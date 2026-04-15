@@ -1,7 +1,19 @@
 import { Link } from 'react-router-dom';
 import { MarketingLayout } from '../MarketingLayout';
+import { breadcrumbJsonLd, usePageMeta } from '../../lib/seo';
 
 export default function Terms() {
+  usePageMeta({
+    title: 'Terms of Service — Exit Armor',
+    description:
+      'The Terms of Service that govern your use of Exit Armor, including refund policy, acceptable use, limitation of liability, and binding arbitration.',
+    path: '/terms',
+    jsonLd: breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'Terms of Service', path: '/terms' },
+    ]),
+  });
+
   return (
     <MarketingLayout>
       <article className="mk-doc">
@@ -129,16 +141,67 @@ export default function Terms() {
           Terms take effect constitutes your acceptance of the revised Terms.
         </p>
 
-        <h2>14. Governing law</h2>
+        <h2>14. Binding arbitration and class action waiver</h2>
         <p>
-          These Terms are governed by the laws of the State of Delaware, without regard
-          to conflict-of-laws principles. Any disputes arising out of these Terms or
-          your use of Exit Armor shall be resolved exclusively in the state or federal
-          courts located in Delaware, and you consent to the jurisdiction of those
-          courts.
+          <strong>Please read this section carefully. It affects your legal rights.</strong>{' '}
+          By using Exit Armor, you and Exit Armor agree that any dispute, claim, or
+          controversy arising out of or relating to these Terms, your purchase of Exit
+          Armor, or your use of the product (a "Dispute") shall be resolved by final and
+          binding individual arbitration, not in a court of law, except that either party
+          may bring an individual action in small-claims court for claims that qualify.
+        </p>
+        <p>
+          Arbitration shall be administered by the American Arbitration Association
+          ("AAA") under its Consumer Arbitration Rules, as modified by these Terms.
+          The arbitration shall be conducted in English by a single arbitrator, and
+          the seat of arbitration shall be Wilmington, Delaware, unless the parties
+          agree otherwise. Either party may elect to have the arbitration conducted by
+          telephone, video, or on documents only for claims under $10,000.
+        </p>
+        <p>
+          <strong>Class action waiver.</strong> You and Exit Armor agree that each party
+          may bring claims against the other only in an individual capacity, and not as
+          a plaintiff or class member in any purported class, collective, consolidated,
+          or representative action. The arbitrator may not consolidate more than one
+          person's claims and may not otherwise preside over any form of representative
+          or class proceeding.
+        </p>
+        <p>
+          <strong>Exceptions.</strong> Nothing in this section prevents either party
+          from (a) bringing an individual action in small-claims court, (b) seeking
+          injunctive or equitable relief in a court of competent jurisdiction to
+          prevent the actual or threatened infringement, misappropriation, or
+          violation of intellectual property rights, or (c) exercising any right that
+          cannot be waived under applicable law.
+        </p>
+        <p>
+          <strong>30-day right to opt out.</strong> You may opt out of this arbitration
+          agreement by sending a written notice to{' '}
+          <a href="mailto:support@exitarmor.com">support@exitarmor.com</a> within 30
+          days of your first purchase of Exit Armor, with the subject line "Arbitration
+          Opt-Out." Your notice must include your full name, email address, and a clear
+          statement that you wish to opt out. Opting out will not otherwise affect your
+          use of Exit Armor.
+        </p>
+        <p>
+          If any portion of this section is found unenforceable, that portion shall be
+          severed and the remainder shall continue in full force and effect, except
+          that if the class action waiver is found unenforceable as to any claim, that
+          claim (and only that claim) shall be severed from the arbitration and brought
+          in the courts identified in Section 15.
         </p>
 
-        <h2>15. Contact us</h2>
+        <h2>15. Governing law and forum</h2>
+        <p>
+          These Terms are governed by the Federal Arbitration Act with respect to
+          Section 14, and by the laws of the State of Delaware as to all other matters,
+          in each case without regard to conflict-of-laws principles. Subject to Section
+          14, any Dispute that is not required to be arbitrated shall be resolved
+          exclusively in the state or federal courts located in Delaware, and you
+          consent to the exclusive jurisdiction of those courts.
+        </p>
+
+        <h2>16. Contact us</h2>
         <p>
           Questions about these Terms? Email us at{' '}
           <a href="mailto:support@exitarmor.com">support@exitarmor.com</a> or use our{' '}

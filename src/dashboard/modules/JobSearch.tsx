@@ -2,22 +2,25 @@ import { useState } from 'react';
 import { Icon } from '../../components/Icon';
 import { EMAIL_TEMPLATES } from '../../data/emailTemplates';
 import { JOB_SEARCH_ITEMS, MODULES } from '../../data/modules';
+import type { ModuleId } from '../../data/modules';
 import { downloadChecklist } from '../../lib/exportChecklist';
 import { countChecked, personalize, useProfile } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
 import { StoryBuilder } from '../components/StoryBuilder';
+import { RelatedTools } from '../components/RelatedTools';
 
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
+  onOpenModule?: (id: ModuleId) => void;
 }
 
 const JOB_TEMPLATES = EMAIL_TEMPLATES.filter((t) => t.category === 'job-search');
 
-export function JobSearch({ checked, onToggle, onBack }: Props) {
+export function JobSearch({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'job-search')!;
   const [profile] = useProfile();
   const [activeTpl, setActiveTpl] = useState<string>(JOB_TEMPLATES[0]?.id ?? '');
@@ -134,6 +137,8 @@ export function JobSearch({ checked, onToggle, onBack }: Props) {
             <h4>The 90-second answer</h4>
             <p>Every interview will ask what happened. Practice the "How to Explain Your Layoff" template out loud until it is automatic.</p>
           </div>
+
+          {onOpenModule && <RelatedTools currentRoute="job-search" onOpen={onOpenModule} />}
         </aside>
       </div>
     </>

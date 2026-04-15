@@ -26,7 +26,7 @@ export interface ChecklistItem {
   id: string;
   label: string;
   detail?: string;
-  day?: 'Day 1' | 'Day 2' | 'Day 3' | 'Day 4-7';
+  day?: 'Day 1' | 'Day 2' | 'Day 3';
   why?: string;        // Why this matters
   how?: string;        // Step-by-step how to do it
   resources?: ChecklistResource[];

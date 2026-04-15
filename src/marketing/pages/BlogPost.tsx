@@ -1,6 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
 import { BLOG_BY_SLUG, BLOG_POSTS } from '../../data/blog';
 import { MarketingLayout } from '../MarketingLayout';
+import {
+  articleJsonLd,
+  breadcrumbJsonLd,
+  usePageMeta,
+} from '../../lib/seo';
 
 // Minimal markdown renderer: ## for h2, blank line for paragraph breaks
 function renderBody(body: string) {
@@ -30,6 +35,45 @@ function renderBody(body: string) {
 export default function BlogPost() {
   const { slug = '' } = useParams();
   const post = BLOG_BY_SLUG[slug];
+
+  // Hooks must be called unconditionally — always call usePageMeta, but
+  // emit a noindex 404-ish meta when the slug doesn't resolve to a post.
+  usePageMeta(
+    post
+      ? {
+          title: `${post.title} — Exit Armor`,
+          description: post.summary,
+          path: `/blog/${post.slug}`,
+          ogType: 'article',
+          article: {
+            publishedTime: post.date,
+            author: post.author,
+            section: post.category,
+          },
+          jsonLd: [
+            breadcrumbJsonLd([
+              { name: 'Home', path: '/' },
+              { name: 'Blog', path: '/blog' },
+              { name: post.title, path: `/blog/${post.slug}` },
+            ]),
+            articleJsonLd({
+              slug: post.slug,
+              title: post.title,
+              description: post.summary,
+              datePublished: post.date,
+              author: post.author,
+              section: post.category,
+              wordCount: post.body.split(/\s+/).length,
+            }),
+          ],
+        }
+      : {
+          title: 'Post not found — Exit Armor',
+          description: 'That blog post could not be found.',
+          path: `/blog/${slug}`,
+          noindex: true,
+        }
+  );
 
   if (!post) {
     return (

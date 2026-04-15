@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" width="280" height="64">
+  <!-- Exit Armor full lockup: mark + wordmark + tagline -->
+  <defs>
+    <linearGradient id="wmShield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f2a44"/>
+      <stop offset="1" stop-color="#080c18"/>
+    </linearGradient>
+    <linearGradient id="wmChevron" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Mark -->
+  <g transform="translate(2 2)">
+    <path d="M30 0 L54 8 V28 C54 40 43 50 30 56 C17 50 6 40 6 28 V8 Z"
+          fill="url(#wmShield)" stroke="#e63946" stroke-width="2"/>
+    <path d="M14 38 L30 18 L46 38"
+          fill="none" stroke="url(#wmChevron)" stroke-width="5.5"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="30" cy="11" r="2.4" fill="#e63946"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="'Playfair Display', 'Georgia', serif" fill="#0b0f1c">
+    <text x="72" y="32" font-size="22" font-weight="800" letter-spacing="1.5">EXIT ARMOR</text>
+  </g>
+
+  <!-- Divider accent -->
+  <rect x="72" y="38" width="40" height="2" fill="#e63946"/>
+
+  <!-- Tagline -->
+  <g font-family="'Inter', 'Helvetica Neue', sans-serif" fill="#64748b">
+    <text x="72" y="52" font-size="9" font-weight="600" letter-spacing="2">LAYOFF DEFENSE KIT</text>
+  </g>
+</svg>

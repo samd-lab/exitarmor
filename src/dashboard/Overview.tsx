@@ -11,11 +11,13 @@ import type { ChecklistMap } from '../lib/storage';
 import { Checklist } from './components/Checklist';
 import { CrisisCard } from './components/CrisisCard';
 import { PhaseRing } from './components/PhaseRing';
+import { PrivacyBadge } from './components/PrivacyBadge';
 
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onOpenModule: (id: ModuleId) => void;
+  firstName?: string;
 }
 
 function phaseTotals(phase: Phase) {
@@ -23,7 +25,7 @@ function phaseTotals(phase: Phase) {
   return ids;
 }
 
-export function Overview({ checked, onToggle, onOpenModule }: Props) {
+export function Overview({ checked, onToggle, onOpenModule, firstName }: Props) {
   const allIds = MODULES.flatMap((m) => m.itemIds);
   const overall = allIds.length === 0 ? 0 : Math.round((countChecked(checked, allIds) / allIds.length) * 100);
 
@@ -177,6 +179,8 @@ export function Overview({ checked, onToggle, onOpenModule }: Props) {
           );
         })()}
       </section>
+
+      <PrivacyBadge firstName={firstName} />
 
       <CrisisCard />
 

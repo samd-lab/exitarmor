@@ -1,8 +1,19 @@
 import { useState } from 'react';
 import { MarketingLayout } from '../MarketingLayout';
+import { breadcrumbJsonLd, usePageMeta } from '../../lib/seo';
 
 export default function Contact() {
   const [sent, setSent] = useState(false);
+  usePageMeta({
+    title: 'Contact Exit Armor — Support, corrections & press',
+    description:
+      'Questions, refund requests, corrections, or press inquiries for Exit Armor. Humans read every message — replies within 24 hours on business days.',
+    path: '/contact',
+    jsonLd: breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'Contact', path: '/contact' },
+    ]),
+  });
 
   return (
     <MarketingLayout>

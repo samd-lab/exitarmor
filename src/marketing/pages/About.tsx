@@ -1,7 +1,22 @@
 import { Link } from 'react-router-dom';
 import { MarketingLayout } from '../MarketingLayout';
+import { breadcrumbJsonLd, organizationJsonLd, usePageMeta } from '../../lib/seo';
 
 export default function About() {
+  usePageMeta({
+    title: 'About Exit Armor — Built for the hardest week of your career',
+    description:
+      'Why we built Exit Armor: a calm, research-backed 90-day layoff survival kit for anyone facing a severance packet, COBRA election, or unemployment filing.',
+    path: '/about',
+    jsonLd: [
+      organizationJsonLd(),
+      breadcrumbJsonLd([
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+      ]),
+    ],
+  });
+
   return (
     <MarketingLayout>
       <article className="mk-doc">

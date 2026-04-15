@@ -1,5 +1,6 @@
 import { Icon } from '../../components/Icon';
 import type { IconName } from '../../components/Icon';
+import { BrandMark } from '../../components/BrandMark';
 import type { ModuleId } from '../../data/modules';
 
 export type Route = 'overview' | ModuleId;
@@ -13,6 +14,14 @@ const NAV: Array<{ id: Route; label: string; icon: IconName }> = [
   { id: 'cobra-aca', label: 'COBRA vs ACA', icon: 'heart' },
   { id: 'budget', label: '90-Day Budget', icon: 'dollar' },
   { id: 'job-search', label: 'Job Search Tools', icon: 'search' },
+];
+
+// Small stats strip shown just under the brand — surfaces the
+// scale of content at a glance. Every number here is a product fact.
+const STATS = [
+  { value: '10', label: 'tools' },
+  { value: '50', label: 'states' },
+  { value: '11', label: 'asks' },
 ];
 
 interface Props {
@@ -35,11 +44,22 @@ export function Sidebar({ active, onChange, onOpenProfile, profileName }: Props)
   return (
     <aside className="dash-sidebar">
       <div className="dash-sidebar__brand">
-        <div className="dash-sidebar__logo">EA</div>
+        <div className="dash-sidebar__logo" aria-hidden>
+          <BrandMark id="sidebar" size={36} />
+        </div>
         <div>
           <div className="dash-sidebar__name">EXIT ARMOR</div>
           <div className="dash-sidebar__tag">Layoff Defense</div>
         </div>
+      </div>
+
+      <div className="dash-sidebar__stats" aria-label="Kit at a glance">
+        {STATS.map((s) => (
+          <div key={s.label} className="dash-sidebar__stat">
+            <strong>{s.value}</strong>
+            <span>{s.label}</span>
+          </div>
+        ))}
       </div>
 
       <div className="dash-sidebar__section">Your Survival Kit</div>

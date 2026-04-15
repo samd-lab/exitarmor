@@ -68,10 +68,17 @@ export function Dashboard({ onStartAi }: Props) {
               <Icon name="download" size={14} />
               Action Plan PDF
             </button>
-            <button type="button" className="dash-ai-btn" onClick={onStartAi}>
-              <span className="dash-ai-btn__dot" />
+            <button
+              type="button"
+              className="dash-ai-btn dash-ai-btn--soon"
+              onClick={onStartAi}
+              aria-label="Talk to AI — coming soon"
+              title="Talk to AI — coming soon"
+            >
+              <span className="dash-ai-btn__dot dash-ai-btn__dot--soon" />
               <Icon name="mic" size={16} />
               Talk to AI
+              <span className="dash-ai-btn__badge">Soon</span>
             </button>
           </div>
         </div>
@@ -81,28 +88,29 @@ export function Dashboard({ onStartAi }: Props) {
             checked={checked}
             onToggle={toggle}
             onOpenModule={openModule}
+            firstName={firstName}
           />
         )}
         {route === 'first-48' && (
-          <First48Hours checked={checked} onToggle={toggle} onBack={goOverview} />
+          <First48Hours checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
         {route === 'severance' && (
-          <Severance checked={checked} onToggle={toggle} onBack={goOverview} />
+          <Severance checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
         {route === 'state' && (
-          <StateResources checked={checked} onToggle={toggle} onBack={goOverview} />
+          <StateResources checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
         {route === 'cobra-aca' && (
-          <CobraVsAca checked={checked} onToggle={toggle} onBack={goOverview} />
+          <CobraVsAca checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
         {route === 'budget' && (
-          <Budget checked={checked} onToggle={toggle} onBack={goOverview} />
+          <Budget checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
         {route === 'job-search' && (
-          <JobSearch checked={checked} onToggle={toggle} onBack={goOverview} />
+          <JobSearch checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
         {route === 'recovery-7day' && (
-          <RecoveryCompanion checked={checked} onToggle={toggle} onBack={goOverview} />
+          <RecoveryCompanion checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
       </main>
 

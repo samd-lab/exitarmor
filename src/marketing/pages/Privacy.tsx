@@ -1,7 +1,19 @@
 import { Link } from 'react-router-dom';
 import { MarketingLayout } from '../MarketingLayout';
+import { breadcrumbJsonLd, usePageMeta } from '../../lib/seo';
 
 export default function Privacy() {
+  usePageMeta({
+    title: 'Privacy Policy — Exit Armor',
+    description:
+      'What we collect, what we don’t, and why. Exit Armor stores your checklist progress locally in your browser, not on our servers.',
+    path: '/privacy',
+    jsonLd: breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'Privacy Policy', path: '/privacy' },
+    ]),
+  });
+
   return (
     <MarketingLayout>
       <article className="mk-doc">
@@ -43,6 +55,162 @@ export default function Privacy() {
           data, switch devices, or use incognito mode, your progress will not carry
           over. That is a trade-off we made on purpose: the less of your situation we
           hold, the less risk to you.
+        </p>
+
+        <h2>Your data, in technical detail</h2>
+        <p>
+          Because we know "it stays on your device" can sound vague, here is exactly
+          what that means &mdash; every field, every lifecycle, every edge case.
+        </p>
+
+        <h3>What we store, and where</h3>
+        <p>
+          Everything you type into Exit Armor &mdash; your name, company, role, target
+          role, tenure, phone, email, HR contact, LinkedIn URL, severance numbers,
+          budget entries, selected state, and every checklist tick &mdash; is saved to
+          your browser's built-in <strong>localStorage</strong> database under keys
+          prefixed with <code>exitarmor.v1.*</code>. localStorage is a per-origin
+          (meaning per-website) key-value store that your browser manages on your
+          behalf. Nothing about it travels over the network. When you mark an item
+          complete, your browser writes to its local disk. When you reload the page,
+          your browser reads from its local disk. Our servers are never involved.
+        </p>
+        <p>
+          You can verify this yourself. Open your browser's DevTools (F12 on most
+          browsers), click the Application or Storage tab, and look under localStorage
+          for <code>exitarmor.com</code>. Everything Exit Armor remembers about you is
+          there, in plain text, and you can delete any single key at any time.
+        </p>
+
+        <h3>What <em>survives</em></h3>
+        <ul>
+          <li><strong>Page refresh or navigation.</strong> Yes.</li>
+          <li><strong>Closing the tab or window.</strong> Yes.</li>
+          <li><strong>Quitting and reopening the browser.</strong> Yes.</li>
+          <li><strong>Restarting your laptop or desktop.</strong> Yes. localStorage is written to the browser's on-disk profile, not to memory, so a normal shutdown, a crash, a forced reboot, or a power outage does not lose your data. As long as the disk is intact, the data is intact.</li>
+          <li><strong>System updates and browser updates.</strong> Yes, with rare exceptions where a browser changes its storage format &mdash; which hasn't happened in any major browser in years.</li>
+          <li><strong>Going offline.</strong> Yes. Exit Armor works fully offline once the page has loaded, because nothing round-trips to our servers.</li>
+        </ul>
+
+        <h3>What <em>clears</em> your data</h3>
+        <p>
+          The following things will delete your Exit Armor progress. Some are your
+          choice; some are your browser's policy. None of them involve us.
+        </p>
+        <ul>
+          <li>
+            <strong>You clear browsing data.</strong> Any time you (or someone with
+            access to your device) clears "cached images and files," "cookies and
+            other site data," or "site data" for <code>exitarmor.com</code>, your
+            progress is gone. Some privacy extensions and "one-click cleaner" tools do
+            this automatically &mdash; check their settings.
+          </li>
+          <li>
+            <strong>You use Incognito / Private / InPrivate mode.</strong> In private
+            browsing, localStorage is scoped to the private session only. The moment
+            you close the last private window, everything is deleted. If you want your
+            progress to persist, use a normal (non-private) window.
+          </li>
+          <li>
+            <strong>You switch browsers or devices.</strong> localStorage is scoped
+            per browser, per device, per user profile. Progress you saved in Chrome on
+            your laptop is not readable by Safari on your laptop, Chrome on a
+            different laptop, or the same Chrome under a different user profile.
+            There is no cloud sync.
+          </li>
+          <li>
+            <strong>Safari's Intelligent Tracking Prevention (ITP).</strong> This is
+            the one to know about. On Safari (macOS and iOS), Apple's ITP policy
+            automatically deletes script-writable storage &mdash; including
+            localStorage &mdash; for any site you haven't interacted with in{' '}
+            <strong>7 days</strong>. If you use Safari, buy Exit Armor, and then
+            don't visit the site again for a week, your progress will be wiped. The
+            fix is simple: open the dashboard once a week, or use a non-Safari
+            browser (Chrome, Firefox, Edge, Arc, Brave) where this policy does not
+            apply.
+          </li>
+          <li>
+            <strong>Storage quota pressure.</strong> Browsers reserve a small amount
+            of disk for every site (usually 5&ndash;10 MB for localStorage, sometimes
+            more). If your disk fills up to a critical level, or if you've visited
+            thousands of sites and your browser decides to reclaim space, it may evict
+            the oldest or least-used origin storage. Exit Armor uses a few kilobytes,
+            so this is extremely unlikely unless your disk is almost full.
+          </li>
+          <li>
+            <strong>Browser profile deletion or corruption.</strong> If you delete
+            your browser user profile, factory-reset your device, or your browser's
+            on-disk profile database is corrupted by a hardware failure or a force-
+            quit during a write, localStorage for all sites is affected, including
+            Exit Armor.
+          </li>
+          <li>
+            <strong>You explicitly reset it inside Exit Armor.</strong> Where we
+            surface a "Clear progress" or "Start over" button, clicking it removes
+            exactly the keys you'd expect and nothing else.
+          </li>
+        </ul>
+
+        <h3>What does <em>not</em> clear your data</h3>
+        <ul>
+          <li>
+            A power outage, sudden shutdown, or crash while you're <em>reading</em>.
+            localStorage writes are committed to disk synchronously; any data saved
+            before the event is safe.
+          </li>
+          <li>
+            Logging out of your operating system account (as long as you log back
+            into the same user profile).
+          </li>
+          <li>
+            Putting the laptop to sleep, closing the lid, or letting the battery die
+            &mdash; once you reopen and relaunch the browser, the data is still there.
+          </li>
+          <li>
+            A Wi-Fi or internet outage. Exit Armor does not need to contact our
+            servers to remember what you've entered.
+          </li>
+          <li>
+            An Exit Armor product update. We use versioned keys (<code>exitarmor.v1</code>),
+            so if we ever need to change the format we migrate your data forward
+            rather than wipe it.
+          </li>
+        </ul>
+
+        <h3>How to back up your progress</h3>
+        <p>
+          Because your data is local, you are the only one who can preserve it. Two
+          practical options:
+        </p>
+        <ul>
+          <li>
+            <strong>Generate the Action Plan PDF.</strong> The Action Plan view
+            compiles everything you've entered &mdash; numbers, asks, state, runway,
+            counter-offer email &mdash; into a single printable 1-page document. Hit
+            "Save as PDF" whenever you make a meaningful change and store the PDF
+            somewhere safe (email to yourself, save to Dropbox, print a copy).
+          </li>
+          <li>
+            <strong>Export raw data from DevTools.</strong> Advanced users can copy
+            the JSON values under <code>exitarmor.v1.*</code> directly out of the
+            Application/Storage panel and paste them into a text file.
+          </li>
+        </ul>
+        <p>
+          We're working on an in-product "Export / Import" button that does this in
+          one click. Until then, the PDF is the fastest durable backup.
+        </p>
+
+        <h3>Why we designed it this way</h3>
+        <p>
+          It would be cheaper and easier for us to put all of this in a server-side
+          database. We chose not to. People using Exit Armor are, by definition,
+          having a bad week &mdash; and the last thing they need is another company
+          they don't know holding a file on their severance numbers, their HR
+          contact, and their state of residence. Local-only storage means we can't
+          hand your data to a law-firm discovery request, a hacker who breaches us,
+          an advertiser who offers us money, or an AI model we're training. There's
+          nothing to hand over.
         </p>
 
         <h3>3. Voice data (if you use voice features)</h3>

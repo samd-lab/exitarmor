@@ -11,15 +11,17 @@
 
 import { Icon } from '../../components/Icon';
 import { MODULES, RECOVERY_ITEMS } from '../../data/modules';
-import type { ChecklistItem } from '../../data/modules';
+import type { ChecklistItem, ModuleId } from '../../data/modules';
 import { countChecked } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { ModuleHeader } from '../components/ModuleHeader';
+import { RelatedTools } from '../components/RelatedTools';
 
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
+  onOpenModule?: (id: ModuleId) => void;
 }
 
 interface DayGroup {
@@ -53,7 +55,7 @@ function groupByDay(items: ChecklistItem[]): DayGroup[] {
   }));
 }
 
-export function RecoveryCompanion({ checked, onToggle, onBack }: Props) {
+export function RecoveryCompanion({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'recovery-7day')!;
   const groups = groupByDay(RECOVERY_ITEMS);
 
@@ -138,6 +140,12 @@ export function RecoveryCompanion({ checked, onToggle, onBack }: Props) {
           You do not have to do this alone. If you need someone to talk to,
           scroll to the bottom of the dashboard for free 24/7 support lines.
         </p>
+
+        {onOpenModule && (
+          <div style={{ marginTop: '1.5rem', maxWidth: 520 }}>
+            <RelatedTools currentRoute="recovery-7day" onOpen={onOpenModule} />
+          </div>
+        )}
       </div>
     </>
   );

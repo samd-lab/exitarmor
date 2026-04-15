@@ -10,6 +10,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '../components/Icon';
+import { BrandMark } from '../components/BrandMark';
 import { EMAIL_TEMPLATES } from '../data/emailTemplates';
 import {
   DEFAULT_SEVERANCE_INPUT,
@@ -85,7 +86,9 @@ export default function ActionPlan() {
         {/* HEADER */}
         <header className="ap-header">
           <div className="ap-brand">
-            <div className="ap-brand__mark">EA</div>
+            <div className="ap-brand__mark">
+              <BrandMark id="ap" size={46} />
+            </div>
             <div>
               <div className="ap-brand__name">Exit Armor</div>
               <div className="ap-brand__tag">Personalized Severance Action Plan</div>

@@ -12,6 +12,8 @@ import { HrRoleplay } from '../components/HrRoleplay';
 import { OfferCompare } from '../components/OfferCompare';
 import { AttorneyDirectory } from '../components/AttorneyDirectory';
 import { BenchmarkCard } from '../components/BenchmarkCard';
+import { RelatedTools } from '../components/RelatedTools';
+import type { ModuleId } from '../../data/modules';
 
 const SEV_TEMPLATES = EMAIL_TEMPLATES.filter((t) => t.category === 'severance');
 
@@ -33,9 +35,10 @@ interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
+  onOpenModule?: (id: ModuleId) => void;
 }
 
-export function Severance({ checked, onToggle, onBack }: Props) {
+export function Severance({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'severance')!;
   const [tab, setTab] = useState<'overview' | 'calculator' | 'asks' | 'templates' | 'roleplay' | 'compare' | 'attorney' | 'benchmarks'>('calculator');
   const [activeTpl, setActiveTpl] = useState<string>(SEV_TEMPLATES[0]?.id ?? '');
@@ -182,6 +185,8 @@ export function Severance({ checked, onToggle, onBack }: Props) {
               Open HR Roleplay <Icon name="arrow" size={12} />
             </button>
           </div>
+
+          {onOpenModule && <RelatedTools currentRoute="severance" onOpen={onOpenModule} />}
         </aside>
       </div>
     </>

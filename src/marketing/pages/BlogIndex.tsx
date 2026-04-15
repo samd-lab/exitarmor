@@ -1,9 +1,36 @@
 import { Link } from 'react-router-dom';
 import { BLOG_POSTS } from '../../data/blog';
 import { MarketingLayout } from '../MarketingLayout';
+import { breadcrumbJsonLd, SITE_URL, usePageMeta } from '../../lib/seo';
 
 export default function BlogIndex() {
   const posts = [...BLOG_POSTS].sort((a, b) => b.date.localeCompare(a.date));
+
+  usePageMeta({
+    title: 'The Exit Armor Blog — Severance, COBRA, Unemployment & Layoff Recovery',
+    description:
+      'Calm, cited guidance on severance negotiation, COBRA vs ACA, state-by-state unemployment filing, non-compete enforceability, and the job search after a layoff.',
+    path: '/blog',
+    jsonLd: [
+      breadcrumbJsonLd([
+        { name: 'Home', path: '/' },
+        { name: 'Blog', path: '/blog' },
+      ]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Blog',
+        name: 'The Exit Armor Blog',
+        url: `${SITE_URL}/blog`,
+        blogPost: posts.map((p) => ({
+          '@type': 'BlogPosting',
+          headline: p.title,
+          datePublished: p.date,
+          url: `${SITE_URL}/blog/${p.slug}`,
+          author: { '@type': 'Organization', name: p.author },
+        })),
+      },
+    ],
+  });
 
   return (
     <MarketingLayout>

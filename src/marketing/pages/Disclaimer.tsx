@@ -1,7 +1,19 @@
 import { Link } from 'react-router-dom';
 import { MarketingLayout } from '../MarketingLayout';
+import { breadcrumbJsonLd, usePageMeta } from '../../lib/seo';
 
 export default function Disclaimer() {
+  usePageMeta({
+    title: 'Disclaimer — Exit Armor',
+    description:
+      'Exit Armor is an educational resource, not legal, financial, tax, or medical advice. Read our disclaimer before relying on any guidance in the product.',
+    path: '/disclaimer',
+    jsonLd: breadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'Disclaimer', path: '/disclaimer' },
+    ]),
+  });
+
   return (
     <MarketingLayout>
       <article className="mk-doc">

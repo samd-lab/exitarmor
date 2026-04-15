@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Icon } from '../../components/Icon';
 import { BUDGET_ITEMS, MODULES } from '../../data/modules';
+import type { ModuleId } from '../../data/modules';
 import { calculateRunway, money, runwayLabel } from '../../lib/calculators';
 import type { RunwayInput } from '../../lib/calculators';
 import { downloadChecklist } from '../../lib/exportChecklist';
@@ -9,11 +10,13 @@ import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
 import { Rollover401k } from '../components/Rollover401k';
+import { RelatedTools } from '../components/RelatedTools';
 
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
+  onOpenModule?: (id: ModuleId) => void;
 }
 
 const DEFAULTS: RunwayInput = {
@@ -28,7 +31,7 @@ const DEFAULTS: RunwayInput = {
   savings: 12000,
 };
 
-export function Budget({ checked, onToggle, onBack }: Props) {
+export function Budget({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'budget')!;
   const [inputs, setInputs] = usePersistentState<RunwayInput>('budget.runway', DEFAULTS);
   const [tab, setTab] = useState<'runway' | 'rollover'>('runway');
@@ -134,6 +137,8 @@ export function Budget({ checked, onToggle, onBack }: Props) {
             <h4>Don't cash out 401(k)</h4>
             <p>Early withdrawal triggers a 10% penalty plus income tax — typically 30–40% gone immediately. Roll to an IRA instead.</p>
           </div>
+
+          {onOpenModule && <RelatedTools currentRoute="budget" onOpen={onOpenModule} />}
         </aside>
       </div>
     </>

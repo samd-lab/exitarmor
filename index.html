@@ -2,12 +2,125 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Exit Armor / FirstDayFired protects you when you get laid off. Get an instant, AI-guided severance consultation and a 48-hour action plan." />
-    <title>Exit Armor - Severance Maximizer & Layoff Survival Guide</title>
+
+    <!-- Favicons / app icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <link rel="mask-icon" href="/logo-mark.svg" color="#e63946" />
+    <meta name="theme-color" content="#0b0f1c" />
+
+    <!-- SEO -->
+    <title>Exit Armor — Severance Maximizer & 90-Day Layoff Playbook</title>
+    <meta name="description" content="A 90-day layoff playbook built on 10 tools — severance math, HR call roleplay, COBRA vs ACA, state-by-state unemployment rules. No AI voice, no guesswork. $69 one-time." />
+
+    <!-- Open Graph / social share -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Exit Armor" />
+    <meta property="og:title" content="Don't read your severance packet alone at 11pm." />
+    <meta property="og:description" content="A 90-day layoff playbook — severance math, HR roleplay, COBRA vs ACA, state-by-state rules. $69 one-time." />
+    <meta property="og:image" content="/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Don't read your severance packet alone at 11pm." />
+    <meta name="twitter:description" content="A 90-day layoff playbook — severance math, HR roleplay, COBRA vs ACA, state-by-state rules." />
+    <meta name="twitter:image" content="/og-image.svg" />
+
+    <!-- ================================================================
+         Analytics — REPLACE placeholder IDs before going live.
+         Each snippet is gated behind its real ID so leaving a placeholder
+         in place will NOT fire requests to the vendor.
+         ================================================================ -->
+
+    <!-- Google Tag Manager — preferred when you want GA4 + Ads + any other
+         tags fired from a single container. Replace GTM-XXXXXXX. -->
+    <script>
+      (function (w, d, s, l, i) {
+        if (!i || i === 'GTM-XXXXXXX') return;
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-XXXXXXX');
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google Analytics 4 (direct gtag.js) — use this OR GTM above, not
+         both. If you use GTM, configure GA4 inside the container and
+         delete this block. Replace G-XXXXXXXXXX. -->
+    <script>
+      (function () {
+        var GA_ID = 'G-XXXXXXXXXX';
+        if (!GA_ID || GA_ID === 'G-XXXXXXXXXX') return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { window.dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA_ID, { anonymize_ip: true });
+      })();
+    </script>
+    <!-- End Google Analytics 4 -->
+
+    <!-- Microsoft Clarity — free heatmaps + session replay.
+         Replace XXXXXXXXXX with your Clarity project ID. -->
+    <script>
+      (function (c, l, a, r, i, t, y) {
+        if (!i || i === 'XXXXXXXXXX') return;
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+        t = l.createElement(r); t.async = 1;
+        t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', 'XXXXXXXXXX');
+    </script>
+    <!-- End Microsoft Clarity -->
+
+    <!-- Microsoft Advertising UET (Bing Ads conversion tracking).
+         Replace XXXXXXXX with your UET tag ID. -->
+    <script>
+      (function (w, d, t, r, u) {
+        if (!u || u === 'XXXXXXXX') return;
+        var f, n, i;
+        (w[u] = w[u] || []),
+          (f = function () {
+            var o = { ti: u, enableAutoSpaTracking: true };
+            (o.q = w[u]), (w[u] = new UET(o)), w[u].push('pageLoad');
+          }),
+          (n = d.createElement(t)), (n.src = r), (n.async = 1),
+          (n.onload = n.onreadystatechange = function () {
+            var s = this.readyState;
+            (s && s !== 'loaded' && s !== 'complete') ||
+              (f(), (n.onload = n.onreadystatechange = null));
+          }),
+          (i = d.getElementsByTagName(t)[0]),
+          i.parentNode.insertBefore(n, i);
+      })(window, document, 'script', '//bat.bing.com/bat.js', 'XXXXXXXX');
+    </script>
+    <!-- End Microsoft UET -->
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) — required fallback if GTM is enabled.
+         Replace GTM-XXXXXXX to match the container ID above. -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

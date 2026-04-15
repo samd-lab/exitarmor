@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.css';
 import { Dashboard } from './dashboard/Dashboard';
 import ActionPlan from './dashboard/ActionPlan';
@@ -11,6 +11,7 @@ import Terms from './marketing/pages/Terms';
 import Privacy from './marketing/pages/Privacy';
 import BlogIndex from './marketing/pages/BlogIndex';
 import BlogPost from './marketing/pages/BlogPost';
+import NotFound from './marketing/pages/NotFound';
 
 function App() {
   return (
@@ -26,161 +27,144 @@ function App() {
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/app" element={<AppShell />} />
         <Route path="/action-plan" element={<ActionPlan />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
-type AppView = 'consent' | 'dashboard';
-
 function AppShell() {
-  const navigate = useNavigate();
-  const [view, setView] = useState<AppView>('consent');
-  const [aiActive, setAiActive] = useState(false);
+  const [aiComingSoon, setAiComingSoon] = useState(false);
 
   return (
     <div className="app-container">
-      {view === 'consent' && (
-        <ConsentModal
-          onAccept={() => setView('dashboard')}
-          onCancel={() => navigate('/')}
-        />
-      )}
-      {view === 'dashboard' && (
-        <>
-          <Dashboard onStartAi={() => setAiActive(true)} />
-          {aiActive && <AiSessionModal onClose={() => setAiActive(false)} />}
-        </>
-      )}
+      <Dashboard onStartAi={() => setAiComingSoon(true)} />
+      {aiComingSoon && <AiComingSoonModal onClose={() => setAiComingSoon(false)} />}
     </div>
   );
 }
 
-function ConsentModal({ onAccept, onCancel }: { onAccept: () => void; onCancel: () => void }) {
+function AiComingSoonModal({ onClose }: { onClose: () => void }) {
   return (
     <div
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(0,0,0,0.8)',
-        backdropFilter: 'blur(5px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-      }}
-    >
-      <div
-        className="glass-panel animate-fade-in"
-        style={{ maxWidth: '500px', padding: '2.5rem', width: '90%' }}
-      >
-        <h3 style={{ marginBottom: '1.5rem', color: 'var(--accent-secondary)' }}>Before We Begin</h3>
-        <p
-          style={{
-            marginBottom: '1rem',
-            color: 'var(--text-secondary)',
-            fontSize: '0.95rem',
-          }}
-        >
-          This session uses your voice input to generate a personalized action plan.
-        </p>
-        <div
-          style={{
-            background: 'rgba(0,0,0,0.3)',
-            padding: '1rem',
-            borderRadius: '8px',
-            marginBottom: '1.5rem',
-            fontSize: '0.85rem',
-            color: 'var(--text-muted)',
-          }}
-        >
-          <strong>Privacy &amp; Voice Data:</strong> Your voice is processed in real-time
-          and is <strong>not stored</strong> after your session ends.
-          <br />
-          <br />
-          <strong>Legal Disclaimer:</strong> I am an AI assistant, not a human lawyer.
-          Everything I share is general educational information based on publicly
-          available knowledge &mdash; not legal advice. Your situation may require a
-          licensed employment attorney.
-        </div>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-          <button className="btn btn-glass" onClick={onCancel}>Cancel</button>
-          <button className="btn btn-primary" onClick={onAccept}>I Understand, Start Session</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AiSessionModal({ onClose }: { onClose: () => void }) {
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(8, 10, 20, 0.78)',
-        backdropFilter: 'blur(8px)',
+        background: 'rgba(8, 10, 20, 0.72)',
+        backdropFilter: 'blur(6px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
         padding: '1.5rem',
       }}
+      onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
         style={{
-          background: '#0b0f1c',
+          background: 'linear-gradient(160deg, #0b0f1c 0%, #1a1230 55%, #2a0f2a 100%)',
           color: '#fff',
-          borderRadius: 18,
-          padding: '2.5rem',
+          borderRadius: 20,
+          padding: '2.5rem 2rem 2rem',
           maxWidth: 460,
           width: '100%',
           textAlign: 'center',
           border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+          boxShadow: '0 40px 90px rgba(0,0,0,0.55)',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
         <div
-          className="animate-pulse-glow"
+          aria-hidden
           style={{
-            width: 110,
-            height: 110,
+            position: 'absolute',
+            top: -80,
+            left: -80,
+            width: 240,
+            height: 240,
+            background: 'radial-gradient(circle at center, rgba(230,57,70,0.35), transparent 65%)',
+            filter: 'blur(20px)',
+            pointerEvents: 'none',
+          }}
+        />
+        <div
+          style={{
+            width: 86,
+            height: 86,
             borderRadius: '50%',
-            background: 'rgba(230,57,70,0.12)',
-            border: '2px solid rgba(230,57,70,0.4)',
-            margin: '0 auto 1.5rem',
+            background: 'linear-gradient(135deg, rgba(230,57,70,0.25), rgba(245,158,11,0.2))',
+            border: '2px solid rgba(245,158,11,0.5)',
+            margin: '0 auto 1.3rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            position: 'relative',
+            zIndex: 1,
           }}
         >
-          <svg
-            width="44"
-            height="44"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#e63946"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="9" y="2" width="6" height="12" rx="3" />
             <path d="M5 10v2a7 7 0 0 0 14 0v-2" />
             <line x1="12" y1="19" x2="12" y2="22" />
           </svg>
         </div>
-        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', marginBottom: '0.5rem' }}>
-          Alex is listening...
+        <div style={{
+          display: 'inline-block',
+          padding: '0.3rem 0.75rem',
+          background: 'rgba(245,158,11,0.15)',
+          border: '1px solid rgba(245,158,11,0.4)',
+          color: '#fcd34d',
+          borderRadius: 999,
+          fontSize: '0.72rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          marginBottom: '0.8rem',
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          Coming end of May
+        </div>
+        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', margin: '0 0 0.7rem', position: 'relative', zIndex: 1 }}>
+          Talk-to-AI is almost here.
         </h3>
-        <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-          Describe your situation. I'll ask 6 quick questions, then walk you through
-          your personalized 48-hour action plan.
+        <p style={{ color: '#cbd5e1', fontSize: '0.92rem', marginBottom: '1.2rem', lineHeight: 1.6, position: 'relative', zIndex: 1 }}>
+          A voice-guided walkthrough of your severance, negotiation, and 90-day plan —
+          built on top of the same content that's already inside your dashboard.
         </p>
-        <p style={{ color: '#64748b', fontSize: '0.72rem', marginBottom: '1.5rem' }}>
-          AI assistant &middot; Voice processed in real time &middot; Not stored
+        <p style={{
+          color: '#fbbf24',
+          fontSize: '0.88rem',
+          marginBottom: '1.8rem',
+          fontWeight: 600,
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          Free for everyone who owns the kit at launch.
         </p>
-        <button className="btn btn-glass" onClick={onClose}>End Session</button>
+        <div style={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              color: '#fff',
+              padding: '0.7rem 1.6rem',
+              borderRadius: 999,
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 600,
+              fontSize: '0.9rem',
+              cursor: 'pointer',
+            }}
+          >
+            Got it
+          </button>
+        </div>
       </div>
     </div>
   );

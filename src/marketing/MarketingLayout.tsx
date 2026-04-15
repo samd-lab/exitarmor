@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { BrandMark } from '../components/BrandMark';
 import './marketing.css';
 
 interface Props {
@@ -21,7 +22,9 @@ export function MarketingNav() {
     <nav className="mk-nav">
       <div className="mk-nav__inner">
         <Link to="/" className="mk-nav__logo">
-          <span className="mk-nav__logo-mark">EA</span>
+          <span className="mk-nav__logo-mark">
+            <BrandMark id="nav" size={30} />
+          </span>
           EXIT ARMOR
         </Link>
         <div className="mk-nav__links">
@@ -43,7 +46,9 @@ export function MarketingFooter() {
       <div className="mk-footer__grid">
         <div className="mk-footer__col">
           <div className="mk-nav__logo" style={{ marginBottom: '1rem' }}>
-            <span className="mk-nav__logo-mark">EA</span>
+            <span className="mk-nav__logo-mark">
+              <BrandMark id="footer" size={30} />
+            </span>
             EXIT ARMOR
           </div>
           <p className="mk-footer__tagline">

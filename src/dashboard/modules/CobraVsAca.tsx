@@ -1,16 +1,19 @@
 import { useMemo } from 'react';
 import { Icon } from '../../components/Icon';
 import { COBRA_ITEMS, MODULES } from '../../data/modules';
+import type { ModuleId } from '../../data/modules';
 import { downloadChecklist } from '../../lib/exportChecklist';
 import { countChecked, usePersistentState } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
+import { RelatedTools } from '../components/RelatedTools';
 
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
+  onOpenModule?: (id: ModuleId) => void;
 }
 
 interface Inputs {
@@ -22,7 +25,7 @@ interface Inputs {
 
 const DEFAULTS: Inputs = { age: 35, income: 60000, cobraMonthly: 650, household: 1 };
 
-export function CobraVsAca({ checked, onToggle, onBack }: Props) {
+export function CobraVsAca({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'cobra-aca')!;
   const [inputs, setInputs] = usePersistentState<Inputs>('cobra.inputs', DEFAULTS);
 
@@ -129,6 +132,8 @@ export function CobraVsAca({ checked, onToggle, onBack }: Props) {
             <h4>ACA quick facts</h4>
             <p>Job loss = qualifying life event for a 60-day Special Enrollment Period. Premium tax credits scale with new (lower) income.</p>
           </div>
+
+          {onOpenModule && <RelatedTools currentRoute="cobra-aca" onOpen={onOpenModule} />}
         </aside>
       </div>
     </>

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Keep the private/stateful app shell out of the index — it's behind purchase
+# and has no stable public content for crawlers to rank.
+Disallow: /app
+Disallow: /action-plan
+
+Sitemap: https://exitarmor.com/sitemap.xml

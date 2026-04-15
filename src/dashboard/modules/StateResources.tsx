@@ -1,18 +1,21 @@
 import { Icon } from '../../components/Icon';
 import { MODULES, STATE_ITEMS, STATES } from '../../data/modules';
+import type { ModuleId } from '../../data/modules';
 import { downloadChecklist } from '../../lib/exportChecklist';
 import { countChecked, usePersistentState } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
+import { RelatedTools } from '../components/RelatedTools';
 
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
+  onOpenModule?: (id: ModuleId) => void;
 }
 
-export function StateResources({ checked, onToggle, onBack }: Props) {
+export function StateResources({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'state')!;
   const [stateCode, setStateCode] = usePersistentState<string>('state.selected', 'CA');
   const state = STATES.find((s) => s.code === stateCode) ?? STATES[0];
@@ -114,6 +117,8 @@ export function StateResources({ checked, onToggle, onBack }: Props) {
             <h4>Filing tip</h4>
             <p>When filing, always say "laid off" or "position eliminated" — never anything that sounds like misconduct.</p>
           </div>
+
+          {onOpenModule && <RelatedTools currentRoute="state" onOpen={onOpenModule} />}
         </aside>
       </div>
     </>

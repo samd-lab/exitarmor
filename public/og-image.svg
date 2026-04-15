@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Social share card: ink background, mark on left, message on right -->
+  <defs>
+    <linearGradient id="ogBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0f1c"/>
+      <stop offset="0.55" stop-color="#141b2e"/>
+      <stop offset="1" stop-color="#1f0d18"/>
+    </linearGradient>
+    <radialGradient id="ogGlow" cx="0.18" cy="0.5" r="0.55">
+      <stop offset="0" stop-color="#e63946" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#e63946" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ogShield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a3650"/>
+      <stop offset="1" stop-color="#0b0f1c"/>
+    </linearGradient>
+    <linearGradient id="ogChevron" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="ogHeadline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#ogBg)"/>
+  <rect width="1200" height="630" fill="url(#ogGlow)"/>
+
+  <!-- Top accent bar -->
+  <rect x="0" y="0" width="1200" height="6" fill="#e63946"/>
+
+  <!-- Shield mark -->
+  <g transform="translate(90 160)">
+    <path d="M130 0 L250 38 V130 C250 182 198 230 130 272 C62 230 10 182 10 130 V38 Z"
+          fill="url(#ogShield)" stroke="#e63946" stroke-width="5"/>
+    <path d="M130 14 L236 46 V130 C130 175 178 216 130 250 C82 216 24 175 24 130 V46 Z"
+          fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+    <path d="M48 188 L130 84 L212 188"
+          fill="none" stroke="url(#ogChevron)" stroke-width="26"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="130" cy="48" r="11" fill="#e63946"/>
+  </g>
+
+  <!-- Right-side text -->
+  <g font-family="'Playfair Display', 'Georgia', serif" fill="url(#ogHeadline)">
+    <text x="420" y="200" font-size="36" font-weight="800" letter-spacing="4">EXIT ARMOR</text>
+  </g>
+  <rect x="420" y="218" width="80" height="4" fill="#e63946"/>
+  <g font-family="'Playfair Display', 'Georgia', serif" fill="#ffffff">
+    <text x="420" y="305" font-size="64" font-weight="700">Don't read your severance</text>
+    <text x="420" y="380" font-size="64" font-weight="700">packet alone at 11pm.</text>
+  </g>
+  <g font-family="'Inter', 'Helvetica Neue', sans-serif" fill="#cbd5e1">
+    <text x="420" y="440" font-size="26" font-weight="400">A 90-day layoff playbook — severance math,</text>
+    <text x="420" y="476" font-size="26" font-weight="400">HR roleplay, COBRA vs ACA, state-by-state rules.</text>
+  </g>
+
+  <!-- Footer chips -->
+  <g font-family="'Inter', 'Helvetica Neue', sans-serif">
+    <rect x="420" y="520" width="130" height="42" rx="21" fill="#e63946"/>
+    <text x="485" y="548" font-size="18" font-weight="700" fill="#ffffff" text-anchor="middle">$69 · ONE-TIME</text>
+
+    <rect x="570" y="520" width="150" height="42" rx="21" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+    <text x="645" y="548" font-size="18" font-weight="600" fill="#e2e8f0" text-anchor="middle">10 TOOLS · 50 STATES</text>
+
+    <rect x="740" y="520" width="160" height="42" rx="21" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+    <text x="820" y="548" font-size="18" font-weight="600" fill="#e2e8f0" text-anchor="middle">SAVED ON DEVICE</text>
+  </g>
+</svg>

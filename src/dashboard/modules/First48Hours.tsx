@@ -6,16 +6,19 @@ import { countChecked } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
+import { RelatedTools } from '../components/RelatedTools';
+import type { ModuleId } from '../../data/modules';
 
-const DAYS = ['Day 1', 'Day 2', 'Day 3', 'Day 4-7'] as const;
+const DAYS = ['Day 1', 'Day 2', 'Day 3'] as const;
 
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
+  onOpenModule?: (id: ModuleId) => void;
 }
 
-export function First48Hours({ checked, onToggle, onBack }: Props) {
+export function First48Hours({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'first-48')!;
   const [day, setDay] = useState<typeof DAYS[number]>('Day 1');
 
@@ -55,11 +58,25 @@ export function First48Hours({ checked, onToggle, onBack }: Props) {
 
           {filtered.length === 0 ? (
             <p style={{ color: 'var(--d-text-muted)', fontSize: '0.9rem' }}>
-              Coming soon — actions for {day}. In the meantime, focus on the earlier days.
+              No actions for {day} — pick another day tab above.
             </p>
           ) : (
             <Checklist items={filtered} checked={checked} onToggle={onToggle} />
           )}
+          <p style={{
+            marginTop: '1.25rem',
+            padding: '0.8rem 1rem',
+            background: '#f0f9ff',
+            border: '1px solid #bae6fd',
+            borderRadius: 10,
+            color: '#075985',
+            fontSize: '0.82rem',
+            lineHeight: 1.55,
+          }}>
+            <Icon name="info" size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            Day 4 onward is covered in the separate <strong>7-Day Recovery Companion</strong> module —
+            open it from the sidebar for the week-one wellbeing and job-search cadence.
+          </p>
 
           <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button type="button" className="btn-pill" onClick={() => downloadChecklist(module.title, FIRST_48_ITEMS, checked)}>
@@ -102,6 +119,8 @@ export function First48Hours({ checked, onToggle, onBack }: Props) {
               a group layoff) and 7 days to revoke after signing. Use that time.
             </p>
           </div>
+
+          {onOpenModule && <RelatedTools currentRoute="first-48" onOpen={onOpenModule} />}
         </aside>
       </div>
     </>
