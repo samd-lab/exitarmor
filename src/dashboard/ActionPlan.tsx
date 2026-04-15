@@ -1,11 +1,23 @@
-// Printable 1-page Action Plan — the tangible deliverable a user takes away.
+// Printable personal playbook — the tangible deliverable a user takes away.
 //
-// Reads everything from localStorage (profile + severance.calc + budget.runway)
-// and renders a print-optimized layout. Users hit "Save as PDF" which just
+// Reads EVERY persistent storage key the app writes:
+//   - profile              (exitarmor.v1.profile)
+//   - severance.calc       (exitarmor.v1.severance.calc)
+//   - budget.runway        (exitarmor.v1.budget.runway)
+//   - cobra.inputs         (exitarmor.v1.cobra.inputs)
+//   - offers.compare       (exitarmor.v1.offers.compare)
+//   - stories.star         (exitarmor.v1.stories.star)
+//   - state.selected       (exitarmor.v1.state.selected)
+//   - progress             (exitarmor.v1.progress)  -- checklist completion map
+//
+// Each section renders conditionally: we only print what the user actually
+// filled in. Empty calculators (still at defaults) are skipped so the PDF
+// doesn't pad itself with generic junk. Users hit "Save as PDF" which just
 // calls window.print() — no PDF library dependency.
 //
-// The @media print block in dashboard.css hides navigation chrome and
-// tightens margins for clean 8.5x11 output.
+// The @media print block in action-plan.css hides navigation chrome and
+// tightens margins for clean 8.5x11 output. New sections all use
+// page-break-inside: avoid so a section never splits mid-card.
 
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,12 +33,24 @@ import {
   runwayLabel,
 } from '../lib/calculators';
 import type { RunwayInput, SeveranceInput } from '../lib/calculators';
-import { UI_DATA_AS_OF } from '../data/states';
-import { loadJSON, personalize } from '../lib/storage';
-import type { UserProfile } from '../lib/storage';
+import { STATES, UI_DATA_AS_OF } from '../data/states';
+import { ITEMS_BY_MODULE, MODULES } from '../data/modules';
+import type { ModuleId } from '../data/modules';
+import { countChecked, loadJSON, personalize } from '../lib/storage';
+import type { ChecklistMap, UserProfile } from '../lib/storage';
 import { EMPTY_PROFILE } from '../lib/storage';
+import {
+  COBRA_ACA_DEFAULTS,
+  estimateAca,
+} from './modules/CobraVsAca';
+import type { CobraAcaInputs } from './modules/CobraVsAca';
 import './dashboard.css';
 import './action-plan.css';
+
+// ---------------------------------------------------------------------------
+// Local defaults — must match the defaults used in each source module so we
+// can tell when a user has actually touched a calculator vs when they haven't.
+// ---------------------------------------------------------------------------
 
 const DEFAULT_RUNWAY: RunwayInput = {
   rent: 1800,
@@ -40,11 +64,122 @@ const DEFAULT_RUNWAY: RunwayInput = {
   savings: 12000,
 };
 
+interface Offer {
+  label: string;
+  baseWeeks: number;
+  weeklyPay: number;
+  cobraMonths: number;
+  cobraMonthlyValue: number;
+  bonusDollars: number;
+  ptoDays: number;
+  dailyRate: number;
+  equityDollars: number;
+  otherDollars: number;
+  notes: string;
+}
+
+const EMPTY_OFFER = (label: string): Offer => ({
+  label,
+  baseWeeks: 0,
+  weeklyPay: 0,
+  cobraMonths: 0,
+  cobraMonthlyValue: 0,
+  bonusDollars: 0,
+  ptoDays: 0,
+  dailyRate: 0,
+  equityDollars: 0,
+  otherDollars: 0,
+  notes: '',
+});
+
+const EMPTY_OFFERS: { a: Offer; b: Offer } = {
+  a: EMPTY_OFFER('Offer A'),
+  b: EMPTY_OFFER('Offer B'),
+};
+
+interface Story {
+  id: string;
+  title: string;
+  situation: string;
+  task: string;
+  action: string;
+  result: string;
+}
+
+const STORY_LABELS: Record<string, string> = {
+  win: 'A big win',
+  failure: 'A failure you recovered from',
+  conflict: 'A conflict you handled',
+  leadership: 'A leadership moment',
+  'hard-work': 'A technical / craft deep-dive',
+  teamwork: 'A cross-team / cross-functional win',
+};
+
+// ---------------------------------------------------------------------------
+// Pure helpers — "did the user touch this calculator?" detection
+// ---------------------------------------------------------------------------
+
+function runwayIsCustomized(r: RunwayInput): boolean {
+  const keys = Object.keys(DEFAULT_RUNWAY) as Array<keyof RunwayInput>;
+  return keys.some((k) => r[k] !== DEFAULT_RUNWAY[k]);
+}
+
+function cobraIsCustomized(c: CobraAcaInputs): boolean {
+  return (
+    c.age !== COBRA_ACA_DEFAULTS.age ||
+    c.income !== COBRA_ACA_DEFAULTS.income ||
+    c.cobraMonthly !== COBRA_ACA_DEFAULTS.cobraMonthly ||
+    c.household !== COBRA_ACA_DEFAULTS.household
+  );
+}
+
+function offerHasContent(o: Offer): boolean {
+  return (
+    o.baseWeeks > 0 ||
+    o.weeklyPay > 0 ||
+    o.cobraMonths > 0 ||
+    o.cobraMonthlyValue > 0 ||
+    o.bonusDollars > 0 ||
+    o.ptoDays > 0 ||
+    o.dailyRate > 0 ||
+    o.equityDollars > 0 ||
+    o.otherDollars > 0 ||
+    (o.notes ?? '').trim().length > 0
+  );
+}
+
+function storyWordCount(s: Story): number {
+  return `${s.situation} ${s.task} ${s.action} ${s.result}`
+    .split(/\s+/)
+    .filter(Boolean).length;
+}
+
+function storyIsFilled(s: Story): boolean {
+  return storyWordCount(s) >= 15;
+}
+
+function buildStoryAnswer(s: Story): string {
+  const parts: string[] = [];
+  if (s.situation.trim()) parts.push(s.situation.trim());
+  if (s.task.trim()) parts.push(s.task.trim());
+  if (s.action.trim()) parts.push(s.action.trim());
+  if (s.result.trim()) parts.push(s.result.trim());
+  return parts.join(' ');
+}
+
+// ---------------------------------------------------------------------------
+
 export default function ActionPlan() {
   const profile = loadJSON<UserProfile>('profile', EMPTY_PROFILE);
   const severanceInput = loadJSON<SeveranceInput>('severance.calc', DEFAULT_SEVERANCE_INPUT);
   const runwayInput = loadJSON<RunwayInput>('budget.runway', DEFAULT_RUNWAY);
+  const cobraInput = loadJSON<CobraAcaInputs>('cobra.inputs', COBRA_ACA_DEFAULTS);
+  const offers = loadJSON<{ a: Offer; b: Offer }>('offers.compare', EMPTY_OFFERS);
+  const stories = loadJSON<Record<string, Story>>('stories.star', {});
+  const altStateCode = loadJSON<string>('state.selected', severanceInput.stateCode);
+  const progress = loadJSON<ChecklistMap>('progress', {});
 
+  // Severance + runway + UI computations
   const severance = useMemo(() => estimateSeverance(severanceInput), [severanceInput]);
   const runway = useMemo(() => calculateRunway(runwayInput), [runwayInput]);
   const ui = useMemo(
@@ -52,6 +187,79 @@ export default function ActionPlan() {
     [severanceInput.annualSalary, severanceInput.stateCode]
   );
 
+  // COBRA vs ACA computation
+  const cobraAnnual = cobraInput.cobraMonthly * 12;
+  const acaMonthly = useMemo(() => estimateAca(cobraInput), [cobraInput]);
+  const acaAnnual = acaMonthly * 12;
+  const cobraWinner: 'cobra' | 'aca' | 'tie' =
+    acaAnnual < cobraAnnual ? 'aca' : acaAnnual > cobraAnnual ? 'cobra' : 'tie';
+  const cobraDelta = Math.abs(cobraAnnual - acaAnnual);
+  const showCobra = cobraIsCustomized(cobraInput);
+
+  // Offer compare detection
+  const hasOfferA = offerHasContent(offers.a);
+  const hasOfferB = offerHasContent(offers.b);
+  const showOffers = hasOfferA || hasOfferB;
+  const totalA = useMemo(() => totalsFor(offers.a), [offers.a]);
+  const totalB = useMemo(() => totalsFor(offers.b), [offers.b]);
+  const offerDelta = totalB.grand - totalA.grand;
+
+  // STAR stories — only the ones with meaningful content
+  const filledStories = useMemo(
+    () =>
+      Object.values(stories)
+        .filter((s): s is Story => !!s && typeof s === 'object')
+        .filter(storyIsFilled),
+    [stories]
+  );
+
+  // Checklist completion scorecard across all 7 modules
+  const scorecard = useMemo(
+    () =>
+      MODULES.map((m) => {
+        const items = ITEMS_BY_MODULE[m.id];
+        const ids = items.map((i) => i.id);
+        const done = countChecked(progress, ids);
+        const remaining = items.filter((i) => !progress[i.id]);
+        return {
+          id: m.id,
+          title: m.short,
+          accent: m.accent,
+          done,
+          total: ids.length,
+          pct: ids.length === 0 ? 0 : Math.round((done / ids.length) * 100),
+          remaining,
+        };
+      }),
+    [progress]
+  );
+
+  const totalChecklistItems = scorecard.reduce((acc, s) => acc + s.total, 0);
+  const totalChecklistDone = scorecard.reduce((acc, s) => acc + s.done, 0);
+  const overallPct =
+    totalChecklistItems === 0
+      ? 0
+      : Math.round((totalChecklistDone / totalChecklistItems) * 100);
+
+  // State reconciliation — if the user picked a different state in State
+  // Resources than the one they used in the severance calc, flag it.
+  const stateMismatch =
+    altStateCode && altStateCode !== severanceInput.stateCode;
+  const altState = stateMismatch
+    ? STATES.find((s) => s.code === altStateCode) ?? null
+    : null;
+
+  // Itemized budget helpers
+  const essentialsTotal =
+    runwayInput.rent +
+    runwayInput.food +
+    runwayInput.insurance +
+    runwayInput.utilities +
+    runwayInput.debt +
+    runwayInput.other;
+  const budgetTotal = essentialsTotal + runwayInput.discretionary;
+
+  // Counter email
   const counterTemplate = EMAIL_TEMPLATES.find((t) => t.id === 'leverage');
   const counterSubject = counterTemplate ? personalize(counterTemplate.subject, profile) : '';
   const counterBody = counterTemplate ? personalize(counterTemplate.body, profile) : '';
@@ -91,12 +299,13 @@ export default function ActionPlan() {
             </div>
             <div>
               <div className="ap-brand__name">Exit Armor</div>
-              <div className="ap-brand__tag">Personalized Severance Action Plan</div>
+              <div className="ap-brand__tag">Personal Severance Playbook</div>
             </div>
           </div>
           <div className="ap-header__meta">
             <div><strong>Prepared for:</strong> {displayName}</div>
             {profile.company && <div><strong>Company:</strong> {profile.company}</div>}
+            {profile.role && <div><strong>Role:</strong> {profile.role}</div>}
             <div><strong>Date:</strong> {today}</div>
           </div>
         </header>
@@ -139,6 +348,32 @@ export default function ActionPlan() {
           )}
         </section>
 
+        {/* PROGRESS SCORECARD */}
+        <section className="ap-section">
+          <h2 className="ap-section__title">Your checklist scorecard</h2>
+          <p className="ap-section__sub">
+            {totalChecklistDone} of {totalChecklistItems} items complete across 7
+            modules · {overallPct}% overall
+          </p>
+          <div className="ap-score">
+            {scorecard.map((s) => (
+              <div key={s.id} className="ap-score__row">
+                <div className="ap-score__label">{s.title}</div>
+                <div className="ap-score__bar">
+                  <span
+                    style={{ width: `${s.pct}%`, background: s.accent }}
+                    aria-hidden
+                  />
+                </div>
+                <div className="ap-score__count">
+                  <strong>{s.done}</strong>/<span>{s.total}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <OpenItems scorecard={scorecard} />
+        </section>
+
         {/* TOP ASKS */}
         <section className="ap-section">
           <h2 className="ap-section__title">Your top {severance.asks.length} asks</h2>
@@ -170,6 +405,22 @@ export default function ActionPlan() {
                 <li key={i}>{f}</li>
               ))}
             </ul>
+          </section>
+        )}
+
+        {/* STATE MISMATCH BANNER */}
+        {stateMismatch && altState && (
+          <section className="ap-section ap-section--compact">
+            <div className="ap-state-mismatch">
+              <Icon name="info" size={14} />
+              <span>
+                State mismatch: your severance calculator is set to{' '}
+                <strong>{severance.state?.name ?? severanceInput.stateCode}</strong>,
+                but your State Resources module is set to{' '}
+                <strong>{altState.name}</strong>. Use the one that matches where
+                you're physically working from.
+              </span>
+            </div>
           </section>
         )}
 
@@ -239,6 +490,172 @@ export default function ActionPlan() {
           )}
         </section>
 
+        {/* DETAILED BUDGET */}
+        {runwayIsCustomized(runwayInput) && (
+          <section className="ap-section">
+            <h2 className="ap-section__title">Your monthly budget, itemized</h2>
+            <p className="ap-section__sub">
+              Starting point: {money(budgetTotal)}/mo total · {money(essentialsTotal)}/mo
+              essentials · savings on hand: {money(runwayInput.savings)}
+            </p>
+            <div className="ap-budget">
+              <div className="ap-budget__col">
+                <div className="ap-budget__colhead">Essentials</div>
+                <BudgetRow label="Rent / mortgage" value={runwayInput.rent} />
+                <BudgetRow label="Food & groceries" value={runwayInput.food} />
+                <BudgetRow label="Health insurance" value={runwayInput.insurance} />
+                <BudgetRow label="Utilities" value={runwayInput.utilities} />
+                <BudgetRow label="Debt service" value={runwayInput.debt} />
+                <BudgetRow label="Other essentials" value={runwayInput.other} />
+                <div className="ap-budget__row ap-budget__row--total">
+                  <span>Essentials total</span>
+                  <strong>{money(essentialsTotal)}</strong>
+                </div>
+              </div>
+              <div className="ap-budget__col">
+                <div className="ap-budget__colhead">Flex &amp; income</div>
+                <BudgetRow
+                  label="Discretionary"
+                  value={runwayInput.discretionary}
+                  hint="First to cut"
+                />
+                <BudgetRow
+                  label="Monthly income"
+                  value={runwayInput.monthlyIncome}
+                  hint="Severance, UI, partner, side"
+                  tone="pos"
+                />
+                <BudgetRow label="Savings on hand" value={runwayInput.savings} tone="pos" />
+                <div className="ap-budget__row ap-budget__row--total">
+                  <span>Monthly bleed</span>
+                  <strong>{money(runway.scenarios.current.monthlyBleed)}</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* COBRA vs ACA DECISION */}
+        {showCobra && (
+          <section className="ap-section">
+            <h2 className="ap-section__title">COBRA vs ACA decision</h2>
+            <p className="ap-section__sub">
+              Based on age {cobraInput.age}, expected income {money(cobraInput.income)},
+              household size {cobraInput.household}.{' '}
+              {cobraWinner === 'tie'
+                ? 'Roughly equal cost.'
+                : `${cobraWinner === 'aca' ? 'ACA' : 'COBRA'} is estimated ${money(
+                    cobraDelta
+                  )}/yr cheaper.`}
+            </p>
+            <div className="ap-cobra">
+              <div
+                className={`ap-cobra__card ${
+                  cobraWinner === 'cobra' ? 'ap-cobra__card--winner' : ''
+                }`}
+              >
+                <div className="ap-cobra__label">COBRA</div>
+                <div className="ap-cobra__value">{money(cobraAnnual)}/yr</div>
+                <div className="ap-cobra__sub">
+                  {money(cobraInput.cobraMonthly)}/mo premium · same doctors
+                </div>
+              </div>
+              <div className="ap-cobra__vs">vs</div>
+              <div
+                className={`ap-cobra__card ${
+                  cobraWinner === 'aca' ? 'ap-cobra__card--winner' : ''
+                }`}
+              >
+                <div className="ap-cobra__label">ACA Marketplace</div>
+                <div className="ap-cobra__value">{money(acaAnnual)}/yr</div>
+                <div className="ap-cobra__sub">
+                  ~{money(acaMonthly)}/mo estimated w/ subsidies
+                </div>
+              </div>
+            </div>
+            <p className="ap-state__notes">
+              Estimates only. Confirm exact COBRA premiums with your benefits admin
+              and ACA pricing at healthcare.gov before electing.
+            </p>
+          </section>
+        )}
+
+        {/* OFFER COMPARE */}
+        {showOffers && (
+          <section className="ap-section">
+            <h2 className="ap-section__title">Offer comparison</h2>
+            <p className="ap-section__sub">
+              Pure math on what you entered. A bigger number isn't always the better
+              offer — non-competes, release language, and tax can all change real value.
+            </p>
+            <div className="ap-offers">
+              <div className="ap-offers__summary">
+                <div className="ap-offers__card">
+                  <div className="ap-offers__name">{offers.a.label || 'Offer A'}</div>
+                  <div className="ap-offers__total">{money(totalA.grand)}</div>
+                </div>
+                <div className="ap-offers__vs">vs</div>
+                <div className="ap-offers__card">
+                  <div className="ap-offers__name">{offers.b.label || 'Offer B'}</div>
+                  <div className="ap-offers__total">{money(totalB.grand)}</div>
+                </div>
+                <div
+                  className={`ap-offers__delta ${
+                    offerDelta >= 0 ? 'ap-offers__delta--pos' : 'ap-offers__delta--neg'
+                  }`}
+                >
+                  <span>Difference</span>
+                  <strong>
+                    {offerDelta >= 0 ? '+' : ''}
+                    {money(offerDelta)}
+                  </strong>
+                </div>
+              </div>
+              <table className="ap-offers__table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>{offers.a.label || 'Offer A'}</th>
+                    <th>{offers.b.label || 'Offer B'}</th>
+                    <th>Difference</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <OfferTR label="Base pay" a={totalA.baseTotal} b={totalB.baseTotal} />
+                  <OfferTR label="COBRA reimbursement" a={totalA.cobraTotal} b={totalB.cobraTotal} />
+                  <OfferTR label="PTO payout" a={totalA.ptoTotal} b={totalB.ptoTotal} />
+                  <OfferTR label="Pro-rata bonus" a={offers.a.bonusDollars} b={offers.b.bonusDollars} />
+                  <OfferTR label="Equity / RSUs" a={offers.a.equityDollars} b={offers.b.equityDollars} />
+                  <OfferTR label="Other" a={offers.a.otherDollars} b={offers.b.otherDollars} />
+                  <tr className="ap-offers__grand">
+                    <td>Grand total</td>
+                    <td>{money(totalA.grand)}</td>
+                    <td>{money(totalB.grand)}</td>
+                    <td>
+                      {offerDelta >= 0 ? '+' : ''}
+                      {money(offerDelta)}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              {(offers.a.notes || offers.b.notes) && (
+                <div className="ap-offers__notes">
+                  {offers.a.notes && (
+                    <div>
+                      <strong>{offers.a.label || 'Offer A'} notes:</strong> {offers.a.notes}
+                    </div>
+                  )}
+                  {offers.b.notes && (
+                    <div>
+                      <strong>{offers.b.label || 'Offer B'} notes:</strong> {offers.b.notes}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* UNEMPLOYMENT BENEFITS */}
         {ui.state && ui.weeklyBenefit > 0 && (
           <section className="ap-section">
@@ -290,6 +707,33 @@ export default function ActionPlan() {
           </section>
         )}
 
+        {/* STAR STORIES APPENDIX */}
+        {filledStories.length > 0 && (
+          <section className="ap-section ap-section--page-break">
+            <h2 className="ap-section__title">Interview stories appendix</h2>
+            <p className="ap-section__sub">
+              {filledStories.length} drafted in STAR format. Read each one out loud once
+              before the interview — don't memorize, just get the shape.
+            </p>
+            <div className="ap-stories">
+              {filledStories.map((s) => {
+                const label = STORY_LABELS[s.id] ?? s.title;
+                const wc = storyWordCount(s);
+                const answer = buildStoryAnswer(s);
+                return (
+                  <div key={s.id} className="ap-story">
+                    <div className="ap-story__head">
+                      <strong>{label}</strong>
+                      <span className="ap-story__wc">{wc} words</span>
+                    </div>
+                    <p className="ap-story__answer">{answer}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         {/* FOOTER */}
         <footer className="ap-footer">
           <p>
@@ -306,4 +750,110 @@ export default function ActionPlan() {
       </article>
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+function BudgetRow({
+  label,
+  value,
+  hint,
+  tone,
+}: {
+  label: string;
+  value: number;
+  hint?: string;
+  tone?: 'pos' | 'neg';
+}) {
+  return (
+    <div className={`ap-budget__row ${tone ? `ap-budget__row--${tone}` : ''}`}>
+      <span>
+        {label}
+        {hint && <small>{hint}</small>}
+      </span>
+      <strong>{money(value)}</strong>
+    </div>
+  );
+}
+
+function OfferTR({ label, a, b }: { label: string; a: number; b: number }) {
+  const diff = b - a;
+  return (
+    <tr>
+      <td>{label}</td>
+      <td>{money(a)}</td>
+      <td>{money(b)}</td>
+      <td className={diff === 0 ? '' : diff > 0 ? 'ap-offers__pos' : 'ap-offers__neg'}>
+        {diff === 0 ? '—' : `${diff > 0 ? '+' : ''}${money(diff)}`}
+      </td>
+    </tr>
+  );
+}
+
+function OpenItems({
+  scorecard,
+}: {
+  scorecard: Array<{
+    id: ModuleId;
+    title: string;
+    remaining: Array<{ id: string; label: string }>;
+  }>;
+}) {
+  const modulesWithOpen = scorecard.filter((s) => s.remaining.length > 0);
+  if (modulesWithOpen.length === 0) {
+    return (
+      <p className="ap-score__done">
+        Everything checked. You've worked the full 46-item defense plan — take a
+        breath.
+      </p>
+    );
+  }
+  const top = modulesWithOpen.slice(0, 3);
+  return (
+    <div className="ap-score__open">
+      <div className="ap-score__openhead">Still open:</div>
+      {top.map((m) => (
+        <div key={m.id} className="ap-score__openmod">
+          <strong>{m.title}</strong>
+          <ul>
+            {m.remaining.slice(0, 4).map((i) => (
+              <li key={i.id}>{i.label}</li>
+            ))}
+            {m.remaining.length > 4 && (
+              <li className="ap-score__more">
+                +{m.remaining.length - 4} more in this module
+              </li>
+            )}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Offer totals — mirrored from OfferCompare.tsx so ActionPlan is self-contained
+// ---------------------------------------------------------------------------
+
+interface OfferTotals {
+  baseTotal: number;
+  cobraTotal: number;
+  ptoTotal: number;
+  grand: number;
+}
+
+function totalsFor(o: Offer): OfferTotals {
+  const baseTotal = o.baseWeeks * o.weeklyPay;
+  const cobraTotal = o.cobraMonths * o.cobraMonthlyValue;
+  const ptoTotal = o.ptoDays * o.dailyRate;
+  const grand =
+    baseTotal +
+    cobraTotal +
+    ptoTotal +
+    o.bonusDollars +
+    o.equityDollars +
+    o.otherDollars;
+  return { baseTotal, cobraTotal, ptoTotal, grand };
 }

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MODULES } from '../data/modules';
 import type { ModuleId } from '../data/modules';
-import { useChecklist, useProfile } from '../lib/storage';
+import { countChecked, useChecklist, useProfile } from '../lib/storage';
 import { Icon } from '../components/Icon';
 import { Overview } from './Overview';
 import { Sidebar } from './components/Sidebar';
@@ -31,9 +32,24 @@ export function Dashboard({ onStartAi }: Props) {
   const openModule = (id: ModuleId) => setRoute(id);
   const firstName = profile.name ? profile.name.split(' ')[0] : '';
 
+  // Personalized progress stats for the sidebar
+  const progressStats = useMemo(() => {
+    const allIds = MODULES.flatMap((m) => m.itemIds);
+    const done = countChecked(checked, allIds);
+    const total = allIds.length;
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    return { pct, done, total };
+  }, [checked]);
+
   return (
     <div className="dash-shell">
-      <Sidebar active={route} onChange={setRoute} onOpenProfile={() => setProfileOpen(true)} profileName={profile.name} />
+      <Sidebar
+        active={route}
+        onChange={setRoute}
+        onOpenProfile={() => setProfileOpen(true)}
+        profileName={profile.name}
+        progress={progressStats}
+      />
       <main className="dash-main">
         <div className="dash-topbar">
           <div className="dash-topbar__greet">
@@ -49,17 +65,6 @@ export function Dashboard({ onStartAi }: Props) {
             <span className="dash-topbar__sub">Your 90-day plan is ready</span>
           </div>
           <div className="dash-topbar__actions">
-            <span className="dash-pill">
-              <Icon name="lock" size={14} /> Saved on this device
-            </span>
-            <button
-              type="button"
-              className="btn-pill btn-pill--ghost"
-              onClick={() => setProfileOpen(true)}
-            >
-              <Icon name="user" size={14} />
-              {profile.name ? 'Your Details' : 'Add Your Details'}
-            </button>
             <button
               type="button"
               className="btn-pill btn-pill--primary"

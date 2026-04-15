@@ -16,22 +16,15 @@ const NAV: Array<{ id: Route; label: string; icon: IconName }> = [
   { id: 'job-search', label: 'Job Search Tools', icon: 'search' },
 ];
 
-// Small stats strip shown just under the brand — surfaces the
-// scale of content at a glance. Every number here is a product fact.
-const STATS = [
-  { value: '10', label: 'tools' },
-  { value: '50', label: 'states' },
-  { value: '11', label: 'asks' },
-];
-
 interface Props {
   active: Route;
   onChange: (r: Route) => void;
   onOpenProfile?: () => void;
   profileName?: string;
+  progress?: { pct: number; done: number; total: number };
 }
 
-export function Sidebar({ active, onChange, onOpenProfile, profileName }: Props) {
+export function Sidebar({ active, onChange, onOpenProfile, profileName, progress }: Props) {
   const initials = profileName
     ? profileName
         .split(' ')
@@ -40,6 +33,10 @@ export function Sidebar({ active, onChange, onOpenProfile, profileName }: Props)
         .map((p) => p[0]?.toUpperCase() ?? '')
         .join('') || 'EA'
     : 'EA';
+
+  const pct = progress?.pct ?? 0;
+  const done = progress?.done ?? 0;
+  const total = progress?.total ?? 0;
 
   return (
     <aside className="dash-sidebar">
@@ -53,13 +50,18 @@ export function Sidebar({ active, onChange, onOpenProfile, profileName }: Props)
         </div>
       </div>
 
-      <div className="dash-sidebar__stats" aria-label="Kit at a glance">
-        {STATS.map((s) => (
-          <div key={s.label} className="dash-sidebar__stat">
-            <strong>{s.value}</strong>
-            <span>{s.label}</span>
-          </div>
-        ))}
+      {/* Personalized progress ring instead of marketing stats */}
+      <div className="dash-sidebar__progress" aria-label="Your plan progress">
+        <div className="dash-sidebar__progress-head">
+          <span className="dash-sidebar__progress-eyebrow">Your plan</span>
+          <strong className="dash-sidebar__progress-pct">{pct}%</strong>
+        </div>
+        <div className="dash-sidebar__progress-bar">
+          <span style={{ width: `${pct}%` }} />
+        </div>
+        <div className="dash-sidebar__progress-sub">
+          {done}/{total} tasks complete
+        </div>
       </div>
 
       <div className="dash-sidebar__section">Your Survival Kit</div>
@@ -72,12 +74,17 @@ export function Sidebar({ active, onChange, onOpenProfile, profileName }: Props)
             onClick={() => onChange(item.id)}
           >
             <span className="dash-nav-item__icon">
-              <Icon name={item.icon} size={18} />
+              <Icon name={item.icon} size={22} />
             </span>
             {item.label}
           </button>
         ))}
       </nav>
+
+      <div className="dash-sidebar__trust" aria-label="Privacy">
+        <Icon name="lock" size={12} />
+        <span>Saved on this device</span>
+      </div>
 
       <button
         type="button"

@@ -51,8 +51,8 @@ export const MODULES: ModuleSpec[] = [
     title: 'First 48-Hour Survival Checklist',
     short: 'First 48 Hours',
     description: 'Your critical first steps after a layoff — hour by hour.',
-    accent: '#f97316',
-    iconBg: 'linear-gradient(135deg, #fb923c, #ea580c)',
+    accent: '#e63946',
+    iconBg: 'linear-gradient(135deg, #ef4b5a, #c92a38)',
     phase: 'stabilize',
     itemIds: [
       '48-secure-data',
@@ -70,8 +70,8 @@ export const MODULES: ModuleSpec[] = [
     title: '7-Day Recovery Companion',
     short: '7-Day Recovery',
     description: 'A guided first week — one small task at a time.',
-    accent: '#6366f1',
-    iconBg: 'linear-gradient(135deg, #818cf8, #6366f1)',
+    accent: '#f97066',
+    iconBg: 'linear-gradient(135deg, #fb7d6f, #e63946)',
     phase: 'stabilize',
     itemIds: [
       'rec-d1-breathe',
@@ -96,8 +96,8 @@ export const MODULES: ModuleSpec[] = [
     title: 'Severance Preparation Kit',
     short: 'Severance Prep',
     description: 'Maximize your package with proven scripts & templates.',
-    accent: '#8b5cf6',
-    iconBg: 'linear-gradient(135deg, #a78bfa, #7c3aed)',
+    accent: '#e11d48',
+    iconBg: 'linear-gradient(135deg, #f43f5e, #be123c)',
     phase: 'benefits',
     itemIds: [
       'sev-benchmark',
@@ -113,8 +113,8 @@ export const MODULES: ModuleSpec[] = [
     title: 'State-by-State Labor Resources',
     short: 'State Resources',
     description: 'Find exact rules, links, and benefits for your state.',
-    accent: '#14b8a6',
-    iconBg: 'linear-gradient(135deg, #2dd4bf, #0d9488)',
+    accent: '#fb7185',
+    iconBg: 'linear-gradient(135deg, #fda4af, #e11d48)',
     phase: 'benefits',
     itemIds: [
       'state-unemployment-link',
@@ -129,8 +129,8 @@ export const MODULES: ModuleSpec[] = [
     title: 'COBRA vs ACA Decision Matrix',
     short: 'COBRA vs ACA',
     description: 'Compare your health insurance options side-by-side.',
-    accent: '#ec4899',
-    iconBg: 'linear-gradient(135deg, #f472b6, #db2777)',
+    accent: '#f43f5e',
+    iconBg: 'linear-gradient(135deg, #fb7185, #db2777)',
     phase: 'benefits',
     itemIds: [
       'health-cobra-window',
@@ -144,8 +144,8 @@ export const MODULES: ModuleSpec[] = [
     title: '90-Day Defense Budget',
     short: '90-Day Budget',
     description: 'Take control of your finances & extend your runway.',
-    accent: '#10b981',
-    iconBg: 'linear-gradient(135deg, #34d399, #059669)',
+    accent: '#f59e0b',
+    iconBg: 'linear-gradient(135deg, #fbbf24, #d97706)',
     phase: 'finances',
     itemIds: [
       'bud-bleed-rate',
@@ -160,8 +160,8 @@ export const MODULES: ModuleSpec[] = [
     title: 'Job Search Tools',
     short: 'Job Search',
     description: 'Get back to work faster with templates & trackers.',
-    accent: '#0ea5e9',
-    iconBg: 'linear-gradient(135deg, #38bdf8, #0284c7)',
+    accent: '#ff6b3d',
+    iconBg: 'linear-gradient(135deg, #ff8c5a, #ea580c)',
     phase: 'job-search',
     itemIds: [
       'job-resume',
@@ -185,10 +185,10 @@ export interface PhaseSpec {
 }
 
 export const PHASES: PhaseSpec[] = [
-  { id: 'stabilize', step: 1, label: 'Stabilize', sub: '48 Hours', accent: '#f97316' },
-  { id: 'benefits', step: 2, label: 'Secure Benefits', sub: 'Week 1', accent: '#8b5cf6' },
-  { id: 'finances', step: 3, label: 'Protect Finances', sub: 'Week 2', accent: '#10b981' },
-  { id: 'job-search', step: 4, label: 'Launch Job Search', sub: 'Week 3+', accent: '#0ea5e9' },
+  { id: 'stabilize', step: 1, label: 'Stabilize', sub: '48 Hours', accent: '#e63946' },
+  { id: 'benefits', step: 2, label: 'Secure Benefits', sub: 'Week 1', accent: '#e11d48' },
+  { id: 'finances', step: 3, label: 'Protect Finances', sub: 'Week 2', accent: '#f59e0b' },
+  { id: 'job-search', step: 4, label: 'Launch Job Search', sub: 'Week 3+', accent: '#ff6b3d' },
 ];
 
 // ---------- Enriched Checklists ----------

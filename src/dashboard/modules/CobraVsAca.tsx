@@ -16,14 +16,18 @@ interface Props {
   onOpenModule?: (id: ModuleId) => void;
 }
 
-interface Inputs {
+export interface CobraAcaInputs {
   age: number;
   income: number;
   cobraMonthly: number;
   household: number;
 }
 
-const DEFAULTS: Inputs = { age: 35, income: 60000, cobraMonthly: 650, household: 1 };
+// Re-exported as the legacy local alias so the rest of the file stays untouched.
+type Inputs = CobraAcaInputs;
+
+export const COBRA_ACA_DEFAULTS: CobraAcaInputs = { age: 35, income: 60000, cobraMonthly: 650, household: 1 };
+const DEFAULTS = COBRA_ACA_DEFAULTS;
 
 export function CobraVsAca({ checked, onToggle, onBack, onOpenModule }: Props) {
   const module = MODULES.find((m) => m.id === 'cobra-aca')!;
@@ -141,7 +145,7 @@ export function CobraVsAca({ checked, onToggle, onBack, onOpenModule }: Props) {
 }
 
 // Very rough ACA estimate. Educational approximation only.
-function estimateAca(i: Inputs): number {
+export function estimateAca(i: Inputs): number {
   const fpl = 14580 + (i.household - 1) * 5140;
   const ratio = i.income / fpl;
   // Simplified subsidy curve (not actual KFF tables) — illustrative only.

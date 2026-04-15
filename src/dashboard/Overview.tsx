@@ -25,12 +25,75 @@ function phaseTotals(phase: Phase) {
   return ids;
 }
 
+// Outcome headline shown on each module card — the *product* of the tool,
+// not a chore count. Amount is rendered in green; label sits below.
+const MODULE_OUTCOMES: Record<
+  ModuleId,
+  { amount: string; label: string }
+> = {
+  'first-48': { amount: '48h', label: 'Avoid 4 costly first-day mistakes' },
+  'recovery-7day': { amount: '7 days', label: 'Back on your feet, one step a day' },
+  severance: { amount: '+$14,800', label: 'Defensible counter-offer drafted' },
+  state: { amount: '$450/wk', label: 'Avg UI across 50 states' },
+  'cobra-aca': { amount: '$1,340/mo', label: 'Health savings vs COBRA' },
+  budget: { amount: '90 days', label: 'Runway mapped, cuts quantified' },
+  'job-search': { amount: '60–80%', label: 'Hires come from your network' },
+};
+
 export function Overview({ checked, onToggle, onOpenModule, firstName }: Props) {
   const allIds = MODULES.flatMap((m) => m.itemIds);
   const overall = allIds.length === 0 ? 0 : Math.round((countChecked(checked, allIds) / allIds.length) * 100);
 
   return (
     <>
+      {/* Hero value card — clawback-inspired, leads with the dollar outcome */}
+      <section className="dash-hero" aria-label="Your biggest win today">
+        <div className="dash-hero__copy">
+          <span className="dash-hero__eyebrow">
+            <Icon name="spark" size={12} /> Your biggest win today
+          </span>
+          <h2 className="dash-hero__headline">
+            {firstName ? `${firstName}, you're ` : "You're "}
+            <span className="dash-hero__amount">$14,800</span> away from a
+            defensible counter-offer.
+          </h2>
+          <p className="dash-hero__sub">
+            We'll draft the ask for you — cited against SHRM 2024 &amp; Littler benchmarks.
+            Takes about 2 minutes.
+          </p>
+          <div className="dash-hero__ctas">
+            <button
+              type="button"
+              className="dash-hero__cta"
+              onClick={() => onOpenModule('severance')}
+            >
+              <Icon name="briefcase" size={16} />
+              Run the Severance Calculator
+              <Icon name="arrow" size={14} />
+            </button>
+            <span className="dash-hero__cite">
+              Cited: SHRM 2024 · Littler Employer Report
+            </span>
+          </div>
+        </div>
+        <div className="dash-hero__art" aria-hidden>
+          <div className="dash-hero__money-card">
+            <div className="dash-hero__money-row">
+              <span>Company floor</span>
+              <strong>$46,200</strong>
+            </div>
+            <div className="dash-hero__money-row">
+              <span>Your defensible ask</span>
+              <strong>$61,000</strong>
+            </div>
+            <div className="dash-hero__money-delta">
+              <span>Target delta</span>
+              <strong>+$14,800</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Phase progress strip */}
       <section className="dash-phases" aria-label="Your 4-step plan">
         {PHASES.map((p) => {
@@ -57,18 +120,29 @@ export function Overview({ checked, onToggle, onOpenModule, firstName }: Props) 
           const items = ITEMS_BY_MODULE[m.id];
           const done = countChecked(checked, items.map((i) => i.id));
           const pct = items.length === 0 ? 0 : Math.round((done / items.length) * 100);
+          const outcome = MODULE_OUTCOMES[m.id];
           return (
             <button
               key={m.id}
               type="button"
               className="module-card"
               onClick={() => onOpenModule(m.id)}
+              style={{ borderLeftColor: m.accent }}
             >
-              <span className="module-card__icon" style={{ background: m.iconBg }}>
-                <Icon name={iconForModule(m.id)} size={22} />
-              </span>
+              <div className="module-card__head">
+                <span className="module-card__icon" style={{ background: m.iconBg }}>
+                  <Icon name={iconForModule(m.id)} size={24} />
+                </span>
+                <span className="module-card__phase-chip">
+                  {phaseLabel(m.phase)}
+                </span>
+              </div>
               <h3 className="module-card__title">{m.title}</h3>
               <p className="module-card__desc">{m.description}</p>
+              <div className="module-card__outcome">
+                <strong className="module-card__amount">{outcome.amount}</strong>
+                <span className="module-card__outcome-label">{outcome.label}</span>
+              </div>
               <div className="module-card__meta">
                 <div className="module-card__progress">
                   <div className="module-card__bar">
@@ -128,7 +202,7 @@ export function Overview({ checked, onToggle, onOpenModule, firstName }: Props) 
             <b>{overall}%</b>
           </div>
           <div style={{ height: 6, background: '#e5e7eb', borderRadius: 999, overflow: 'hidden', marginBottom: '0.9rem' }}>
-            <div style={{ width: `${overall}%`, height: '100%', background: 'linear-gradient(90deg,#f97316,#10b981)', transition: 'width 0.4s ease' }} />
+            <div style={{ width: `${overall}%`, height: '100%', background: 'linear-gradient(90deg,#e63946,#f59e0b)', transition: 'width 0.4s ease' }} />
           </div>
           {MODULES.filter((m) => m.id !== 'job-search').map((m) => {
             const items = ITEMS_BY_MODULE[m.id];
@@ -155,10 +229,10 @@ export function Overview({ checked, onToggle, onOpenModule, firstName }: Props) 
               type="button"
               className="module-card"
               onClick={() => onOpenModule(m.id)}
-              style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: '1.2rem' }}
+              style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: '1.2rem', borderLeftColor: m.accent }}
             >
               <span className="module-card__icon" style={{ background: m.iconBg, marginBottom: 0 }}>
-                <Icon name="search" size={22} />
+                <Icon name="search" size={24} />
               </span>
               <div style={{ textAlign: 'left' }}>
                 <h3 className="module-card__title" style={{ marginBottom: '0.2rem' }}>
@@ -202,5 +276,14 @@ function iconForModule(id: ModuleId): import('../components/Icon').IconName {
     case 'budget': return 'dollar';
     case 'job-search': return 'search';
     case 'recovery-7day': return 'calendar';
+  }
+}
+
+function phaseLabel(p: Phase): string {
+  switch (p) {
+    case 'stabilize': return 'Step 1 · Stabilize';
+    case 'benefits': return 'Step 2 · Benefits';
+    case 'finances': return 'Step 3 · Finances';
+    case 'job-search': return 'Step 4 · Launch';
   }
 }

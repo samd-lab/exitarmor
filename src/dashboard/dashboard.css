@@ -104,14 +104,14 @@
 .dash-nav-item {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: 9px;
+  gap: 0.85rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 10px;
   border: none;
   background: transparent;
   color: var(--d-sidebar-text);
   font-family: var(--font-body);
-  font-size: 0.92rem;
+  font-size: 0.94rem;
   font-weight: 500;
   cursor: pointer;
   text-align: left;
@@ -140,7 +140,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+.dash-nav-item:hover .dash-nav-item__icon {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.dash-nav-item--active .dash-nav-item__icon {
+  background: linear-gradient(135deg, rgba(230, 57, 70, 0.28), rgba(245, 158, 11, 0.18));
+  border-color: rgba(230, 57, 70, 0.5);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .dash-sidebar__footer {
   margin-top: auto;
@@ -3189,6 +3206,12 @@
   color: var(--d-text-muted);
   margin-top: 0.1rem;
 }
+.dash-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
 
 /* Upgrade "Saved on this device" pill */
 .dash-pill {
@@ -3353,54 +3376,96 @@
 }
 
 /* =========================================================
-   SIDEBAR — stats strip + quick tool tiles
+   SIDEBAR — personalized progress + trust strip
    ========================================================= */
 
-/* "Kit at a glance" stats strip under the brand */
-.dash-sidebar__stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.4rem;
+/* Personalized plan-progress card under the brand */
+.dash-sidebar__progress {
   margin: 1rem 1rem 0.2rem;
-  padding: 0.75rem 0.4rem;
-  background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  padding: 0.85rem 0.95rem 0.9rem;
+  background: linear-gradient(135deg, rgba(230, 57, 70, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
   position: relative;
   overflow: hidden;
 }
-.dash-sidebar__stats::before {
+.dash-sidebar__progress::before {
   content: '';
   position: absolute;
-  top: -20px;
-  right: -20px;
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle, rgba(230, 57, 70, 0.18), transparent 65%);
+  top: -28px;
+  right: -28px;
+  width: 110px;
+  height: 110px;
+  background: radial-gradient(circle, rgba(230, 57, 70, 0.22), transparent 65%);
   pointer-events: none;
 }
-.dash-sidebar__stat {
+.dash-sidebar__progress-head {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
+  align-items: baseline;
+  justify-content: space-between;
   position: relative;
   z-index: 1;
+  margin-bottom: 0.55rem;
 }
-.dash-sidebar__stat strong {
+.dash-sidebar__progress-eyebrow {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--d-sidebar-text-muted);
+  font-weight: 600;
+}
+.dash-sidebar__progress-pct {
   font-family: var(--font-heading);
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.02em;
   line-height: 1;
+  text-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
 }
-.dash-sidebar__stat span {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.dash-sidebar__progress-bar {
+  position: relative;
+  z-index: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.dash-sidebar__progress-bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #e63946 0%, #f59e0b 100%);
+  border-radius: 999px;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
+}
+.dash-sidebar__progress-sub {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
   color: var(--d-sidebar-text-muted);
-  margin-top: 0.15rem;
+  font-weight: 500;
+}
+
+/* Lock/trust strip sitting just above the profile footer */
+.dash-sidebar__trust {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  margin: 0.4rem 1.25rem 0.6rem;
+  padding: 0.45rem 0.7rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  font-size: 0.68rem;
+  color: var(--d-sidebar-text-muted);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  align-self: flex-start;
+}
+.dash-sidebar__trust svg {
+  color: #34d399;
 }
 
 /* =========================================================
@@ -3706,4 +3771,271 @@
 
 @media (prefers-reduced-motion: reduce) {
   .privacy-badge__dot { animation: none; }
+}
+
+/* =========================================================
+   DASHBOARD HERO — clawback-inspired value card
+   Leads with the user's biggest dollar win, sits above
+   the phase-progress strip, matches marketing palette.
+   ========================================================= */
+.dash-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1.8rem;
+  align-items: center;
+  padding: 1.9rem 2.1rem;
+  margin-bottom: 1.6rem;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(230, 57, 70, 0.12), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(245, 158, 11, 0.12), transparent 60%),
+    linear-gradient(145deg, #fff6f5 0%, #fffaf1 100%);
+  border: 1px solid rgba(230, 57, 70, 0.14);
+  box-shadow:
+    0 18px 42px rgba(230, 57, 70, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+}
+.dash-hero::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 520px;
+  height: 520px;
+  background: conic-gradient(from 120deg, rgba(230, 57, 70, 0.08), rgba(245, 158, 11, 0.1), rgba(230, 57, 70, 0.08));
+  filter: blur(60px);
+  pointer-events: none;
+  animation: dashHeroDrift 30s linear infinite;
+}
+@keyframes dashHeroDrift {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.dash-hero__copy {
+  position: relative;
+  z-index: 1;
+}
+.dash-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  background: rgba(230, 57, 70, 0.12);
+  border: 1px solid rgba(230, 57, 70, 0.22);
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #c92a38;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.9rem;
+}
+.dash-hero__headline {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.7rem;
+  line-height: 1.2;
+  color: var(--d-text);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.6rem;
+}
+.dash-hero__amount {
+  background: linear-gradient(120deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
+  text-shadow: 0 2px 12px rgba(16, 185, 129, 0.2);
+}
+.dash-hero__sub {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--d-text-muted);
+  margin: 0 0 1.15rem;
+  max-width: 44ch;
+}
+.dash-hero__ctas {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.dash-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.25rem;
+  background: linear-gradient(135deg, #e63946 0%, #c92a38 100%);
+  color: #fff;
+  border: 1px solid #b91c1c;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  box-shadow:
+    0 10px 24px rgba(230, 57, 70, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.22s ease;
+}
+.dash-hero__cta:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 32px rgba(230, 57, 70, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+.dash-hero__cite {
+  font-size: 0.74rem;
+  color: var(--d-text-muted);
+  font-style: italic;
+}
+.dash-hero__art {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+.dash-hero__money-card {
+  width: 100%;
+  max-width: 340px;
+  padding: 1.3rem 1.35rem 1.2rem;
+  background: linear-gradient(180deg, #0b0f1c 0%, #111729 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow:
+    0 22px 44px rgba(15, 23, 42, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  font-family: var(--font-body);
+  position: relative;
+  overflow: hidden;
+}
+.dash-hero__money-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #e63946, #f59e0b, #10b981);
+}
+.dash-hero__money-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.8rem;
+}
+.dash-hero__money-row:last-of-type { border-bottom: none; }
+.dash-hero__money-row span {
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.dash-hero__money-row strong {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  color: #fff;
+  font-weight: 700;
+}
+.dash-hero__money-delta {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.1) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.dash-hero__money-delta span {
+  font-size: 0.7rem;
+  color: #86efac;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+.dash-hero__money-delta strong {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #34d399;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 12px rgba(52, 211, 153, 0.35);
+}
+@media (max-width: 960px) {
+  .dash-hero {
+    grid-template-columns: 1fr;
+    padding: 1.6rem 1.5rem;
+  }
+  .dash-hero__headline { font-size: 1.45rem; }
+  .dash-hero__art { justify-content: flex-start; }
+  .dash-hero__money-card { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dash-hero::before { animation: none; }
+}
+
+/* =========================================================
+   MODULE CARD — outcome-first (clawback-style)
+   Lead with the dollar/outcome, not a chore count.
+   Left border adopts the phase accent so cards group
+   visually with the phase strip above.
+   ========================================================= */
+.module-card {
+  border-left: 4px solid transparent;
+  padding-left: calc(1.35rem - 4px);
+}
+.module-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+}
+.module-card__phase-chip {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.55rem;
+  background: rgba(15, 23, 42, 0.05);
+  border: 1px solid var(--d-border);
+  border-radius: 999px;
+  color: var(--d-text-muted);
+  white-space: nowrap;
+}
+.module-card__icon {
+  margin-bottom: 0 !important;
+}
+.module-card__outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+  margin: 0.35rem 0 1rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.04) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 12px;
+}
+.module-card__amount {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #059669;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+}
+.module-card__outcome-label {
+  font-size: 0.78rem;
+  color: var(--d-text-muted);
+  font-weight: 500;
+  line-height: 1.35;
 }
