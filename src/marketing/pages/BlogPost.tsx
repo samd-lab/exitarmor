@@ -134,7 +134,7 @@ export default function BlogPost() {
             Exit Armor walks you through every step in this post with personalized
             checklists, state-specific guidance, and copy-paste email templates.
           </p>
-          <Link to="/app" className="btn btn-primary">Launch Exit Armor &mdash; $69</Link>
+          <Link to="/checkout" className="btn btn-primary">Get the kit &mdash; $69</Link>
         </div>
 
         {related.length > 0 && (

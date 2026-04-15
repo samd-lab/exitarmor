@@ -2989,3 +2989,264 @@
   .mk-shot-cobra__grid { grid-template-columns: 1fr; }
   .mk-gallery__footer { flex-direction: column; gap: 1rem; }
 }
+
+/* ============================================================
+ * v2 calm palette — additive styles for the redesigned landing.
+ * Added in the 'too much red, too severance-heavy' pass.
+ * All new classes; nothing here overrides earlier rules.
+ * ============================================================ */
+
+/* ---- Hero legal disclaimer under CTAs ---- */
+.mk-hero__legal {
+  margin-top: 1.1rem;
+  max-width: 560px;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  opacity: 0.82;
+  letter-spacing: 0.01em;
+}
+
+/* ---- Hero mockup: 7-module plan view (replaces severance-only) ---- */
+.mk-mockup__body--plan {
+  padding: 1.4rem 1.4rem 1.6rem;
+  gap: 0.7rem;
+}
+.mk-mockup__stamp--calm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(91, 122, 110, 0.18);
+  border: 1px solid rgba(91, 122, 110, 0.4);
+  color: #a8c9ba;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+.mk-mockup__stamp--calm svg { color: #86d0b0; }
+
+.mk-mockup__progress {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  margin-top: 0.15rem;
+  margin-bottom: 0.1rem;
+}
+.mk-mockup__progress > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #5b7a6e, #86d0b0);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.mk-mockup__checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.mk-mockup__checkitem {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.mk-mockup__checkitem.is-done {
+  background: rgba(91, 122, 110, 0.14);
+  border-color: rgba(91, 122, 110, 0.32);
+}
+
+.mk-mockup__checkicon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  color: #8a9197;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.mk-mockup__checkitem.is-done .mk-mockup__checkicon {
+  background: linear-gradient(135deg, #5b7a6e, #86d0b0);
+  color: #0f1619;
+  border-color: transparent;
+}
+
+.mk-mockup__checklabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  min-width: 0;
+  flex: 1;
+}
+.mk-mockup__checklabel strong {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f1ede3;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.mk-mockup__checkitem.is-done .mk-mockup__checklabel strong {
+  color: #fff;
+}
+.mk-mockup__checklabel em {
+  font-style: normal;
+  font-size: 0.68rem;
+  color: #8a9197;
+  line-height: 1.25;
+}
+
+/* Calm variant of the mockup float-card header (replaces warn/red) */
+.mk-mockup__float-head--calm {
+  color: #a8c9ba;
+}
+
+/* ---- Deep-dive cards: new sage/terracotta accents ---- */
+.mk-deep2__veil--sage {
+  background: linear-gradient(
+    135deg,
+    rgba(91, 122, 110, 0.35),
+    rgba(63, 90, 80, 0.15) 50%,
+    rgba(0, 0, 0, 0.15)
+  );
+}
+.mk-deep2__veil--terracotta {
+  background: linear-gradient(
+    135deg,
+    rgba(192, 74, 60, 0.3),
+    rgba(217, 119, 87, 0.14) 50%,
+    rgba(0, 0, 0, 0.18)
+  );
+}
+
+.mk-deepcard--sage { border-color: rgba(91, 122, 110, 0.45); }
+.mk-deepcard--terracotta { border-color: rgba(192, 74, 60, 0.45); }
+
+.mk-deepcard__icon--sage {
+  background: linear-gradient(135deg, #5b7a6e, #86d0b0);
+}
+.mk-deepcard__icon--terracotta {
+  background: linear-gradient(135deg, #c04a3c, #d97757);
+}
+
+.mk-deep2__icon--sage {
+  background: linear-gradient(135deg, #5b7a6e, #86d0b0);
+}
+.mk-deep2__icon--terracotta {
+  background: linear-gradient(135deg, #c04a3c, #d97757);
+}
+
+/* ---- Final CTA: photo background variant ---- */
+.mk-final-section {
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+}
+
+.mk-cta-band--v3 {
+  position: relative;
+  overflow: hidden;
+  background: #141b1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  padding: 0;
+  min-height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.65);
+}
+
+.mk-cta-band__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: saturate(0.85) brightness(0.7);
+  z-index: 0;
+}
+
+.mk-cta-band__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(15, 22, 25, 0.92) 0%,
+      rgba(15, 22, 25, 0.75) 35%,
+      rgba(45, 59, 68, 0.65) 70%,
+      rgba(192, 74, 60, 0.35) 100%
+    );
+  z-index: 1;
+}
+
+.mk-cta-band__content {
+  position: relative;
+  z-index: 2;
+  padding: 4.5rem 3rem;
+  max-width: 780px;
+  text-align: center;
+  color: #fff;
+}
+
+.mk-cta-band__eyebrow {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(91, 122, 110, 0.22);
+  border: 1px solid rgba(168, 201, 186, 0.32);
+  color: #c6e1d4;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.mk-cta-band--v3 h2 {
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+  color: #fbf9f2;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
+}
+
+.mk-cta-band--v3 p {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: #e5e2d7;
+  max-width: 600px;
+  margin: 0 auto 1.8rem;
+}
+
+.mk-cta-band__fine {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  color: rgba(229, 226, 215, 0.7);
+}
+
+@media (max-width: 640px) {
+  .mk-cta-band--v3 { min-height: 360px; border-radius: 20px; }
+  .mk-cta-band__content { padding: 3rem 1.5rem; }
+  .mk-mockup__checkitem { padding: 0.42rem 0.55rem; gap: 0.5rem; }
+  .mk-mockup__checklabel strong { font-size: 0.76rem; }
+  .mk-mockup__checklabel em { font-size: 0.64rem; }
+}

@@ -11,6 +11,7 @@ import Terms from './marketing/pages/Terms';
 import Privacy from './marketing/pages/Privacy';
 import BlogIndex from './marketing/pages/BlogIndex';
 import BlogPost from './marketing/pages/BlogPost';
+import Checkout from './marketing/pages/Checkout';
 import Thanks from './marketing/pages/Thanks';
 import NotFound from './marketing/pages/NotFound';
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/app" element={<AppShell />} />
         <Route path="/action-plan" element={<ActionPlan />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/thanks" element={<Thanks />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

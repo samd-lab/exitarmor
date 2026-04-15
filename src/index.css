@@ -1,20 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  /* Premium Dark Mode Glassmorphism Palette */
-  --bg-dark: #0a0a0c;
-  --bg-gradient: radial-gradient(circle at top right, #1a1a24, #050505);
-  
-  --accent-primary: #e63946;  /* Emergency/Urgency Amber-Red */
-  --accent-secondary: #f4a261; /* Warning/Action Orange */
-  
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-highlight: rgba(255, 255, 255, 0.12);
-  
-  --text-primary: #f8f9fa;
-  --text-secondary: #adb5bd;
-  --text-muted: #6c757d;
+  /* -------------------------------------------------------
+   * Exit Armor v2 palette — calm, premium, editorial.
+   * Inspired by VettedVitals: warm off-white canvas, sage +
+   * slate primaries, muted terracotta accent, forest green
+   * for outcome numbers. Crimson is reserved for urgency
+   * (First 48 Hours, warning states) — NOT for the brand.
+   * ------------------------------------------------------- */
+
+  /* Dark shell (used by the app + hero gradients) */
+  --bg-dark: #0f1619;
+  --bg-gradient: radial-gradient(circle at top right, #1a242a, #0a1013);
+
+  /* Core brand — calm primaries */
+  --sage: #5b7a6e;           /* calm leaf */
+  --sage-deep: #3f5a50;      /* hover/active sage */
+  --slate: #2d3b44;           /* editorial charcoal */
+  --slate-soft: #4a5963;      /* secondary slate */
+  --cream: #fdfcf7;           /* warm canvas */
+  --cream-2: #f6f1e7;         /* warm elevated */
+  --ink: #1b2328;             /* near-black body copy */
+
+  /* Accents — used sparingly */
+  --terracotta: #c04a3c;      /* muted warm accent */
+  --terracotta-soft: #d97757; /* lighter terracotta */
+  --forest: #2d6a4f;          /* outcome/money green */
+  --forest-soft: #52b788;     /* highlight green */
+  --amber-warm: #d4a24c;      /* warm gold, replaces bright amber */
+
+  /* Urgency — only on First 48 Hours + warnings */
+  --urgency: #c0392b;
+  --urgency-soft: #e67e22;
+
+  /* Back-compat aliases — existing components still reference
+   * these, so they now resolve to the calmer palette without
+   * mass-editing every file. */
+  --accent-primary: var(--terracotta);
+  --accent-secondary: var(--amber-warm);
+
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-highlight: rgba(255, 255, 255, 0.14);
+
+  --text-primary: #f8f7f3;
+  --text-secondary: #c2c9cc;
+  --text-muted: #8a9197;
 
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -79,15 +110,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
-  background: var(--accent-primary);
+  background: linear-gradient(135deg, var(--terracotta) 0%, #a93d30 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+  box-shadow: 0 4px 15px rgba(192, 74, 60, 0.28);
 }
 
 .btn-primary:hover {
-  background: #ff4d5a;
+  background: linear-gradient(135deg, var(--terracotta-soft) 0%, var(--terracotta) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+  box-shadow: 0 8px 22px rgba(192, 74, 60, 0.38);
 }
 
 .btn-glass {

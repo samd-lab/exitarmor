@@ -51,8 +51,10 @@ export const MODULES: ModuleSpec[] = [
     title: 'First 48-Hour Survival Checklist',
     short: 'First 48 Hours',
     description: 'Your critical first steps after a layoff — hour by hour.',
-    accent: '#e63946',
-    iconBg: 'linear-gradient(135deg, #ef4b5a, #c92a38)',
+    // Crimson is reserved for urgency — First 48 is the ONLY module
+    // that still uses it in the new calm palette.
+    accent: '#c0392b',
+    iconBg: 'linear-gradient(135deg, #c0392b, #8b1a23)',
     phase: 'stabilize',
     itemIds: [
       '48-secure-data',
@@ -70,8 +72,9 @@ export const MODULES: ModuleSpec[] = [
     title: '7-Day Recovery Companion',
     short: '7-Day Recovery',
     description: 'A guided first week — one small task at a time.',
-    accent: '#f97066',
-    iconBg: 'linear-gradient(135deg, #fb7d6f, #e63946)',
+    // Recovery is the CALMEST module — sage green.
+    accent: '#5b7a6e',
+    iconBg: 'linear-gradient(135deg, #5b7a6e, #86d0b0)',
     phase: 'stabilize',
     itemIds: [
       'rec-d1-breathe',
@@ -96,8 +99,9 @@ export const MODULES: ModuleSpec[] = [
     title: 'Severance Preparation Kit',
     short: 'Severance Prep',
     description: 'Maximize your package with proven scripts & templates.',
-    accent: '#e11d48',
-    iconBg: 'linear-gradient(135deg, #f43f5e, #be123c)',
+    // Severance = warm terracotta — assertive but not alarm red.
+    accent: '#c04a3c',
+    iconBg: 'linear-gradient(135deg, #c04a3c, #d97757)',
     phase: 'benefits',
     itemIds: [
       'sev-benchmark',
@@ -113,8 +117,9 @@ export const MODULES: ModuleSpec[] = [
     title: 'State-by-State Labor Resources',
     short: 'State Resources',
     description: 'Find exact rules, links, and benefits for your state.',
-    accent: '#fb7185',
-    iconBg: 'linear-gradient(135deg, #fda4af, #e11d48)',
+    // State rules = editorial slate — feels like reference material.
+    accent: '#4a5963',
+    iconBg: 'linear-gradient(135deg, #4a5963, #2d3b44)',
     phase: 'benefits',
     itemIds: [
       'state-unemployment-link',
@@ -129,8 +134,9 @@ export const MODULES: ModuleSpec[] = [
     title: 'COBRA vs ACA Decision Matrix',
     short: 'COBRA vs ACA',
     description: 'Compare your health insurance options side-by-side.',
-    accent: '#f43f5e',
-    iconBg: 'linear-gradient(135deg, #fb7185, #db2777)',
+    // Healthcare = forest green — health + positive outcome.
+    accent: '#2d6a4f',
+    iconBg: 'linear-gradient(135deg, #2d6a4f, #52b788)',
     phase: 'benefits',
     itemIds: [
       'health-cobra-window',
@@ -144,8 +150,9 @@ export const MODULES: ModuleSpec[] = [
     title: '90-Day Defense Budget',
     short: '90-Day Budget',
     description: 'Take control of your finances & extend your runway.',
-    accent: '#f59e0b',
-    iconBg: 'linear-gradient(135deg, #fbbf24, #d97706)',
+    // Budget = warm gold — money signal without bright amber noise.
+    accent: '#d4a24c',
+    iconBg: 'linear-gradient(135deg, #d4a24c, #b07c2a)',
     phase: 'finances',
     itemIds: [
       'bud-bleed-rate',
@@ -160,8 +167,9 @@ export const MODULES: ModuleSpec[] = [
     title: 'Job Search Tools',
     short: 'Job Search',
     description: 'Get back to work faster with templates & trackers.',
-    accent: '#ff6b3d',
-    iconBg: 'linear-gradient(135deg, #ff8c5a, #ea580c)',
+    // Job search = deep sage — growth, forward motion, not panic.
+    accent: '#3f5a50',
+    iconBg: 'linear-gradient(135deg, #3f5a50, #5b7a6e)',
     phase: 'job-search',
     itemIds: [
       'job-resume',
@@ -185,10 +193,12 @@ export interface PhaseSpec {
 }
 
 export const PHASES: PhaseSpec[] = [
-  { id: 'stabilize', step: 1, label: 'Stabilize', sub: '48 Hours', accent: '#e63946' },
-  { id: 'benefits', step: 2, label: 'Secure Benefits', sub: 'Week 1', accent: '#e11d48' },
-  { id: 'finances', step: 3, label: 'Protect Finances', sub: 'Week 2', accent: '#f59e0b' },
-  { id: 'job-search', step: 4, label: 'Launch Job Search', sub: 'Week 3+', accent: '#ff6b3d' },
+  // Phase colors mirror the module palette above so the phase
+  // rail and the module cards read as the same visual system.
+  { id: 'stabilize', step: 1, label: 'Stabilize', sub: '48 Hours', accent: '#c0392b' },
+  { id: 'benefits', step: 2, label: 'Secure Benefits', sub: 'Week 1', accent: '#2d6a4f' },
+  { id: 'finances', step: 3, label: 'Protect Finances', sub: 'Week 2', accent: '#d4a24c' },
+  { id: 'job-search', step: 4, label: 'Launch Job Search', sub: 'Week 3+', accent: '#3f5a50' },
 ];
 
 // ---------- Enriched Checklists ----------

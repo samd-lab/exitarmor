@@ -11,7 +11,6 @@ import {
   usePageMeta,
   websiteJsonLd,
 } from '../../lib/seo';
-import { CHECKOUT_URL } from '../../lib/config';
 
 // --------------------------------------------------------------
 // Person-in-context imagery — used inside the "Built for your
@@ -25,10 +24,16 @@ const IMG_COBRA =
 const IMG_OFFER =
   'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1100&q=80';
 
-// Hero rotates through this list to show scale & unique coverage
+// Hero rotates through this list to show scale & unique coverage.
+// Rebalanced so severance is ONE of seven outcomes — not the headline.
 const HERO_ROTATOR = [
-  '50 state laws',
-  '11 negotiable asks',
+  'the first 48 hours',
+  '7-day recovery',
+  'severance math',
+  'COBRA vs ACA',
+  '50 state rules',
+  'your 90-day runway',
+  'the job-search restart',
   '8 HR roleplay scenarios',
   '20+ email templates',
   '6 attorney services',
@@ -146,14 +151,10 @@ const FEATURES: Feature[] = [
     body:
       'Unemployment filing windows, final-paycheck rules, PTO payout, non-compete enforceability, WARN Act coverage — linked to the actual government pages.',
   },
-  {
-    icon: 'info',
-    accent: 'sunset',
-    pill: 'Citations',
-    title: 'Industry Benchmarks',
-    body:
-      'Every number we show is sourced — SHRM, BLS, KFF, Littler, LinkedIn Talent. No made-up peer data. You can cite them in your negotiation.',
-  },
+  // NOTE: a 10th "Industry Benchmarks" feature used to live here, but it
+  // was fully redundant with the sources strip (SHRM/BLS/KFF/Littler) that
+  // sits right above this grid — and it was leaving a dangling card in a
+  // 3-column layout. Trimmed to 9 so the grid is a clean 3x3.
 ];
 
 // --------------------------------------------------------------
@@ -418,7 +419,21 @@ function useReveal() {
 // result, a negotiable-ask list, and an HR Roleplay prompt, all
 // floating inside a fake browser window. No external images.
 // --------------------------------------------------------------
+// HeroMockup v2 — a calm "here's your 90-day plan" dashboard preview.
+// Shows all 7 modules as a checklist so visitors see the scope of the
+// kit (not just severance). Two floating cards show scenario-level
+// value so it still feels tangible, not abstract.
 function HeroMockup() {
+  const modules: Array<{ label: string; note: string; on: boolean; icon: IconName }> = [
+    { label: 'First 48 Hours',    note: 'Don\'t sign yet',        on: true,  icon: 'shield' },
+    { label: '7-Day Recovery',    note: 'One gentle step a day',  on: true,  icon: 'calendar' },
+    { label: 'Severance Prep',    note: 'Cited counter drafted',  on: true,  icon: 'briefcase' },
+    { label: 'State Resources',   note: 'Your state\'s UI rules', on: true,  icon: 'map' },
+    { label: 'COBRA vs ACA',      note: 'Side-by-side math',      on: false, icon: 'heart' },
+    { label: '90-Day Budget',     note: '3 runway scenarios',     on: false, icon: 'dollar' },
+    { label: 'Job Search',        note: 'Network-first restart',  on: false, icon: 'search' },
+  ];
+
   return (
     <div className="mk-mockup reveal">
       <div className="mk-mockup__window">
@@ -426,61 +441,52 @@ function HeroMockup() {
           <span className="mk-mockup__dot mk-mockup__dot--r" />
           <span className="mk-mockup__dot mk-mockup__dot--y" />
           <span className="mk-mockup__dot mk-mockup__dot--g" />
-          <div className="mk-mockup__url">exitarmor.app / severance</div>
+          <div className="mk-mockup__url">exitarmor.app / your-plan</div>
         </div>
-        <div className="mk-mockup__body">
-          <div className="mk-mockup__stamp">
-            <Icon name="check" size={12} /> Counter-offer drafted
+        <div className="mk-mockup__body mk-mockup__body--plan">
+          <div className="mk-mockup__stamp mk-mockup__stamp--calm">
+            <Icon name="check" size={12} /> Your 90-day plan
           </div>
-          <div className="mk-mockup__eyebrow">Severance Calculator</div>
+          <div className="mk-mockup__eyebrow">Progress · 4 of 7 modules</div>
 
-          <div className="mk-mockup__row-kv">
-            <span>Company floor</span>
-            <strong>$46,200</strong>
-          </div>
-          <div className="mk-mockup__row-kv">
-            <span>Your defensible ask</span>
-            <strong>$61,000</strong>
-          </div>
-          <div className="mk-mockup__row-kv mk-mockup__row-kv--cite">
-            <span>Cited benchmark</span>
-            <em>SHRM 2024 &middot; Littler</em>
+          <div className="mk-mockup__progress">
+            <span style={{ width: '57%' }} />
           </div>
 
-          <div className="mk-mockup__dollar">
-            <span>Target delta</span>
-            <strong>+$14,800</strong>
-          </div>
-
-          <div className="mk-mockup__row">
-            <div className="mk-mockup__chip mk-mockup__chip--on">
-              <Icon name="check" size={11} /> 11 asks ready
-            </div>
-            <div className="mk-mockup__chip mk-mockup__chip--on">
-              <Icon name="check" size={11} /> OWBPA 21-day
-            </div>
-            <div className="mk-mockup__chip mk-mockup__chip--on">
-              <Icon name="check" size={11} /> Counter drafted
-            </div>
-          </div>
+          <ul className="mk-mockup__checklist">
+            {modules.map((m) => (
+              <li
+                key={m.label}
+                className={`mk-mockup__checkitem ${m.on ? 'is-done' : ''}`}
+              >
+                <span className="mk-mockup__checkicon">
+                  <Icon name={m.on ? 'check' : m.icon} size={12} />
+                </span>
+                <span className="mk-mockup__checklabel">
+                  <strong>{m.label}</strong>
+                  <em>{m.note}</em>
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
       <div className="mk-mockup__float mk-mockup__float--ask">
         <div className="mk-mockup__float-head">
-          <Icon name="briefcase" size={14} /> 11 negotiables
+          <Icon name="heart" size={14} /> Benefits decision
         </div>
-        <strong>Ranked &amp; scripted</strong>
-        <span>Every ask has a pre-written email</span>
+        <strong>ACA wins this month</strong>
+        <span>Cited against KFF 2024 family premiums</span>
       </div>
 
       <div className="mk-mockup__float mk-mockup__float--hr">
-        <div className="mk-mockup__float-head mk-mockup__float-head--warn">
-          <Icon name="alert" size={14} /> HR Roleplay
+        <div className="mk-mockup__float-head mk-mockup__float-head--calm">
+          <Icon name="calendar" size={14} /> Day 3 check-in
         </div>
-        <em>"This offer is non-negotiable."</em>
+        <em>"Today's one small thing is enough."</em>
         <div className="mk-mockup__reply">
-          <Icon name="check" size={11} /> 4 coached replies
+          <Icon name="check" size={11} /> Gentle, not pushy
         </div>
       </div>
     </div>
@@ -499,7 +505,7 @@ interface DeepDiveCardProps {
   ruleValue: string;
   amountLabel: string;
   amount: string;
-  accent: 'crimson' | 'amber' | 'rose';
+  accent: 'crimson' | 'amber' | 'rose' | 'sage' | 'terracotta';
 }
 function DeepDiveCard(p: DeepDiveCardProps) {
   return (
@@ -593,26 +599,28 @@ export default function Landing() {
         <div className="mk-hero__copy">
           <div className="mk-hero__eyebrow reveal">
             <span className="mk-hero__eyebrow-pulse" />
-            Exit Armor covers <Rotator items={HERO_ROTATOR} />
+            Exit Armor guides you through <Rotator items={HERO_ROTATOR} />
           </div>
           <h1 className="reveal">
-            Don't read your severance packet <span className="text-gradient">alone at 11pm</span>.
+            Everything to do after a layoff &mdash;{' '}
+            <span className="text-gradient">in order, in one place</span>.
           </h1>
           <p className="mk-hero__lede reveal">
-            Your hands are shaking. HR wants an answer by Friday. You're reading a 14-page
-            severance packet with no idea which clauses matter. Exit Armor is an educational
-            kit built on cited labor-law, healthcare and negotiation research — so you can
-            walk into that meeting with a plan instead of a panic attack.
+            A layoff isn't one decision &mdash; it's fifty. Insurance, unemployment,
+            severance, budget, job search, recovery. Exit Armor is a calm, step-by-step
+            90-day playbook built on cited labor-law, healthcare and negotiation
+            research. We don't replace a lawyer or a therapist. We help you take the
+            next right step when your hands are still shaking.
           </p>
           <div className="mk-hero__cta-row reveal">
-            <a
-              href={CHECKOUT_URL}
+            <Link
+              to="/checkout"
               className="btn btn-primary btn-glow"
               style={{ padding: '1rem 2rem', fontSize: '1.05rem' }}
             >
-              Get My Playbook &mdash; $69
+              Get the 90-Day Playbook &mdash; $69
               <Icon name="arrow" size={16} />
-            </a>
+            </Link>
             <a href="#inside" className="btn btn-glass" style={{ padding: '1rem 2rem', fontSize: '1.05rem' }}>
               See what's inside
             </a>
@@ -622,6 +630,10 @@ export default function Landing() {
             <span className="mk-hero__check">No account needed</span>
             <span className="mk-hero__check">7-day money-back</span>
           </div>
+          <p className="mk-hero__legal reveal">
+            Educational resource. Not legal, financial, or medical advice. Always consult
+            a licensed professional for decisions that affect your rights.
+          </p>
         </div>
 
         <HeroMockup />
@@ -728,6 +740,123 @@ export default function Landing() {
       </section>
 
       {/* ========================================================
+          BUILT FOR REAL LIFE — person-in-context deep dives
+          (moved up from later in the page so humans appear
+          above the fold, not buried 6 sections down). Language
+          is now intentionally hedged — we show *representative*
+          numbers the calculator produces, not promised outcomes.
+      ======================================================== */}
+      <section className="mk-section mk-deep2-intro">
+        <div className="mk-section__head">
+          <div className="mk-section__eyebrow">Built for real life</div>
+          <h2>Three moments &mdash; <span className="text-gradient">one calm playbook.</span></h2>
+          <p>
+            Every section below pairs a moment you might face with the deliverable
+            Exit Armor hands you &mdash; a cited rule, a worked example, and the
+            next sentence you'd say. Numbers shown are representative calculator
+            outputs, not promised outcomes. Your result depends on your facts.
+          </p>
+        </div>
+      </section>
+
+      <DeepDive
+        image={IMG_SEVERANCE}
+        alt="Reviewing a severance offer at a desk"
+        iconName="briefcase"
+        eyebrow="If you're staring at a severance packet"
+        headline={<>A cited counter-offer draft, <span className="text-gradient">in plain English</span>.</>}
+        body={
+          <>
+            SHRM and Littler publish the ranges most US employers anchor to when
+            drafting severance &mdash; typically 1&ndash;2 weeks per year of service,
+            plus bonus proration, PTO, and COBRA offsets. Exit Armor plugs your
+            tenure, state and comp into those published ranges and shows you a
+            floor, a benchmarked ask, and a stretch target &mdash; with the
+            counter-offer email already written underneath.
+          </>
+        }
+        bullets={[
+          'SHRM & Littler-cited ranges for your state',
+          'Counter-offer email auto-drafted with your numbers',
+        ]}
+        ctaLabel="See the module"
+        ctaTo="/app"
+        card={{
+          title: 'Counter-offer target',
+          category: 'Severance Calculator · example',
+          ruleLabel: 'Cited',
+          ruleValue: 'SHRM 2024 · Littler',
+          amountLabel: 'Benchmarked delta',
+          amount: '+$14,800',
+          accent: 'sage',
+        }}
+      />
+
+      <DeepDive
+        flip
+        image={IMG_COBRA}
+        alt="Reviewing health insurance options at a kitchen table"
+        iconName="heart"
+        eyebrow="If you have a 60-day benefits decision"
+        headline={<>COBRA or ACA? <span className="text-gradient">Side-by-side math</span>, not a forum thread.</>}
+        body={
+          <>
+            KFF's 2024 Employer Health Benefits survey puts average family COBRA
+            premiums north of $1,800/month. For many households, the ACA Marketplace
+            &mdash; priced on your new, lower job-search income &mdash; can win by
+            thousands a year. Exit Armor runs both numbers for your exact income,
+            state, and family size and tells you which one wins in your situation.
+          </>
+        }
+        bullets={[
+          'KFF 2024 premium data for COBRA side',
+          'Real subsidy curve math for ACA side',
+        ]}
+        ctaLabel="See the module"
+        ctaTo="/app"
+        card={{
+          title: 'Monthly savings · example',
+          category: 'COBRA vs ACA',
+          ruleLabel: 'Cited',
+          ruleValue: 'KFF EHBS 2024',
+          amountLabel: 'Representative',
+          amount: '~$1,340/mo',
+          accent: 'terracotta',
+        }}
+      />
+
+      <DeepDive
+        image={IMG_OFFER}
+        alt="Comparing two job offers side by side"
+        iconName="chart"
+        eyebrow="If you have two offers on the table"
+        headline={<>Two offers, <span className="text-gradient">line-by-line</span>, in plain dollars.</>}
+        body={
+          <>
+            Base pay is never the whole story. PTO accrual, COBRA bridge, bonus
+            proration, sign-on, unvested equity, 401(k) match &mdash; Exit Armor
+            adds them all up for both offers side-by-side and shows you the real
+            annual delta in plain dollars. No spreadsheet, no guessing, no regret.
+          </>
+        }
+        bullets={[
+          'Every comp component treated as a line item',
+          'Printable summary you can bring to either recruiter',
+        ]}
+        ctaLabel="See the module"
+        ctaTo="/app"
+        card={{
+          title: 'Annual delta · example',
+          category: 'Offer Compare',
+          ruleLabel: 'Weighted',
+          ruleValue: 'Base + PTO + COBRA + equity',
+          amountLabel: 'Offer B over Offer A',
+          amount: '+$14,200/yr',
+          accent: 'amber',
+        }}
+      />
+
+      {/* ========================================================
           NEGOTIABLE ASKS MARQUEE — horizontal scroll
       ======================================================== */}
       <section className="mk-marquee-section reveal">
@@ -772,9 +901,10 @@ export default function Landing() {
           <div className="mk-section__eyebrow">What you'll stop feeling alone with</div>
           <h2>The things nobody taught you &mdash; now written down.</h2>
           <p>
-            Nobody teaches you how to get laid off. There's no class on severance negotiation,
-            no guide on what to say when HR stares at you across a Zoom. So we built one.
-            Ten tools, all in plain English, all walking you through the exact next step.
+            Nobody teaches you how to get laid off. There's no class on what to do
+            in the first 48 hours, no guide on which clauses matter, no handout on
+            COBRA versus ACA. So we built one &mdash; nine plain-English tools that
+            walk you through the exact next step, in the exact right order.
           </p>
         </div>
         <div className="mk-features mk-features--v2">
@@ -794,120 +924,6 @@ export default function Landing() {
           ))}
         </div>
       </section>
-
-      {/* ========================================================
-          BUILT FOR YOUR WORST WEEK — person-in-context deep dives
-          inspired by clawback's "Built for real life" pattern.
-          Each card shows a cited rule and a green dollar amount.
-      ======================================================== */}
-      <section className="mk-section mk-deep2-intro">
-        <div className="mk-section__head">
-          <div className="mk-section__eyebrow">Built for your worst week</div>
-          <h2>Three moments &mdash; <span className="text-gradient">three cited dollar figures.</span></h2>
-          <p>
-            Every section below pairs the exact moment you'll face with the deliverable
-            Exit Armor hands you &mdash; a cited rule, and a dollar amount you can defend.
-            No generic advice. No blank page. Just the number and the next sentence.
-          </p>
-        </div>
-      </section>
-
-      <DeepDive
-        image={IMG_SEVERANCE}
-        alt="Reviewing a severance offer at a desk"
-        iconName="briefcase"
-        eyebrow="The severance packet on the table"
-        headline={<>Don't leave <span className="text-gradient">$14,800</span> on the table.</>}
-        body={
-          <>
-            SHRM and Littler publish the ranges most US employers anchor to when
-            drafting severance &mdash; typically 1&ndash;2 weeks per year of service,
-            plus bonus proration, PTO, and COBRA offsets. Exit Armor plugs your
-            tenure, state and comp into those published ranges and shows you a
-            floor, a defensible ask, and a stretch target &mdash; with the
-            counter-offer email already written underneath.
-          </>
-        }
-        bullets={[
-          'SHRM & Littler-cited ranges for your state',
-          'Counter-offer email auto-drafted with your numbers',
-        ]}
-        ctaLabel="Open the calculator"
-        ctaTo="/app/severance"
-        card={{
-          title: 'Counter-offer target',
-          category: 'Severance Calculator',
-          ruleLabel: 'Cited',
-          ruleValue: 'SHRM 2024 · Littler',
-          amountLabel: 'Defensible delta',
-          amount: '+$14,800',
-          accent: 'crimson',
-        }}
-      />
-
-      <DeepDive
-        flip
-        image={IMG_COBRA}
-        alt="Reviewing health insurance options at a kitchen table"
-        iconName="heart"
-        eyebrow="The benefits decision on a 60-day clock"
-        headline={<>The <span className="text-gradient">$1,340/month</span> switch nobody tells you about.</>}
-        body={
-          <>
-            KFF's 2024 Employer Health Benefits survey puts average family COBRA
-            premiums north of $1,800/month. For many households, the ACA Marketplace
-            &mdash; priced on your new, lower job-search income &mdash; wins by more
-            than $15,000 a year. Exit Armor runs both numbers for your exact income,
-            state, and family size and tells you which one wins.
-          </>
-        }
-        bullets={[
-          'KFF 2024 premium data for COBRA side',
-          'Real subsidy curve math for ACA side',
-        ]}
-        ctaLabel="Run my comparison"
-        ctaTo="/app/cobra-aca"
-        card={{
-          title: 'Likely monthly savings',
-          category: 'COBRA vs ACA',
-          ruleLabel: 'Cited',
-          ruleValue: 'KFF EHBS 2024',
-          amountLabel: 'Switching to ACA',
-          amount: '$1,340/mo',
-          accent: 'rose',
-        }}
-      />
-
-      <DeepDive
-        image={IMG_OFFER}
-        alt="Comparing two job offers side by side"
-        iconName="chart"
-        eyebrow="When you have two offers on the table"
-        headline={<>The <span className="text-gradient">+$14,200/yr</span> delta hiding in plain sight.</>}
-        body={
-          <>
-            Base pay is never the whole story. PTO accrual, COBRA bridge, bonus
-            proration, sign-on, unvested equity, 401(k) match &mdash; Exit Armor
-            adds them all up for both offers side-by-side and shows you the real
-            annual delta in plain dollars. No spreadsheet, no guessing, no regret.
-          </>
-        }
-        bullets={[
-          'Every comp component treated as a line item',
-          'Printable summary you can bring to either recruiter',
-        ]}
-        ctaLabel="Compare my offers"
-        ctaTo="/app/offers"
-        card={{
-          title: 'Real annual delta',
-          category: 'Offer Compare',
-          ruleLabel: 'Weighted',
-          ruleValue: 'Base + PTO + COBRA + equity',
-          amountLabel: 'Offer B over Offer A',
-          amount: '+$14,200/yr',
-          accent: 'amber',
-        }}
-      />
 
       {/* ========================================================
           COMPARISON TABLE — Exit Armor vs the alternatives
@@ -987,14 +1003,14 @@ export default function Landing() {
           </table>
         </div>
         <div className="mk-compare__cta">
-          <a
-            href={CHECKOUT_URL}
+          <Link
+            to="/checkout"
             className="btn btn-primary btn-glow"
             style={{ padding: '1rem 2rem' }}
           >
             Get the kit &mdash; $69
             <Icon name="arrow" size={16} />
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -1192,8 +1208,8 @@ export default function Landing() {
           <span className="mk-gallery__note">
             <Icon name="lock" size={12} /> Everything saves on your device. No account, no login.
           </span>
-          <Link to="/app" className="btn btn-primary btn-glow" style={{ padding: '0.95rem 1.8rem' }}>
-            Open the live dashboard
+          <Link to="/checkout" className="btn btn-primary btn-glow" style={{ padding: '0.95rem 1.8rem' }}>
+            Get the kit &mdash; $69
             <Icon name="arrow" size={16} />
           </Link>
         </div>
@@ -1263,13 +1279,13 @@ export default function Landing() {
                 ))}
               </ul>
               {t.id === 'self' ? (
-                <a
-                  href={CHECKOUT_URL}
+                <Link
+                  to="/checkout"
                   className={`btn ${t.highlighted ? 'btn-primary btn-glow' : 'btn-glass'}`}
                   style={{ padding: '0.85rem 1.5rem', justifyContent: 'center' }}
                 >
                   {t.cta}
-                </a>
+                </Link>
               ) : (
                 <Link
                   to={t.ctaTo}
@@ -1339,29 +1355,42 @@ export default function Landing() {
       </section>
 
       {/* ========================================================
-          FINAL CTA
+          FINAL CTA — now with a real photo background so it
+          doesn't feel like a blank slab. Warm morning light at
+          a kitchen table, gradient overlay in the new palette.
       ======================================================== */}
-      <section className="mk-section">
-        <div className="mk-cta-band mk-cta-band--v2 reveal">
-          <div className="mk-cta-band__glow" />
-          <h2>Walk into that meeting with a plan, not a panic.</h2>
-          <p>
-            Exit Armor is an educational kit built on cited labor-law, healthcare and
-            negotiation research. Sixty-nine dollars, one-time, seven-day refund &mdash;
-            and the quiet confidence of reading your severance with a checklist instead
-            of a blank stare.
-          </p>
-          <a
-            href={CHECKOUT_URL}
-            className="btn btn-primary btn-glow"
-            style={{ padding: '1rem 2.5rem', fontSize: '1.1rem' }}
-          >
-            Start My Playbook &mdash; $69
-            <Icon name="arrow" size={16} />
-          </a>
-          <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            $69 one-time &middot; 7-day money-back guarantee &middot; No account needed
-          </p>
+      <section className="mk-section mk-final-section">
+        <div className="mk-cta-band mk-cta-band--v3 reveal">
+          <div
+            className="mk-cta-band__photo"
+            style={{
+              backgroundImage:
+                'url(https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1600&q=80)',
+            }}
+            aria-hidden
+          />
+          <div className="mk-cta-band__overlay" aria-hidden />
+          <div className="mk-cta-band__content">
+            <div className="mk-cta-band__eyebrow">Your next hour, not your whole life</div>
+            <h2>One step at a time &mdash; starting with the next one.</h2>
+            <p>
+              Exit Armor is an educational kit built on cited labor-law, healthcare
+              and negotiation research. Sixty-nine dollars, one-time, seven-day
+              refund &mdash; and the quiet confidence of opening a checklist instead
+              of a blank browser tab at 2am.
+            </p>
+            <Link
+              to="/checkout"
+              className="btn btn-primary btn-glow"
+              style={{ padding: '1rem 2.5rem', fontSize: '1.1rem' }}
+            >
+              Get the 90-Day Playbook &mdash; $69
+              <Icon name="arrow" size={16} />
+            </Link>
+            <p className="mk-cta-band__fine">
+              $69 one-time &middot; 7-day money-back guarantee &middot; No account needed
+            </p>
+          </div>
         </div>
       </section>
 

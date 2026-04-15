@@ -118,7 +118,7 @@ export default function About() {
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
             Your 72-hour survival plan is 3 clicks away.
           </p>
-          <Link to="/app" className="btn btn-primary">Launch Exit Armor &mdash; $69</Link>
+          <Link to="/checkout" className="btn btn-primary">Get the kit &mdash; $69</Link>
         </div>
       </article>
     </MarketingLayout>

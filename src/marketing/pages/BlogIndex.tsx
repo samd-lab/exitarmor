@@ -65,8 +65,8 @@ export default function BlogIndex() {
           Exit Armor's interactive checklist walks you through every item in these
           posts &mdash; personalized to your state, your tenure, and your situation.
         </p>
-        <Link to="/app" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.05rem' }}>
-          Launch Exit Armor &mdash; $69
+        <Link to="/checkout" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.05rem' }}>
+          Get the kit &mdash; $69
         </Link>
       </div>
     </MarketingLayout>

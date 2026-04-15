@@ -18,12 +18,17 @@
   --d-sidebar-bg-2: #111729;
   --d-sidebar-text: #cbd5e1;
   --d-sidebar-text-muted: #64748b;
-  --d-sidebar-active-bg: rgba(230, 57, 70, 0.18);
+  /* Sidebar active state: calm sage tint, not crimson. */
+  --d-sidebar-active-bg: rgba(91, 122, 110, 0.22);
   --d-sidebar-active-text: #ffffff;
   --d-sidebar-hover-bg: rgba(255, 255, 255, 0.04);
 
-  --d-brand: #e63946;
-  --d-amber: #f59e0b;
+  /* Brand rail: terracotta (muted warm) instead of alarm red.
+     --d-urgency stays available for First 48 + warning callouts. */
+  --d-brand: #c04a3c;
+  --d-brand-calm: #5b7a6e;
+  --d-urgency: #c0392b;
+  --d-amber: #d4a24c;
 
   --d-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
   --d-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.05), 0 2px 4px rgba(15, 23, 42, 0.04);
@@ -68,7 +73,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 4px 10px rgba(230, 57, 70, 0.28));
+  filter: drop-shadow(0 4px 10px rgba(91, 122, 110, 0.32));
 }
 .dash-sidebar__logo svg { display: block; }
 .dash-sidebar__name {
@@ -154,10 +159,10 @@
   color: #fff;
 }
 .dash-nav-item--active .dash-nav-item__icon {
-  background: linear-gradient(135deg, rgba(230, 57, 70, 0.28), rgba(245, 158, 11, 0.18));
-  border-color: rgba(230, 57, 70, 0.5);
+  background: linear-gradient(135deg, rgba(91, 122, 110, 0.32), rgba(63, 90, 80, 0.18));
+  border-color: rgba(134, 208, 176, 0.42);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 12px rgba(91, 122, 110, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .dash-sidebar__footer {
   margin-top: auto;
@@ -187,7 +192,7 @@
 }
 .dash-avatar {
   width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, #e63946, #8b1a23);
+  background: linear-gradient(135deg, #5b7a6e, #3f5a50);
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-weight: 700; font-size: 0.85rem;
   flex-shrink: 0;
@@ -3279,16 +3284,16 @@
 
 /* Primary action pill — subtle gradient */
 .btn-pill--primary {
-  background: linear-gradient(135deg, #e63946 0%, #b91c1c 100%);
-  border-color: #b91c1c;
-  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #c04a3c 0%, #a93d30 100%);
+  border-color: #a93d30;
+  box-shadow: 0 6px 18px rgba(192, 74, 60, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 .btn-pill--primary:hover {
-  background: linear-gradient(135deg, #ef4b5a 0%, #c92a38 100%);
-  border-color: #c92a38;
+  background: linear-gradient(135deg, #d97757 0%, #c04a3c 100%);
+  border-color: #c04a3c;
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(230, 57, 70, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 24px rgba(192, 74, 60, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Phase progress strip — ambient glow & hover lift */

@@ -31,7 +31,10 @@ export function MarketingNav() {
           <Link to="/blog" className="mk-nav__link">Blog</Link>
           <Link to="/about" className="mk-nav__link">About</Link>
           <Link to="/contact" className="mk-nav__link">Contact</Link>
-          <Link to="/app" className="btn btn-primary mk-nav__cta">
+          {/* Primary nav CTA — lands on the /checkout interstitial,
+              which hands off to Stripe. Interstitial adds trust signals
+              (what's inside, guarantee, FAQ) before money changes hands. */}
+          <Link to="/checkout" className="btn btn-primary mk-nav__cta">
             Get Started &mdash; $69
           </Link>
         </div>
@@ -60,7 +63,7 @@ export function MarketingFooter() {
         <div className="mk-footer__col">
           <h4>Product</h4>
           <ul>
-            <li><Link to="/app">Launch App</Link></li>
+            <li><Link to="/checkout">Get the Kit</Link></li>
             <li><Link to="/blog">Blog</Link></li>
             <li><Link to="/about">About</Link></li>
           </ul>
