@@ -12,7 +12,8 @@ export type ModuleId =
   | 'state'
   | 'cobra-aca'
   | 'budget'
-  | 'job-search';
+  | 'job-search'
+  | 'recovery-7day';
 
 export type Phase = 'stabilize' | 'benefits' | 'finances' | 'job-search';
 
@@ -62,6 +63,32 @@ export const MODULES: ModuleSpec[] = [
       '48-export-linkedin',
       '48-references',
       '48-notify-bank',
+    ],
+  },
+  {
+    id: 'recovery-7day',
+    title: '7-Day Recovery Companion',
+    short: '7-Day Recovery',
+    description: 'A guided first week — one small task at a time.',
+    accent: '#6366f1',
+    iconBg: 'linear-gradient(135deg, #818cf8, #6366f1)',
+    phase: 'stabilize',
+    itemIds: [
+      'rec-d1-breathe',
+      'rec-d1-document',
+      'rec-d1-tell-one-person',
+      'rec-d2-file-ui',
+      'rec-d2-freeze-credit',
+      'rec-d3-health-decision',
+      'rec-d3-cash-check',
+      'rec-d4-counter-email',
+      'rec-d4-owbpa',
+      'rec-d5-network-list',
+      'rec-d5-linkedin',
+      'rec-d6-story',
+      'rec-d6-references',
+      'rec-d7-outreach',
+      'rec-d7-reset',
     ],
   },
   {
@@ -469,6 +496,28 @@ export const JOB_SEARCH_ITEMS: ChecklistItem[] = [
   },
 ];
 
+// ---------- 7-Day Recovery Companion ----------
+// Day-by-day tasks. Small, emotionally-aware, builds momentum through the
+// hardest first week. Items reuse the same checklist state so progress
+// contributes to the overall dashboard completion bar.
+export const RECOVERY_ITEMS: ChecklistItem[] = [
+  { id: 'rec-d1-breathe', label: 'Take 30 minutes to breathe — you do not have to decide anything today', detail: 'Day 1 · Before any paperwork.' },
+  { id: 'rec-d1-document', label: 'Save pay stubs, W-2, and performance reviews to personal cloud', detail: 'Day 1 · Before access is cut.' },
+  { id: 'rec-d1-tell-one-person', label: 'Tell one trusted person — out loud — what happened', detail: 'Day 1 · Saying it makes it real and smaller.' },
+  { id: 'rec-d2-file-ui', label: 'File for unemployment in your state', detail: 'Day 2 · Most states do not backdate.' },
+  { id: 'rec-d2-freeze-credit', label: 'Pause any non-essential autopay or freeze credit applications', detail: 'Day 2 · Cut one thing that felt reflexive.' },
+  { id: 'rec-d3-health-decision', label: 'Pick a lane on health coverage (COBRA vs ACA)', detail: 'Day 3 · Use the calculator — do not elect yet unless urgent.' },
+  { id: 'rec-d3-cash-check', label: 'Run the runway calculator and look at the number', detail: 'Day 3 · The number is less scary than the uncertainty.' },
+  { id: 'rec-d4-counter-email', label: 'Draft your severance counter email — do not send yet', detail: 'Day 4 · Sleep on it.' },
+  { id: 'rec-d4-owbpa', label: 'If 40+, write your review deadline on a sticky note', detail: 'Day 4 · 21 days (or 45 for group) is a lot of leverage.' },
+  { id: 'rec-d5-network-list', label: 'Write down 20 people who know your work', detail: 'Day 5 · Former bosses, peers, direct reports, classmates.' },
+  { id: 'rec-d5-linkedin', label: 'Turn on LinkedIn "Open to Work" (recruiters only)', detail: 'Day 5 · Triples your inbound. Update headline to target role.' },
+  { id: 'rec-d6-story', label: 'Practice your 2-sentence layoff story until it is boring', detail: 'Day 6 · "My role was eliminated as part of... I am now focused on..."' },
+  { id: 'rec-d6-references', label: 'Ask 3 people for a LinkedIn recommendation', detail: 'Day 6 · Memory fades fast. Ask while the context is fresh.' },
+  { id: 'rec-d7-outreach', label: 'Send 5 warm-network "grabbing coffee?" messages', detail: 'Day 7 · Ask for advice, not a job. Advice leads to jobs.' },
+  { id: 'rec-d7-reset', label: 'Plan one small good thing for tomorrow', detail: 'Day 7 · You finished the hardest week. Close it deliberately.' },
+];
+
 export const ITEMS_BY_MODULE: Record<ModuleId, ChecklistItem[]> = {
   'first-48': FIRST_48_ITEMS,
   severance: SEVERANCE_ITEMS,
@@ -476,6 +525,7 @@ export const ITEMS_BY_MODULE: Record<ModuleId, ChecklistItem[]> = {
   'cobra-aca': COBRA_ITEMS,
   budget: BUDGET_ITEMS,
   'job-search': JOB_SEARCH_ITEMS,
+  'recovery-7day': RECOVERY_ITEMS,
 };
 
 export const TODAYS_ACTIONS = [

@@ -9,6 +9,7 @@ import type { ModuleId, Phase } from '../data/modules';
 import { countChecked } from '../lib/storage';
 import type { ChecklistMap } from '../lib/storage';
 import { Checklist } from './components/Checklist';
+import { CrisisCard } from './components/CrisisCard';
 import { PhaseRing } from './components/PhaseRing';
 
 interface Props {
@@ -177,6 +178,8 @@ export function Overview({ checked, onToggle, onOpenModule }: Props) {
         })()}
       </section>
 
+      <CrisisCard />
+
       <p className="legal-strip">
         Exit Armor is an AI-powered educational resource. Nothing here constitutes legal,
         financial, or tax advice. Always consult a licensed professional before making
@@ -194,5 +197,6 @@ function iconForModule(id: ModuleId): import('../components/Icon').IconName {
     case 'cobra-aca': return 'heart';
     case 'budget': return 'dollar';
     case 'job-search': return 'search';
+    case 'recovery-7day': return 'calendar';
   }
 }

@@ -7,12 +7,13 @@
 
 import { useMemo } from 'react';
 import { Icon } from '../../components/Icon';
-import { STATES } from '../../data/states';
+import { STATES, UI_DATA_AS_OF } from '../../data/states';
 import {
   DEFAULT_SEVERANCE_INPUT,
   LEVEL_OPTIONS,
   SIZE_OPTIONS,
   estimateSeverance,
+  estimateUnemployment,
   money,
   moneyRange,
 } from '../../lib/calculators';
@@ -37,18 +38,46 @@ export function SeveranceCalculator() {
   );
 
   const result = useMemo(() => estimateSeverance(input), [input]);
+  const ui = useMemo(
+    () => estimateUnemployment(input.annualSalary, input.stateCode),
+    [input.annualSalary, input.stateCode]
+  );
 
   const update = <K extends keyof SeveranceInput>(k: K, v: SeveranceInput[K]) =>
     setInput({ ...input, [k]: v });
 
+  // Progress to target — 0-100%
+  const pctOfTarget =
+    result.totalTargetValue > 0
+      ? Math.min(100, Math.round((result.currentOfferDollars / result.totalTargetValue) * 100))
+      : 0;
+  const atOrAboveTarget = result.currentOfferDollars >= result.totalTargetValue;
+
   return (
     <div className="calc">
-      <div className="calc__intro">
-        <Icon name="briefcase" size={16} />
-        <span>
-          Based on Paycor, Littler, and SHRM benchmark data. Adjust inputs — the
-          estimate updates live. Everything stays on your device.
-        </span>
+      {/* PREMIUM HERO */}
+      <div className="calc-hero">
+        <div className="calc-hero__body">
+          <span className="calc-hero__eyebrow">
+            <Icon name="spark" size={12} /> Personalized estimate
+          </span>
+          <h3 className="calc-hero__title">
+            Your target severance package
+          </h3>
+          <p className="calc-hero__sub">
+            Based on Paycor, Littler, and SHRM public benchmark data for your
+            level, tenure, and company size. Everything below updates live as
+            you edit. Nothing leaves your device.
+          </p>
+        </div>
+        <div className="calc-hero__card">
+          <div className="calc-hero__card-label">Total target value</div>
+          <div className="calc-hero__card-value">{money(result.totalTargetValue)}</div>
+          <div className="calc-hero__card-sub">
+            {result.targetWeeks} weeks base + COBRA
+            {result.bonusValue > 0 && ' + pro-rata bonus'}
+          </div>
+        </div>
       </div>
 
       {/* INPUTS */}
@@ -107,7 +136,7 @@ export function SeveranceCalculator() {
         </div>
 
         <div className="calc-field">
-          <label>State (for non-compete &amp; PTO rules)</label>
+          <label>State (for non-compete, PTO &amp; UI rules)</label>
           <select
             value={input.stateCode}
             onChange={(e) => update('stateCode', e.target.value)}
@@ -187,6 +216,28 @@ export function SeveranceCalculator() {
           </div>
         </div>
 
+        {/* Progress-to-target bar (premium polish) */}
+        {result.currentOfferDollars > 0 && (
+          <div className="calc-progress">
+            <div className="calc-progress__head">
+              <span className="calc-progress__label">
+                Your offer vs. target package
+              </span>
+              <span className="calc-progress__pct">{pctOfTarget}%</span>
+            </div>
+            <div className="calc-progress__bar">
+              <div
+                className={`calc-progress__fill ${atOrAboveTarget ? 'calc-progress__fill--good' : ''}`}
+                style={{ width: `${pctOfTarget}%` }}
+              />
+            </div>
+            <div className="calc-progress__foot">
+              <span>Offer {money(result.currentOfferDollars)}</span>
+              <span>Target {money(result.totalTargetValue)}</span>
+            </div>
+          </div>
+        )}
+
         <div className="calc-totalrow">
           <div>
             <div className="calc-totalrow__label">Total target package</div>
@@ -221,6 +272,48 @@ export function SeveranceCalculator() {
             </div>
           )}
         </div>
+
+        {/* UNEMPLOYMENT ESTIMATE — feeds from state dropdown above */}
+        {ui.state && ui.weeklyBenefit > 0 && (
+          <div className="calc-ui">
+            <h4 className="calc-ui__title">
+              <Icon name="dollar" size={16} />
+              Your estimated unemployment benefits in {ui.state.name}
+            </h4>
+            <div className="calc-ui__grid">
+              <div className="calc-ui__cell">
+                <div className="calc-ui__cell-label">Weekly benefit</div>
+                <div className="calc-ui__cell-value">{money(ui.weeklyBenefit)}</div>
+                <div className="calc-ui__cell-sub">
+                  {ui.cappedByState ? `Capped at ${ui.state.name}'s max` : `~${Math.round(ui.replacementRate * 100)}% wage replacement`}
+                </div>
+              </div>
+              <div className="calc-ui__cell">
+                <div className="calc-ui__cell-label">Max duration</div>
+                <div className="calc-ui__cell-value">{ui.maxWeeks} weeks</div>
+                <div className="calc-ui__cell-sub">Typical regular UI max</div>
+              </div>
+              <div className="calc-ui__cell">
+                <div className="calc-ui__cell-label">Max total payout</div>
+                <div className="calc-ui__cell-value calc-ui__cell-value--big">{money(ui.totalMax)}</div>
+                <div className="calc-ui__cell-sub">Weekly × max weeks</div>
+              </div>
+            </div>
+            <p className="calc-ui__foot">
+              Verify your exact amount at your state DOL portal:{' '}
+              <a href={ui.state.unemploymentUrl} target="_blank" rel="noopener noreferrer">
+                {ui.state.unemploymentUrl}
+              </a>
+            </p>
+            <div className="calc-ui__disclaimer">
+              <strong>Estimate only.</strong> Uses 50% of weekly wages capped at {ui.state.name}'s
+              maximum weekly benefit of {money(ui.state.maxWeeklyBenefit)}. Your actual benefit
+              depends on your high-quarter wages, dependents, and severance offset rules. Severance
+              pay may delay or reduce benefits in some states — check your state's rules before
+              filing. Data vintage: <strong>{UI_DATA_AS_OF}</strong>. Not a benefits determination.
+            </div>
+          </div>
+        )}
 
         {result.asks.length > 0 && (
           <>

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Icon } from '../../components/Icon';
 import { BUDGET_ITEMS, MODULES } from '../../data/modules';
 import { calculateRunway, money, runwayLabel } from '../../lib/calculators';
@@ -8,6 +8,7 @@ import { countChecked, usePersistentState } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
+import { Rollover401k } from '../components/Rollover401k';
 
 interface Props {
   checked: ChecklistMap;
@@ -30,6 +31,7 @@ const DEFAULTS: RunwayInput = {
 export function Budget({ checked, onToggle, onBack }: Props) {
   const module = MODULES.find((m) => m.id === 'budget')!;
   const [inputs, setInputs] = usePersistentState<RunwayInput>('budget.runway', DEFAULTS);
+  const [tab, setTab] = useState<'runway' | 'rollover'>('runway');
 
   const result = useMemo(() => calculateRunway(inputs), [inputs]);
 
@@ -54,6 +56,14 @@ export function Budget({ checked, onToggle, onBack }: Props) {
 
       <div className="module-page__layout">
         <div className="module-page__primary">
+          <div className="day-tabs">
+            <button type="button" className={`day-tab ${tab === 'runway' ? 'day-tab--active' : ''}`} onClick={() => setTab('runway')}>Runway Calculator</button>
+            <button type="button" className={`day-tab ${tab === 'rollover' ? 'day-tab--active' : ''}`} onClick={() => setTab('rollover')}>401(k) Options</button>
+          </div>
+
+          {tab === 'rollover' && <Rollover401k />}
+
+          {tab === 'runway' && <>
           <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>Essential monthly spend</h4>
           <div className="budget-grid">
             <BudgetField label="Rent / Mortgage" value={inputs.rent} onChange={(v) => update('rent', v)} />
@@ -102,6 +112,7 @@ export function Budget({ checked, onToggle, onBack }: Props) {
 
           <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.8rem', marginBottom: '0.5rem' }}>90-day defense checklist</h4>
           <Checklist items={BUDGET_ITEMS} checked={checked} onToggle={onToggle} />
+          </>}
         </div>
 
         <aside className="module-page__side">

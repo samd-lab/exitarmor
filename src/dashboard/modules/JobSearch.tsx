@@ -7,6 +7,7 @@ import { countChecked, personalize, useProfile } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
+import { StoryBuilder } from '../components/StoryBuilder';
 
 interface Props {
   checked: ChecklistMap;
@@ -103,6 +104,15 @@ export function JobSearch({ checked, onToggle, onBack }: Props) {
               </div>
             </div>
           )}
+
+          <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '2rem', marginBottom: '0.25rem' }}>
+            Interview story builder
+          </h4>
+          <p style={{ margin: 0, color: 'var(--d-text-muted)', fontSize: '0.88rem', lineHeight: 1.5 }}>
+            Every interview pulls from the same 5–6 stories. Draft them once, use them forever.
+            Works for any job — tech, trades, retail, healthcare. No jargon.
+          </p>
+          <StoryBuilder />
         </div>
 
         <aside className="module-page__side">

@@ -13,6 +13,7 @@ import { StateResources } from './modules/StateResources';
 import { CobraVsAca } from './modules/CobraVsAca';
 import { Budget } from './modules/Budget';
 import { JobSearch } from './modules/JobSearch';
+import { RecoveryCompanion } from './modules/RecoveryCompanion';
 import './dashboard.css';
 
 interface Props {
@@ -99,6 +100,9 @@ export function Dashboard({ onStartAi }: Props) {
         )}
         {route === 'job-search' && (
           <JobSearch checked={checked} onToggle={toggle} onBack={goOverview} />
+        )}
+        {route === 'recovery-7day' && (
+          <RecoveryCompanion checked={checked} onToggle={toggle} onBack={goOverview} />
         )}
       </main>
 

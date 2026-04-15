@@ -341,3 +341,65 @@ export function money(n: number): string {
 export function moneyRange(lo: number, hi: number): string {
   return `${money(lo)} – ${money(hi)}`;
 }
+
+// ============================================================
+// Unemployment insurance estimator
+// ============================================================
+//
+// Returns an APPROXIMATE weekly benefit and total max payout for a user's
+// state. The formula is deliberately simple: most states replace ~50% of a
+// worker's high-quarter wages up to the state cap, so we use 50% of weekly
+// wages capped at the state max. Duration uses the state's typical max
+// weeks. This is intentionally conservative — some states include
+// dependency allowances or high-quarter bonuses we don't model.
+//
+// EVERY result must be surfaced in the UI alongside:
+//   - A link to the state's DOL portal for the authoritative number
+//   - The UI_DATA_AS_OF vintage label from states.ts
+//   - A disclaimer that this is an estimate, not a benefits determination
+
+export interface UnemploymentEstimate {
+  state: StateInfo | null;
+  weeklyBenefit: number;
+  totalMax: number;
+  maxWeeks: number;
+  cappedByState: boolean; // true if state cap is binding, false if wages were lower than cap
+  replacementRate: number; // actual % of prior weekly wages this represents
+}
+
+export function estimateUnemployment(
+  annualSalary: number,
+  stateCode: string
+): UnemploymentEstimate {
+  const state = STATES.find((s) => s.code === stateCode) || null;
+  if (!state || annualSalary <= 0) {
+    return {
+      state,
+      weeklyBenefit: 0,
+      totalMax: 0,
+      maxWeeks: state?.maxWeeks ?? 0,
+      cappedByState: false,
+      replacementRate: 0,
+    };
+  }
+
+  const weeklyWage = annualSalary / 52;
+  // Most states target ~50% replacement of prior wages. A few (MA, WA, NJ)
+  // use a higher formula, but the state cap almost always dominates for
+  // salaried workers, so this simplification is safe on the low side.
+  const fiftyPercent = weeklyWage * 0.5;
+  const rawBenefit = Math.min(fiftyPercent, state.maxWeeklyBenefit);
+  const weeklyBenefit = Math.round(rawBenefit);
+  const totalMax = Math.round(weeklyBenefit * state.maxWeeks);
+  const cappedByState = fiftyPercent > state.maxWeeklyBenefit;
+  const replacementRate = weeklyWage > 0 ? weeklyBenefit / weeklyWage : 0;
+
+  return {
+    state,
+    weeklyBenefit,
+    totalMax,
+    maxWeeks: state.maxWeeks,
+    cappedByState,
+    replacementRate,
+  };
+}

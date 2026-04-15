@@ -8,6 +8,10 @@ import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
 import { SeveranceCalculator } from '../components/SeveranceCalculator';
+import { HrRoleplay } from '../components/HrRoleplay';
+import { OfferCompare } from '../components/OfferCompare';
+import { AttorneyDirectory } from '../components/AttorneyDirectory';
+import { BenchmarkCard } from '../components/BenchmarkCard';
 
 const SEV_TEMPLATES = EMAIL_TEMPLATES.filter((t) => t.category === 'severance');
 
@@ -33,7 +37,7 @@ interface Props {
 
 export function Severance({ checked, onToggle, onBack }: Props) {
   const module = MODULES.find((m) => m.id === 'severance')!;
-  const [tab, setTab] = useState<'overview' | 'calculator' | 'asks' | 'templates'>('calculator');
+  const [tab, setTab] = useState<'overview' | 'calculator' | 'asks' | 'templates' | 'roleplay' | 'compare' | 'attorney' | 'benchmarks'>('calculator');
   const [activeTpl, setActiveTpl] = useState<string>(SEV_TEMPLATES[0]?.id ?? '');
   const [copied, setCopied] = useState<string | null>(null);
   const [profile] = useProfile();
@@ -72,10 +76,18 @@ export function Severance({ checked, onToggle, onBack }: Props) {
             <button type="button" className={`day-tab ${tab === 'overview' ? 'day-tab--active' : ''}`} onClick={() => setTab('overview')}>Checklist</button>
             <button type="button" className={`day-tab ${tab === 'asks' ? 'day-tab--active' : ''}`} onClick={() => setTab('asks')}>11 Negotiable Asks</button>
             <button type="button" className={`day-tab ${tab === 'templates' ? 'day-tab--active' : ''}`} onClick={() => setTab('templates')}>Email Templates</button>
+            <button type="button" className={`day-tab ${tab === 'roleplay' ? 'day-tab--active' : ''}`} onClick={() => setTab('roleplay')}>HR Roleplay</button>
+            <button type="button" className={`day-tab ${tab === 'compare' ? 'day-tab--active' : ''}`} onClick={() => setTab('compare')}>Offer Compare</button>
+            <button type="button" className={`day-tab ${tab === 'attorney' ? 'day-tab--active' : ''}`} onClick={() => setTab('attorney')}>Find an Attorney</button>
+            <button type="button" className={`day-tab ${tab === 'benchmarks' ? 'day-tab--active' : ''}`} onClick={() => setTab('benchmarks')}>Benchmarks</button>
           </div>
 
           {tab === 'calculator' && <SeveranceCalculator />}
           {tab === 'overview' && <Checklist items={SEVERANCE_ITEMS} checked={checked} onToggle={onToggle} />}
+          {tab === 'roleplay' && <HrRoleplay />}
+          {tab === 'compare' && <OfferCompare />}
+          {tab === 'attorney' && <AttorneyDirectory />}
+          {tab === 'benchmarks' && <BenchmarkCard />}
 
           {tab === 'asks' && (
             <ul className="cklist">
@@ -154,16 +166,21 @@ export function Severance({ checked, onToggle, onBack }: Props) {
             </div>
           </div>
           <div className="module-side-card">
-            <h4>Industry benchmark</h4>
+            <h4>Industry benchmarks</h4>
             <p>1–2 weeks of pay per year of service is the typical range. Senior leaders often receive 3–4 weeks per year.</p>
+            <button type="button" className="btn-pill btn-pill--ghost" style={{ marginTop: '0.5rem' }} onClick={() => setTab('benchmarks')}>
+              See all citations <Icon name="arrow" size={12} />
+            </button>
           </div>
           <div className="module-side-card">
-            <h4>HR script preview</h4>
+            <h4>Rehearse the HR call</h4>
             <p>
-              "I appreciate the offer. Given my tenure and recent contributions, I would
-              like to discuss a few specific adjustments before I sign — could we book
-              15 minutes this week?"
+              Practice the 8 hardest moments of a severance call — time pressure,
+              "non-negotiable," veiled threats. Branching scripts, no AI.
             </p>
+            <button type="button" className="btn-pill btn-pill--ghost" style={{ marginTop: '0.5rem' }} onClick={() => setTab('roleplay')}>
+              Open HR Roleplay <Icon name="arrow" size={12} />
+            </button>
           </div>
         </aside>
       </div>

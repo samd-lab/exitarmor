@@ -7,6 +7,7 @@ export type Route = 'overview' | ModuleId;
 const NAV: Array<{ id: Route; label: string; icon: IconName }> = [
   { id: 'overview', label: 'Dashboard', icon: 'home' },
   { id: 'first-48', label: 'First 48 Hours', icon: 'shield' },
+  { id: 'recovery-7day', label: '7-Day Recovery', icon: 'calendar' },
   { id: 'severance', label: 'Severance Prep', icon: 'briefcase' },
   { id: 'state', label: 'State Resources', icon: 'map' },
   { id: 'cobra-aca', label: 'COBRA vs ACA', icon: 'heart' },

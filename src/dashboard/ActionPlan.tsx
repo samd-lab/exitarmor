@@ -15,10 +15,12 @@ import {
   DEFAULT_SEVERANCE_INPUT,
   calculateRunway,
   estimateSeverance,
+  estimateUnemployment,
   money,
   runwayLabel,
 } from '../lib/calculators';
 import type { RunwayInput, SeveranceInput } from '../lib/calculators';
+import { UI_DATA_AS_OF } from '../data/states';
 import { loadJSON, personalize } from '../lib/storage';
 import type { UserProfile } from '../lib/storage';
 import { EMPTY_PROFILE } from '../lib/storage';
@@ -44,6 +46,10 @@ export default function ActionPlan() {
 
   const severance = useMemo(() => estimateSeverance(severanceInput), [severanceInput]);
   const runway = useMemo(() => calculateRunway(runwayInput), [runwayInput]);
+  const ui = useMemo(
+    () => estimateUnemployment(severanceInput.annualSalary, severanceInput.stateCode),
+    [severanceInput.annualSalary, severanceInput.stateCode]
+  );
 
   const counterTemplate = EMAIL_TEMPLATES.find((t) => t.id === 'leverage');
   const counterSubject = counterTemplate ? personalize(counterTemplate.subject, profile) : '';
@@ -229,6 +235,40 @@ export default function ActionPlan() {
             </ul>
           )}
         </section>
+
+        {/* UNEMPLOYMENT BENEFITS */}
+        {ui.state && ui.weeklyBenefit > 0 && (
+          <section className="ap-section">
+            <h2 className="ap-section__title">Your unemployment benefits</h2>
+            <p className="ap-section__sub">
+              Estimate for {ui.state.name} — verify at {ui.state.unemploymentUrl}
+            </p>
+            <div className="ap-runway">
+              <div className="ap-runway__card">
+                <span>Weekly benefit</span>
+                <strong>{money(ui.weeklyBenefit)}</strong>
+                <small>
+                  {ui.cappedByState ? 'At state cap' : `~${Math.round(ui.replacementRate * 100)}% replacement`}
+                </small>
+              </div>
+              <div className="ap-runway__card">
+                <span>Max weeks</span>
+                <strong>{ui.maxWeeks} weeks</strong>
+                <small>Regular UI duration</small>
+              </div>
+              <div className="ap-runway__card">
+                <span>Max total payout</span>
+                <strong>{money(ui.totalMax)}</strong>
+                <small>Weekly × max weeks</small>
+              </div>
+            </div>
+            <p className="ap-state__notes">
+              Estimate only — data vintage {UI_DATA_AS_OF}. Severance may delay or reduce
+              benefits in some states. File the same week you're notified; most states do
+              not backdate.
+            </p>
+          </section>
+        )}
 
         {/* COUNTER EMAIL */}
         {counterTemplate && (

@@ -117,6 +117,44 @@ const paths: Record<string, React.ReactNode> = {
       <path d="M21 4v5h-5" />
     </>
   ),
+  info: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <line x1="12" y1="11" x2="12" y2="17" />
+      <circle cx="12" cy="7.5" r="0.8" fill="currentColor" />
+    </>
+  ),
+  alert: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <line x1="12" y1="7" x2="12" y2="13" />
+      <circle cx="12" cy="16.5" r="0.8" fill="currentColor" />
+    </>
+  ),
+  scale: (
+    <>
+      <path d="M12 3v18" />
+      <path d="M5 21h14" />
+      <path d="M6 8l-3 6a4 4 0 0 0 6 0L6 8z" />
+      <path d="M18 8l-3 6a4 4 0 0 0 6 0l-3-6z" />
+      <path d="M6 8h12" />
+    </>
+  ),
+  book: (
+    <>
+      <path d="M4 4h9a4 4 0 0 1 4 4v13" />
+      <path d="M4 4v13a3 3 0 0 0 3 3h10" />
+      <path d="M4 4a3 3 0 0 0 0 6h9" />
+    </>
+  ),
+  chart: (
+    <>
+      <line x1="4" y1="20" x2="20" y2="20" />
+      <rect x="6" y="10" width="3" height="10" />
+      <rect x="11" y="6" width="3" height="14" />
+      <rect x="16" y="13" width="3" height="7" />
+    </>
+  ),
 };
 
 export type IconName = keyof typeof paths;
