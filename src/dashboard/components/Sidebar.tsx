@@ -17,9 +17,20 @@ const NAV: Array<{ id: Route; label: string; icon: IconName }> = [
 interface Props {
   active: Route;
   onChange: (r: Route) => void;
+  onOpenProfile?: () => void;
+  profileName?: string;
 }
 
-export function Sidebar({ active, onChange }: Props) {
+export function Sidebar({ active, onChange, onOpenProfile, profileName }: Props) {
+  const initials = profileName
+    ? profileName
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((p) => p[0]?.toUpperCase() ?? '')
+        .join('') || 'EA'
+    : 'EA';
+
   return (
     <aside className="dash-sidebar">
       <div className="dash-sidebar__brand">
@@ -47,13 +58,20 @@ export function Sidebar({ active, onChange }: Props) {
         ))}
       </nav>
 
-      <div className="dash-sidebar__footer">
-        <div className="dash-avatar">A</div>
+      <button
+        type="button"
+        className="dash-sidebar__footer dash-sidebar__footer--button"
+        onClick={onOpenProfile}
+      >
+        <div className="dash-avatar">{initials}</div>
         <div className="dash-sidebar__footer-text">
-          <strong>Your Account</strong>
-          <span>Premium · Active</span>
+          <strong>{profileName || 'Your Details'}</strong>
+          <span>{profileName ? 'Edit profile' : 'Tap to personalize templates'}</span>
         </div>
-      </div>
+        <span className="dash-sidebar__footer-icon">
+          <Icon name="settings" size={14} />
+        </span>
+      </button>
     </aside>
   );
 }

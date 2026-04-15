@@ -15,7 +15,6 @@ interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onOpenModule: (id: ModuleId) => void;
-  onStartAi: () => void;
 }
 
 function phaseTotals(phase: Phase) {
@@ -23,29 +22,12 @@ function phaseTotals(phase: Phase) {
   return ids;
 }
 
-export function Overview({ checked, onToggle, onOpenModule, onStartAi }: Props) {
+export function Overview({ checked, onToggle, onOpenModule }: Props) {
   const allIds = MODULES.flatMap((m) => m.itemIds);
   const overall = allIds.length === 0 ? 0 : Math.round((countChecked(checked, allIds) / allIds.length) * 100);
 
   return (
     <>
-      <div className="dash-topbar">
-        <div className="dash-greeting">
-          <h1>Welcome back. Your 90-day plan is ready.</h1>
-          <p>Follow your step-by-step system to protect your income, benefits, and future.</p>
-        </div>
-        <div style={{ display: 'flex', gap: '0.7rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <span className="dash-pill">
-            <Icon name="lock" size={14} /> Progress saved on this device
-          </span>
-          <button type="button" className="dash-ai-btn" onClick={onStartAi}>
-            <span className="dash-ai-btn__dot" />
-            <Icon name="mic" size={16} />
-            Talk to AI Assistant
-          </button>
-        </div>
-      </div>
-
       {/* Phase progress strip */}
       <section className="dash-phases" aria-label="Your 4-step plan">
         {PHASES.map((p) => {
@@ -117,17 +99,22 @@ export function Overview({ checked, onToggle, onOpenModule, onStartAi }: Props) 
         </div>
 
         <div className="panel panel--accent ai-panel">
-          <h3 className="panel__title">Talk to Your AI Assistant</h3>
+          <h3 className="panel__title">Voice AI — Launching May 2026</h3>
           <p className="panel__sub" style={{ margin: 0 }}>
-            Get personalized guidance, ask questions, rehearse HR conversations.
-            20 minutes included with your plan.
+            Our voice co-pilot "Alex" asks 6 questions and walks you through a 48-hour
+            action plan out loud. 20 free minutes unlock on your purchase email when
+            the beta opens.
           </p>
-          <button type="button" className="ai-panel__cta" onClick={onStartAi}>
-            <Icon name="mic" size={16} />
-            Start 20-Min AI Call
+          <button
+            type="button"
+            className="ai-panel__cta"
+            onClick={() => onOpenModule('severance')}
+          >
+            <Icon name="briefcase" size={16} />
+            Run the Severance Calculator
           </button>
           <div className="ai-panel__note">
-            AI-powered · Educational only · Not a human advisor
+            Personalized estimate · State-aware · Under 2 minutes
           </div>
         </div>
 

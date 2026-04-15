@@ -3,10 +3,13 @@ import { Icon } from '../../components/Icon';
 import { EMAIL_TEMPLATES } from '../../data/emailTemplates';
 import { MODULES, SEVERANCE_ITEMS } from '../../data/modules';
 import { downloadChecklist } from '../../lib/exportChecklist';
-import { countChecked } from '../../lib/storage';
+import { countChecked, personalize, useProfile } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
 import { Checklist } from '../components/Checklist';
 import { ModuleHeader } from '../components/ModuleHeader';
+import { SeveranceCalculator } from '../components/SeveranceCalculator';
+
+const SEV_TEMPLATES = EMAIL_TEMPLATES.filter((t) => t.category === 'severance');
 
 const NEGOTIABLES = [
   'Additional weeks of base pay',
@@ -30,16 +33,19 @@ interface Props {
 
 export function Severance({ checked, onToggle, onBack }: Props) {
   const module = MODULES.find((m) => m.id === 'severance')!;
-  const [tab, setTab] = useState<'overview' | 'asks' | 'templates'>('overview');
-  const [activeTpl, setActiveTpl] = useState<string>(EMAIL_TEMPLATES[0].id);
+  const [tab, setTab] = useState<'overview' | 'calculator' | 'asks' | 'templates'>('calculator');
+  const [activeTpl, setActiveTpl] = useState<string>(SEV_TEMPLATES[0]?.id ?? '');
   const [copied, setCopied] = useState<string | null>(null);
+  const [profile] = useProfile();
   const total = SEVERANCE_ITEMS.length;
   const done = countChecked(checked, SEVERANCE_ITEMS.map((i) => i.id));
 
-  const current = EMAIL_TEMPLATES.find((t) => t.id === activeTpl) ?? EMAIL_TEMPLATES[0];
+  const current = SEV_TEMPLATES.find((t) => t.id === activeTpl) ?? SEV_TEMPLATES[0];
+  const body = current ? personalize(current.body, profile) : '';
+  const subject = current ? personalize(current.subject, profile) : '';
 
-  const copy = (id: string, body: string) => {
-    navigator.clipboard?.writeText(body);
+  const copy = (id: string, text: string) => {
+    navigator.clipboard?.writeText(text);
     setCopied(id);
     setTimeout(() => setCopied(null), 1500);
   };
@@ -62,11 +68,13 @@ export function Severance({ checked, onToggle, onBack }: Props) {
       <div className="module-page__layout">
         <div className="module-page__primary">
           <div className="day-tabs">
-            <button type="button" className={`day-tab ${tab === 'overview' ? 'day-tab--active' : ''}`} onClick={() => setTab('overview')}>Overview</button>
+            <button type="button" className={`day-tab ${tab === 'calculator' ? 'day-tab--active' : ''}`} onClick={() => setTab('calculator')}>Calculator</button>
+            <button type="button" className={`day-tab ${tab === 'overview' ? 'day-tab--active' : ''}`} onClick={() => setTab('overview')}>Checklist</button>
             <button type="button" className={`day-tab ${tab === 'asks' ? 'day-tab--active' : ''}`} onClick={() => setTab('asks')}>11 Negotiable Asks</button>
             <button type="button" className={`day-tab ${tab === 'templates' ? 'day-tab--active' : ''}`} onClick={() => setTab('templates')}>Email Templates</button>
           </div>
 
+          {tab === 'calculator' && <SeveranceCalculator />}
           {tab === 'overview' && <Checklist items={SEVERANCE_ITEMS} checked={checked} onToggle={onToggle} />}
 
           {tab === 'asks' && (
@@ -82,10 +90,15 @@ export function Severance({ checked, onToggle, onBack }: Props) {
             </ul>
           )}
 
-          {tab === 'templates' && (
+          {tab === 'templates' && current && (
             <div className="tpl">
+              <div className="privacy-note" style={{ marginBottom: '1rem' }}>
+                <Icon name="user" size={14} />
+                Fill in <strong>Your Details</strong> (top of the page) and every template
+                will auto-fill your name, company, HR contact, and tenure.
+              </div>
               <div className="tpl__tabs">
-                {EMAIL_TEMPLATES.map((t) => (
+                {SEV_TEMPLATES.map((t) => (
                   <button
                     key={t.id}
                     type="button"
@@ -103,14 +116,14 @@ export function Severance({ checked, onToggle, onBack }: Props) {
                 </div>
                 <div className="tpl__subject">
                   <span className="tpl__subject-label">Subject</span>
-                  <span>{current.subject}</span>
+                  <span>{subject}</span>
                 </div>
-                <pre className="tpl__pre">{current.body}</pre>
+                <pre className="tpl__pre">{body}</pre>
                 <div className="tpl__actions">
                   <button
                     type="button"
                     className="btn-pill"
-                    onClick={() => copy(current.id, `Subject: ${current.subject}\n\n${current.body}`)}
+                    onClick={() => copy(current.id, `Subject: ${subject}\n\n${body}`)}
                   >
                     <Icon name="download" size={14} />{' '}
                     {copied === current.id ? 'Copied!' : 'Copy full email'}

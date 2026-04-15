@@ -55,3 +55,69 @@ export function useChecklist(scope: string) {
 export function countChecked(map: ChecklistMap, ids: string[]): number {
   return ids.reduce((acc, id) => acc + (map[id] ? 1 : 0), 0);
 }
+
+// ---------- User profile ----------
+// Stored in localStorage only. Used to auto-fill template placeholders so
+// users don't have to re-type [Your Name], [Company], etc. every time.
+export interface UserProfile {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  role: string;
+  targetRole: string;
+  tenureYears: string;
+  hrName: string;
+  linkedinUrl: string;
+}
+
+export const EMPTY_PROFILE: UserProfile = {
+  name: '',
+  email: '',
+  phone: '',
+  company: '',
+  role: '',
+  targetRole: '',
+  tenureYears: '',
+  hrName: '',
+  linkedinUrl: '',
+};
+
+export function useProfile() {
+  return usePersistentState<UserProfile>('profile', EMPTY_PROFILE);
+}
+
+// Substitute [Placeholder] tokens in a template body with profile values.
+// Unknown placeholders are left as-is so the user still sees them.
+export function personalize(body: string, p: UserProfile): string {
+  const map: Record<string, string> = {
+    '[Your Name]': p.name,
+    '[Your name]': p.name,
+    '[Name]': p.name, // last-resort fallback (outreach templates override this)
+    '[Your Personal Email]': p.email,
+    '[Your Email]': p.email,
+    '[Personal Email]': p.email,
+    '[Your Phone]': p.phone,
+    '[Phone]': p.phone,
+    '[Company]': p.company,
+    '[Previous Company]': p.company,
+    '[Current Company]': p.company,
+    '[Role]': p.role,
+    '[Your Role]': p.role,
+    '[Current Role]': p.role,
+    '[Target Role]': p.targetRole,
+    '[target role]': p.targetRole,
+    '[Target role]': p.targetRole,
+    '[X years]': p.tenureYears ? `${p.tenureYears} years` : '[X years]',
+    '[N years]': p.tenureYears ? `${p.tenureYears} years` : '[N years]',
+    '[HR Name]': p.hrName,
+    '[LinkedIn URL]': p.linkedinUrl,
+    '[URL]': p.linkedinUrl,
+  };
+  let out = body;
+  for (const [token, value] of Object.entries(map)) {
+    if (!value) continue;
+    out = out.split(token).join(value);
+  }
+  return out;
+}

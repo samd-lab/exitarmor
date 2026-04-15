@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import './index.css';
 import { Dashboard } from './dashboard/Dashboard';
+import ActionPlan from './dashboard/ActionPlan';
 import Landing from './marketing/pages/Landing';
 import About from './marketing/pages/About';
 import Contact from './marketing/pages/Contact';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/blog" element={<BlogIndex />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/app" element={<AppShell />} />
+        <Route path="/action-plan" element={<ActionPlan />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

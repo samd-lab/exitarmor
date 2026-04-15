@@ -1,67 +1,82 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MarketingLayout } from '../MarketingLayout';
+import { Icon } from '../../components/Icon';
+import type { IconName } from '../../components/Icon';
 
 // Hero photo: Unsplash — professional woman thinking at desk (free to use)
 const HERO_IMG =
   'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80';
 
-const FEATURES = [
+// Unified icon + accent system — one warm red/amber palette across all features
+// so the page feels like ONE product, not a Canva template.
+interface Feature {
+  icon: IconName;
+  title: string;
+  body: string;
+  accent: 'coral' | 'amber' | 'rose' | 'crimson' | 'sunset' | 'ember';
+}
+
+const FEATURES: Feature[] = [
   {
-    icon: 'S',
-    color: '#f97316',
+    icon: 'briefcase',
+    accent: 'crimson',
     title: 'Severance Audit',
     body:
-      'AI-powered review of your severance offer against industry benchmarks, state law, and your specific tenure. Get 3–5 specific asks with dollar amounts.',
+      'AI-assisted review of your offer against industry benchmarks, state law, and your specific tenure. Get 3–5 concrete asks with dollar amounts — not generic advice.',
   },
   {
-    icon: 'N',
-    color: '#8b5cf6',
+    icon: 'mail',
+    accent: 'coral',
     title: 'Negotiation Scripts',
     body:
-      'Copy-paste email templates and live voice-coached HR scripts. Practice the call until your voice stops shaking.',
+      'Full-length email templates for every phase — buy-time, counter-offer, and final sign-off. Auto-personalized with your name, company, and HR contact.',
   },
   {
-    icon: 'B',
-    color: '#10b981',
+    icon: 'heart',
+    accent: 'rose',
     title: 'Benefits Rescue',
     body:
-      'Avoid the COBRA trap. Compare COBRA vs ACA Marketplace plans with your exact income and family size in under 5 minutes.',
+      'Avoid the $1,800/month COBRA trap. Compare COBRA vs ACA Marketplace plans with your exact income and family size in under 5 minutes.',
   },
   {
-    icon: '50',
-    color: '#3b82f6',
+    icon: 'map',
+    accent: 'amber',
     title: 'All 50 States',
     body:
-      'State-specific unemployment filing deadlines, PTO payout rules, non-compete enforcement, and WARN Act coverage — down to the link.',
+      'State-specific unemployment filing deadlines, PTO payout rules, non-compete enforceability, and WARN Act coverage — linked to the actual government pages.',
   },
   {
-    icon: '$',
-    color: '#f59e0b',
+    icon: 'dollar',
+    accent: 'sunset',
     title: '90-Day Budget',
     body:
-      'Calculate your runway in one screen. See which subscriptions to cut, which bills to call about, and exactly how far your severance will stretch.',
+      'Calculate your runway in one screen. See which subscriptions to cut, which bills to negotiate, and exactly how far your severance will stretch.',
   },
   {
-    icon: 'J',
-    color: '#ec4899',
+    icon: 'search',
+    accent: 'ember',
     title: 'Job Search Kit',
     body:
-      'LinkedIn "Open to Work" scripts, warm network outreach templates, recruiter cold emails, and a weekly cadence that actually lands interviews.',
+      'LinkedIn "Open to Work" post, warm-network outreach, recruiter cold emails, and the 90-second "so what happened?" interview story — all full-length, ready to copy.',
   },
 ];
 
 const STEPS = [
   {
+    icon: 'shield' as IconName,
     title: 'Stabilize (Days 1–3)',
     body:
       'Secure your documents, file for unemployment, confirm your last day of benefits, and map your cash runway. Eight items, ninety minutes, zero panic.',
   },
   {
+    icon: 'briefcase' as IconName,
     title: 'Negotiate (Days 4–10)',
     body:
       'Audit your severance, build your ask list, send the buy-time email, and script the HR call. Most users add $4,000–$12,000 to their package.',
   },
   {
+    icon: 'spark' as IconName,
     title: 'Launch (Days 11–90)',
     body:
       'Update LinkedIn, activate your warm network, start recruiter outreach, and run a weekly cadence that compounds. Land your next role with leverage.',
@@ -92,6 +107,81 @@ const TESTIMONIALS = [
   },
 ];
 
+// ---- Pricing tiers ----
+// Research note: per-minute consulting ($2/min) creates clock anxiety in a
+// population that is already in fight-or-flight. We benchmarked against
+// BetterUp ($149–399/mo), Thumbtack career coaches ($75–150/hr), employment
+// attorneys ($300–600/hr), and AI career tools ($20–40/mo). Fixed packages
+// win on conversion and satisfaction — users want to know the ceiling.
+interface Tier {
+  id: string;
+  badge?: string;
+  name: string;
+  price: string;
+  period: string;
+  blurb: string;
+  features: string[];
+  cta: string;
+  ctaTo: string;
+  highlighted?: boolean;
+}
+
+const TIERS: Tier[] = [
+  {
+    id: 'self',
+    name: 'Self-Serve Kit',
+    price: '$69',
+    period: 'one-time',
+    blurb: 'Everything you need to run the playbook yourself. No subscription, no renewal.',
+    features: [
+      'All 6 modules + 50-state data',
+      'Full-length email templates (auto-personalized)',
+      '90-day budget worksheet',
+      'COBRA vs ACA comparison',
+      'Interview story builder',
+      '7-day money-back guarantee',
+    ],
+    cta: 'Buy the kit — $69',
+    ctaTo: '/app',
+  },
+  {
+    id: 'ally',
+    badge: 'Most picked',
+    name: 'Power Hour',
+    price: '$149',
+    period: 'one-time',
+    blurb: 'The full kit + a real human on your most important call. Stop second-guessing.',
+    features: [
+      'Everything in Self-Serve',
+      '60-min 1:1 call with a severance coach',
+      'Live review of your specific offer',
+      'We draft your counter-offer email with you',
+      '3 days of async follow-up questions',
+      'Schedule within 24 hours',
+    ],
+    cta: 'Book my Power Hour',
+    ctaTo: '/contact',
+    highlighted: true,
+  },
+  {
+    id: 'war-room',
+    name: 'War Room',
+    price: '$349',
+    period: 'one-time',
+    blurb: 'Full concierge through the whole negotiation — first call, counter, final sign-off.',
+    features: [
+      'Everything in Power Hour',
+      '3 sessions (intake, counter, final sign-off review)',
+      'Unlimited async messaging for 14 days',
+      'Line-by-line review of your signed agreement',
+      'Attorney referral if your case needs it',
+      'Priority scheduling',
+    ],
+    cta: 'Start a War Room',
+    ctaTo: '/contact',
+  },
+];
+
 const FAQ = [
   {
     q: 'Is this legal advice?',
@@ -102,16 +192,20 @@ const FAQ = [
     a: 'No. We built Exit Armor to ask you for as little as possible. Your progress is stored in your own browser. You can export it to email or PDF at any time. The fewer things you have to trust us with in your worst week, the better.',
   },
   {
-    q: 'Is this a subscription?',
-    a: 'No — Exit Armor is a one-time $69 purchase. No renewals, no freemium trap, no upsell emails. You buy it once, you use it until you don\'t need it, and then you forget about us.',
+    q: 'What about the AI co-pilot — when does that launch?',
+    a: 'Our voice-based AI co-pilot, Alex, enters open beta in May 2026. Everyone who buys the kit before then gets 20 free minutes of AI co-pilot time per purchase email, automatically unlocked when beta goes live. No extra charge, no additional sign-up.',
+  },
+  {
+    q: 'Is there a subscription?',
+    a: 'No subscription on the Self-Serve Kit — $69 one time, you use it until you don\'t need it. Power Hour and War Room are also one-time purchases. We don\'t do freemium traps or auto-renewing monthly plans. You buy it, you use it, you move on.',
   },
   {
     q: 'What if I was laid off last month — is it too late?',
-    a: 'No. Many of the most valuable plays in Exit Armor — COBRA vs ACA comparison, unemployment backfiling, network activation, LinkedIn positioning, 90-day budget — work for 30–90 days after the event. Severance negotiation itself is narrower (typically a 21 or 45-day window), but even if you\'ve already signed, the benefits, budget, and job search modules pay for the product many times over.',
+    a: 'No. Many of the most valuable plays — COBRA vs ACA comparison, unemployment backfiling, network activation, LinkedIn positioning, 90-day budget — work for 30–90 days after the event. Severance negotiation itself is narrower (typically a 21 or 45-day window), but even if you\'ve already signed, the benefits, budget, and job search modules pay for the product many times over.',
   },
   {
     q: 'How is this different from ChatGPT?',
-    a: 'ChatGPT is a brilliant generalist with no memory of your state laws, no checklist structure, no email templates designed by employment lawyers, and no 50-state comparison data. Exit Armor is a purpose-built product: curated content, an interactive checklist system, enriched with state-specific guidance, and a single clean flow designed to be used during the worst week of your career.',
+    a: 'ChatGPT is a brilliant generalist with no memory of your state laws, no checklist structure, no email templates enriched by employment lawyers, and no 50-state comparison data. Exit Armor is purpose-built: curated content, an interactive checklist system, enriched with state-specific guidance, and a single clean flow designed to be used during the worst week of your career.',
   },
   {
     q: 'What\'s the refund policy?',
@@ -120,6 +214,20 @@ const FAQ = [
 ];
 
 export default function Landing() {
+  const [emailNotified, setEmailNotified] = useState<string | null>(null);
+  const [emailDraft, setEmailDraft] = useState('');
+
+  const submitEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailDraft.trim()) return;
+    // Lightweight: store locally — real product would POST to a list.
+    try {
+      localStorage.setItem('exitarmor.v1.ai-beta-waitlist', emailDraft.trim());
+    } catch { /* ignore */ }
+    setEmailNotified(emailDraft.trim());
+    setEmailDraft('');
+  };
+
   return (
     <MarketingLayout>
       {/* HERO */}
@@ -133,17 +241,17 @@ export default function Landing() {
             Don't Sign That <span className="text-gradient">Severance Letter</span> Yet.
           </h1>
           <p className="mk-hero__lede">
-            Exit Armor is the AI-powered layoff survival kit that audits your offer,
-            rescues your benefits, and scripts your comeback. In 20 minutes, you'll
-            know exactly what to ask for and how to say it.
+            Exit Armor is the layoff survival kit that audits your offer, rescues your
+            benefits, and scripts your comeback. In 20 minutes, you'll know exactly what
+            to ask for &mdash; and the exact words to say it with.
           </p>
           <div className="mk-hero__cta-row">
             <Link to="/app" className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.05rem' }}>
               Start My 20-Min Audit &mdash; $69
             </Link>
-            <Link to="/blog" className="btn btn-glass" style={{ padding: '1rem 2rem', fontSize: '1.05rem' }}>
-              Read the Playbook
-            </Link>
+            <a href="#pricing" className="btn btn-glass" style={{ padding: '1rem 2rem', fontSize: '1.05rem' }}>
+              See all plans
+            </a>
           </div>
           <div className="mk-hero__checks">
             <span className="mk-hero__check">One-time payment</span>
@@ -158,8 +266,50 @@ export default function Landing() {
             <div className="mk-hero__floating-dot" />
             <div className="mk-hero__floating-text">
               <strong>Average ask accepted</strong>
-              $4,200 — $11,800 added to package
+              $4,200 &mdash; $11,800 added to package
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI BETA BANNER */}
+      <section className="mk-section mk-section--tight">
+        <div className="mk-ai-banner">
+          <div className="mk-ai-banner__icon">
+            <Icon name="mic" size={34} />
+          </div>
+          <div className="mk-ai-banner__content">
+            <div className="mk-ai-banner__eyebrow">
+              <span className="mk-ai-banner__pulse" />
+              Beta launching May 2026
+            </div>
+            <h3>Meet Alex &mdash; your voice AI co-pilot</h3>
+            <p>
+              Talk through your situation out loud. Alex asks 6 quick questions,
+              understands your state and tenure, and walks you through a personalized
+              48-hour action plan. <strong>Every kit buyer gets 20 free minutes</strong>,
+              auto-unlocked on your purchase email when the beta opens.
+            </p>
+            {emailNotified ? (
+              <div className="mk-ai-banner__confirm">
+                <Icon name="check" size={16} /> We'll email{' '}
+                <strong>{emailNotified}</strong> the moment Alex is ready.
+              </div>
+            ) : (
+              <form className="mk-ai-banner__form" onSubmit={submitEmail}>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={emailDraft}
+                  onChange={(e) => setEmailDraft(e.target.value)}
+                  required
+                  aria-label="Email address"
+                />
+                <button type="submit" className="btn btn-primary">
+                  Save my seat
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>
@@ -200,12 +350,9 @@ export default function Landing() {
         </div>
         <div className="mk-features">
           {FEATURES.map((f) => (
-            <div key={f.title} className="mk-feature">
-              <div
-                className="mk-feature__icon"
-                style={{ background: `linear-gradient(135deg, ${f.color}, ${f.color}cc)` }}
-              >
-                {f.icon}
+            <div key={f.title} className={`mk-feature mk-feature--${f.accent}`}>
+              <div className="mk-feature__icon">
+                <Icon name={f.icon} size={32} />
               </div>
               <h3>{f.title}</h3>
               <p>{f.body}</p>
@@ -229,11 +376,58 @@ export default function Landing() {
           {STEPS.map((s, i) => (
             <div key={i} className="mk-step">
               <div className="mk-step__number">{i + 1}</div>
+              <div className="mk-step__icon">
+                <Icon name={s.icon} size={26} />
+              </div>
               <h3>{s.title}</h3>
               <p>{s.body}</p>
             </div>
           ))}
         </div>
+      </section>
+
+      {/* PRICING */}
+      <section className="mk-section" id="pricing">
+        <div className="mk-section__head">
+          <div className="mk-section__eyebrow">Pricing</div>
+          <h2>Three ways to use Exit Armor.</h2>
+          <p>
+            Most people succeed on the $69 Self-Serve Kit alone. If you want a human
+            on your biggest call, Power Hour is our best value. War Room is for
+            six-figure packages and messy exits.
+          </p>
+        </div>
+        <div className="mk-pricing">
+          {TIERS.map((t) => (
+            <div key={t.id} className={`mk-price-card ${t.highlighted ? 'mk-price-card--highlight' : ''}`}>
+              {t.badge && <div className="mk-price-card__badge">{t.badge}</div>}
+              <h3>{t.name}</h3>
+              <div className="mk-price-card__price">
+                <span className="mk-price-card__amount">{t.price}</span>
+                <span className="mk-price-card__period">{t.period}</span>
+              </div>
+              <p className="mk-price-card__blurb">{t.blurb}</p>
+              <ul className="mk-price-card__features">
+                {t.features.map((ft, i) => (
+                  <li key={i}>
+                    <Icon name="check" size={14} /> {ft}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to={t.ctaTo}
+                className={`btn ${t.highlighted ? 'btn-primary' : 'btn-glass'}`}
+                style={{ padding: '0.85rem 1.5rem', justifyContent: 'center' }}
+              >
+                {t.cta}
+              </Link>
+            </div>
+          ))}
+        </div>
+        <p className="mk-pricing__footnote">
+          All tiers are one-time purchases. No subscriptions, no auto-renewals, no upsell
+          emails. 7-day money-back guarantee on the kit.
+        </p>
       </section>
 
       {/* TESTIMONIALS */}

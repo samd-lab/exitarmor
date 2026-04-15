@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { Icon } from '../../components/Icon';
 import { BUDGET_ITEMS, MODULES } from '../../data/modules';
+import { calculateRunway, money, runwayLabel } from '../../lib/calculators';
+import type { RunwayInput } from '../../lib/calculators';
 import { downloadChecklist } from '../../lib/exportChecklist';
 import { countChecked, usePersistentState } from '../../lib/storage';
 import type { ChecklistMap } from '../../lib/storage';
@@ -13,48 +15,28 @@ interface Props {
   onBack: () => void;
 }
 
-interface BudgetInputs {
-  rent: number;
-  food: number;
-  insurance: number;
-  utilities: number;
-  debt: number;
-  other: number;
-  monthlyIncome: number;
-  savings: number;
-}
-
-const DEFAULTS: BudgetInputs = {
+const DEFAULTS: RunwayInput = {
   rent: 1800,
   food: 600,
   insurance: 350,
   utilities: 220,
   debt: 400,
   other: 250,
+  discretionary: 300,
   monthlyIncome: 0,
   savings: 12000,
 };
 
 export function Budget({ checked, onToggle, onBack }: Props) {
   const module = MODULES.find((m) => m.id === 'budget')!;
-  const [inputs, setInputs] = usePersistentState<BudgetInputs>('budget.inputs', DEFAULTS);
+  const [inputs, setInputs] = usePersistentState<RunwayInput>('budget.runway', DEFAULTS);
 
-  const essential = inputs.rent + inputs.food + inputs.insurance + inputs.utilities + inputs.debt;
-  const total = essential + inputs.other;
-  const bleed = Math.max(0, total - inputs.monthlyIncome);
-  const months = bleed === 0 ? Infinity : inputs.savings / bleed;
+  const result = useMemo(() => calculateRunway(inputs), [inputs]);
 
   const totalItems = BUDGET_ITEMS.length;
   const done = countChecked(checked, BUDGET_ITEMS.map((i) => i.id));
 
-  const update = (k: keyof BudgetInputs, v: number) => setInputs({ ...inputs, [k]: v });
-
-  const runwayLabel = useMemo(() => {
-    if (months === Infinity) return 'Income covers expenses';
-    if (months >= 6) return `${months.toFixed(1)} months — strong`;
-    if (months >= 3) return `${months.toFixed(1)} months — cautious`;
-    return `${months.toFixed(1)} months — extend runway`;
-  }, [months]);
+  const update = (k: keyof RunwayInput, v: number) => setInputs({ ...inputs, [k]: v });
 
   return (
     <>
@@ -67,45 +49,58 @@ export function Budget({ checked, onToggle, onBack }: Props) {
 
       <div className="privacy-note">
         <Icon name="lock" size={14} />
-        Financial planning tool — not financial advice. Inputs are stored only on this device.
+        Financial planning tool — not financial advice. Inputs stay only on this device.
       </div>
 
       <div className="module-page__layout">
         <div className="module-page__primary">
-          <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>Monthly expenses</h4>
+          <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>Essential monthly spend</h4>
           <div className="budget-grid">
             <BudgetField label="Rent / Mortgage" value={inputs.rent} onChange={(v) => update('rent', v)} />
             <BudgetField label="Food / Groceries" value={inputs.food} onChange={(v) => update('food', v)} />
             <BudgetField label="Insurance (health, auto)" value={inputs.insurance} onChange={(v) => update('insurance', v)} />
             <BudgetField label="Utilities" value={inputs.utilities} onChange={(v) => update('utilities', v)} />
             <BudgetField label="Minimum debt payments" value={inputs.debt} onChange={(v) => update('debt', v)} />
-            <BudgetField label="Other essentials" value={inputs.other} onChange={(v) => update('other', v)} />
+            <BudgetField label="Other essentials (childcare, transport)" value={inputs.other} onChange={(v) => update('other', v)} />
           </div>
 
-          <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.5rem', marginBottom: '0.5rem' }}>Income & savings</h4>
+          <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.5rem', marginBottom: '0.5rem' }}>Discretionary spend</h4>
+          <div className="budget-grid">
+            <BudgetField
+              label="Subscriptions, dining out, entertainment"
+              value={inputs.discretionary}
+              onChange={(v) => update('discretionary', v)}
+            />
+          </div>
+
+          <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.5rem', marginBottom: '0.5rem' }}>Income &amp; savings</h4>
           <div className="budget-grid">
             <BudgetField label="Monthly income (severance, side, UI)" value={inputs.monthlyIncome} onChange={(v) => update('monthlyIncome', v)} />
             <BudgetField label="Total liquid savings" value={inputs.savings} onChange={(v) => update('savings', v)} />
           </div>
 
-          <div className={`budget-result ${months < 3 ? 'warn' : ''}`}>
-            <div>
-              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, color: months < 3 ? '#b91c1c' : '#047857' }}>
-                Monthly bleed rate
-              </div>
-              <div style={{ marginTop: 6, fontSize: '0.95rem', color: '#0f172a' }}>
-                Total essentials: <strong>${total.toLocaleString()}</strong> · Income: <strong>${inputs.monthlyIncome.toLocaleString()}</strong>
-              </div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: 1, fontWeight: 700, color: months < 3 ? '#b91c1c' : '#047857' }}>
-                Runway
-              </div>
-              <strong>${bleed.toLocaleString()}/mo · {runwayLabel}</strong>
-            </div>
+          <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.8rem', marginBottom: '0.6rem' }}>Three runway scenarios</h4>
+          <div className="runway-scenarios">
+            <ScenarioCard tone="warn" scenario={result.scenarios.current} />
+            <ScenarioCard tone="caution" scenario={result.scenarios.cutDiscretionary} />
+            <ScenarioCard tone="good" scenario={result.scenarios.hardCut} />
           </div>
 
-          <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.5rem', marginBottom: '0.5rem' }}>90-day defense checklist</h4>
+          {result.cuts.length > 0 && (
+            <>
+              <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.8rem', marginBottom: '0.6rem' }}>Top 5 cuts to extend your runway</h4>
+              <ul className="runway-cuts">
+                {result.cuts.map((c, i) => (
+                  <li key={i}>
+                    <span className="runway-cuts__label">{c.label}</span>
+                    <span className="runway-cuts__value">{money(c.monthlySavings)}/mo</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          <h4 style={{ fontFamily: 'var(--font-heading)', marginTop: '1.8rem', marginBottom: '0.5rem' }}>90-day defense checklist</h4>
           <Checklist items={BUDGET_ITEMS} checked={checked} onToggle={onToggle} />
         </div>
 
@@ -131,6 +126,25 @@ export function Budget({ checked, onToggle, onBack }: Props) {
         </aside>
       </div>
     </>
+  );
+}
+
+function ScenarioCard({
+  tone,
+  scenario,
+}: {
+  tone: 'warn' | 'caution' | 'good';
+  scenario: { label: string; monthlyBleed: number; months: number; description: string };
+}) {
+  return (
+    <div className={`runway-scenario runway-scenario--${tone}`}>
+      <div className="runway-scenario__head">
+        <span className="runway-scenario__label">{scenario.label}</span>
+        <span className="runway-scenario__bleed">{money(scenario.monthlyBleed)}/mo bleed</span>
+      </div>
+      <div className="runway-scenario__months">{runwayLabel(scenario.months)}</div>
+      <p className="runway-scenario__desc">{scenario.description}</p>
+    </div>
   );
 }
 

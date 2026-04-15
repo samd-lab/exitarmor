@@ -1,5 +1,6 @@
-// Full-length negotiation email templates.
-// Copy, personalize, send.
+// Full-length negotiation and job-search email templates.
+// Copy, personalize, send. Templates are auto-personalized using the
+// user's profile (see lib/storage.ts > personalize()).
 
 export interface EmailTemplate {
   id: string;
@@ -9,6 +10,7 @@ export interface EmailTemplate {
   subject: string;
   body: string;
   notes: string[];
+  category?: 'severance' | 'job-search';
 }
 
 export const EMAIL_TEMPLATES: EmailTemplate[] = [
@@ -45,6 +47,7 @@ Best regards,
       'Requests documents you are legally entitled to — HR cannot refuse.',
       'Uses personal email/phone — work email may be disabled any moment.',
     ],
+    category: 'severance',
   },
   {
     id: 'leverage',
@@ -81,6 +84,7 @@ Thank you for considering this,
       'Offers flexibility on the most contentious item (keeps confidentiality, asks to drop non-compete).',
       'Sets a soft deadline — pressures them to act without being aggressive.',
     ],
+    category: 'severance',
   },
   {
     id: 'final-signoff',
@@ -120,6 +124,7 @@ Best regards,
       'Offers quick execution ("within 24 hours") in exchange for confirmation.',
       'Closes graciously — you never know when you\'ll cross paths again.',
     ],
+    category: 'severance',
   },
   {
     id: 'warm-network',
@@ -151,6 +156,7 @@ Thanks for considering it,
       'Includes a Calendly link — removes scheduling friction.',
       'Positions you as seeking advice + intros, not a handout.',
     ],
+    category: 'job-search',
   },
   {
     id: 'recruiter-cold',
@@ -188,5 +194,72 @@ Thanks for considering,
       'Proactively addresses logistics (location, comp, timeline) — removes objections.',
       'Mentions the layoff briefly and framed positively — gets ahead of any Google search.',
     ],
+    category: 'job-search',
+  },
+  {
+    id: 'explain-layoff',
+    title: 'How to Explain Your Layoff (Interview / Elevator)',
+    tag: 'Interview',
+    when: 'Use when an interviewer or network contact asks "so what happened at [Company]?"',
+    subject: 'The 90-second answer — spoken, not written',
+    body: `(Speak this in 60–90 seconds. Do not read it aloud — internalize the structure and deliver it naturally.)
+
+"My role at [Company] was eliminated in [month] as part of a [company-wide / department-level / org] restructure that impacted approximately [number] people across the [function / region / business unit]. The decision was driven by [publicly-known context — e.g., 'a shift from the consumer business toward enterprise', 'a broader reduction in force announced in the Q[X] earnings call', 'the consolidation of two teams after the acquisition']. It was a position-level decision, not a performance one — I was told directly by my manager that the team had been pleased with my work, and I left in good standing with a positive reference from [Manager Name].
+
+I'm proud of what I accomplished in my [X years] there. The highlights I point to are [Specific Accomplishment #1 with a quantified outcome — e.g., 'leading the launch of [product] which generated $[X] in its first year'], [Specific Accomplishment #2 with a metric], and [Specific Accomplishment #3 — ideally one that involved cross-functional leadership or a hard problem solved]. Those three things are the clearest signal of what I can bring to my next role.
+
+What I'm focused on now is [Target Role] at companies working on [Problem You Care About]. I'm particularly interested in [This Company] because [One Specific, Researched Reason — something from their engineering blog, a recent product launch, a values post from their CEO, a customer story]. I've been intentional about using this window to talk to people solving problems I find genuinely interesting, rather than spraying applications — and that's what brought me to this conversation."
+
+(Stop. Let them respond. Do not keep talking.)`,
+    notes: [
+      '90 seconds is the target. Practice it out loud until it is automatic — you will be asked this every single interview.',
+      'Three structural beats: (1) what happened + why it was not personal, (2) what you achieved there, (3) what you want next. Missing any beat weakens the story.',
+      'Use passive voice for the layoff itself ("My role was eliminated") — it keeps the focus on the role, not on you.',
+      'Always include publicly-known business context — it signals that you understand the business decision and are not bitter.',
+      'Always name the manager and quality of the reference — it pre-empts the interviewer\'s unspoken concern ("was this a performance issue?").',
+      'Three accomplishments, all quantified. Generic claims ("I built products") signal you don\'t remember specifics. Numbers signal you do.',
+      'Target role + target company context + one specific reason you care about THIS company — this is what separates a pro from a panicked applicant.',
+      'Never trash the employer, never sound angry, never use the words "let go" or "fired," never dwell. Forward momentum is the product.',
+    ],
+    category: 'job-search',
+  },
+  {
+    id: 'linkedin-announcement',
+    title: 'LinkedIn "Open to Work" Announcement Post',
+    tag: 'Job Search',
+    when: 'Post publicly on LinkedIn within 7–14 days of the layoff, once you have calmed down.',
+    subject: 'LinkedIn post — public announcement',
+    body: `After [X amazing years] at [Company], my role was eliminated last [week / month] as part of a broader restructure that impacted [number] roles across the [function / region]. I'm grateful for my time there and incredibly proud of what the team built together.
+
+A few highlights I'll carry forward:
+
+→ [Accomplishment #1 — quantified. e.g., "Led the launch of [product], which grew from 0 to [$X] ARR in [Y] months"]
+→ [Accomplishment #2 — quantified. e.g., "Scaled the [team / function] from [X] to [Y] people while [specific hard thing]"]
+→ [Accomplishment #3 — quantified. e.g., "Shipped [project] across [N] markets in [timeframe]"]
+
+More than any of that, I'm grateful for the people — [Manager Name] who trusted me with [specific big thing], [Peer Name] who taught me [specific skill], and the rest of the [team name] team who showed up every day and made the work matter.
+
+Now the forward look. I'm focused on finding my next chapter as a [Target Role] at a company solving [Problem Area]. Specifically, I'm interested in:
+
+• Mission: companies tackling [specific space you care about — e.g., "climate, healthcare infrastructure, or developer tooling"]
+• Stage: [Seed / Series A–B / growth / public] — where I can [bring X skill and learn Y]
+• Location: [City, remote-first, or open]
+
+If you know of roles that fit, or if you'd be open to a 20-minute conversation about your world, I'd be grateful for either. I'm not expecting anyone to find me a job — what I'm hoping for is advice, introductions, and the occasional "have you thought about ___?"
+
+My resume is linked in my profile, and you can reach me at [Your Personal Email]. Thank you to everyone who has already reached out — it has meant more than I can say.
+
+#OpenToWork #[YourFunction] #[YourIndustry]`,
+    notes: [
+      'Post publicly, not to "recruiters only" — the warm network reach is the whole point.',
+      'Lead with gratitude, not grievance. Angry posts go viral for the wrong reasons and follow you for years.',
+      'Three quantified accomplishments — not five, not one. Three is the magic number for scannability.',
+      'Name 2–3 specific people you worked with. It generates warm comments and gets your post shown to their networks.',
+      'Be specific about what you want next — mission, stage, location. Vague "open to opportunities" posts get vague responses.',
+      'Explicitly lower the ask: "I\'m not expecting anyone to find me a job." This gets you 3x more responses than asking for a job.',
+      'Include your personal email in the post. Do not make people DM you — friction kills intros.',
+      'Use the #OpenToWork tag — LinkedIn\'s algorithm actively surfaces these posts to recruiters and 2nd-degree connections.',
+    ],
+    category: 'job-search',
   },
 ];
