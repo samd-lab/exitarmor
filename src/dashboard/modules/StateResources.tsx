@@ -31,8 +31,8 @@ export function StateResources({ checked, onToggle, onBack }: Props) {
 
       <div className="privacy-note">
         <Icon name="lock" size={14} />
-        State coverage is provided for the 10 largest US states. Always verify deadlines
-        on your state's Department of Labor website.
+        Coverage for all 50 US states + DC. Always verify deadlines on your state's
+        Department of Labor website before taking action.
       </div>
 
       <div className="module-page__layout">

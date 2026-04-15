@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Icon } from '../../components/Icon';
+import { EMAIL_TEMPLATES } from '../../data/emailTemplates';
 import { MODULES, SEVERANCE_ITEMS } from '../../data/modules';
 import { downloadChecklist } from '../../lib/exportChecklist';
 import { countChecked } from '../../lib/storage';
@@ -21,30 +22,6 @@ const NEGOTIABLES = [
   'Re-employment eligibility',
 ];
 
-const TEMPLATES = [
-  {
-    id: 'soft-stall',
-    title: 'Soft Stall — Buy Time',
-    body:
-      'Hi [HR Name], thank you for walking me through the package today. I want to make sure I fully understand everything before signing. ' +
-      'Could we set up a brief 15-minute call later this week so I can ask a few clarifying questions? In the meantime, please consider this email confirmation that I have not yet accepted the terms.',
-  },
-  {
-    id: 'leverage',
-    title: 'Leverage Rebuttal — Ask for More',
-    body:
-      'Hi [HR Name], after reviewing the offer, I want to thank you for putting it together. Given my [X years] of tenure, my recent contributions to [project], and the standard severance benchmark of 2 weeks per year of service, I would like to formally request: ' +
-      '(1) [N] additional weeks of pay, (2) COBRA reimbursement for 3 months, and (3) accelerated vesting of my next equity tranche. I am happy to discuss on a call.',
-  },
-  {
-    id: 'final-signoff',
-    title: 'Final Sign-off — Protect Yourself',
-    body:
-      'Hi [HR Name], I am ready to move forward, but before I sign, please confirm in writing that: ' +
-      '(1) the non-compete clause has been removed, (2) my final paycheck includes accrued PTO payout, and (3) I will receive a positive reference upon request. Once I have that confirmation, I will sign and return.',
-  },
-];
-
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
@@ -54,8 +31,18 @@ interface Props {
 export function Severance({ checked, onToggle, onBack }: Props) {
   const module = MODULES.find((m) => m.id === 'severance')!;
   const [tab, setTab] = useState<'overview' | 'asks' | 'templates'>('overview');
+  const [activeTpl, setActiveTpl] = useState<string>(EMAIL_TEMPLATES[0].id);
+  const [copied, setCopied] = useState<string | null>(null);
   const total = SEVERANCE_ITEMS.length;
   const done = countChecked(checked, SEVERANCE_ITEMS.map((i) => i.id));
+
+  const current = EMAIL_TEMPLATES.find((t) => t.id === activeTpl) ?? EMAIL_TEMPLATES[0];
+
+  const copy = (id: string, body: string) => {
+    navigator.clipboard?.writeText(body);
+    setCopied(id);
+    setTimeout(() => setCopied(null), 1500);
+  };
 
   return (
     <>
@@ -86,29 +73,58 @@ export function Severance({ checked, onToggle, onBack }: Props) {
             <ul className="cklist">
               {NEGOTIABLES.map((n, i) => (
                 <li key={i} className="cklist__item">
-                  <span className="ck ck--checked"><Icon name="check" size={12} /></span>
-                  <span className="cklist__label">{n}</span>
+                  <div className="cklist__row">
+                    <span className="ck ck--checked"><Icon name="check" size={12} /></span>
+                    <span className="cklist__label">{n}</span>
+                  </div>
                 </li>
               ))}
             </ul>
           )}
 
           {tab === 'templates' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {TEMPLATES.map((t) => (
-                <div key={t.id} style={{ background: 'var(--d-surface-soft)', border: '1px solid var(--d-border)', borderRadius: 12, padding: '1rem 1.1rem' }}>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>{t.title}</h4>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--d-text)', lineHeight: 1.6, margin: 0 }}>{t.body}</p>
+            <div className="tpl">
+              <div className="tpl__tabs">
+                {EMAIL_TEMPLATES.map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className={`tpl__tab ${activeTpl === t.id ? 'tpl__tab--active' : ''}`}
+                    onClick={() => setActiveTpl(t.id)}
+                  >
+                    <span className="tpl__tag">{t.tag}</span>
+                    <span>{t.title}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="tpl__body">
+                <div className="tpl__meta">
+                  <strong>When to send:</strong> {current.when}
+                </div>
+                <div className="tpl__subject">
+                  <span className="tpl__subject-label">Subject</span>
+                  <span>{current.subject}</span>
+                </div>
+                <pre className="tpl__pre">{current.body}</pre>
+                <div className="tpl__actions">
                   <button
                     type="button"
                     className="btn-pill"
-                    style={{ marginTop: '0.7rem' }}
-                    onClick={() => navigator.clipboard?.writeText(t.body)}
+                    onClick={() => copy(current.id, `Subject: ${current.subject}\n\n${current.body}`)}
                   >
-                    <Icon name="download" size={14} /> Copy template
+                    <Icon name="download" size={14} />{' '}
+                    {copied === current.id ? 'Copied!' : 'Copy full email'}
                   </button>
                 </div>
-              ))}
+                <div className="tpl__notes">
+                  <h5>Why this works</h5>
+                  <ul>
+                    {current.notes.map((n, i) => (
+                      <li key={i}>{n}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
         </div>

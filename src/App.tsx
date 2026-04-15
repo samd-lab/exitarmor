@@ -1,20 +1,48 @@
 import { useState } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import './index.css';
 import { Dashboard } from './dashboard/Dashboard';
-
-type View = 'landing' | 'consent' | 'dashboard';
+import Landing from './marketing/pages/Landing';
+import About from './marketing/pages/About';
+import Contact from './marketing/pages/Contact';
+import Disclaimer from './marketing/pages/Disclaimer';
+import Terms from './marketing/pages/Terms';
+import Privacy from './marketing/pages/Privacy';
+import BlogIndex from './marketing/pages/BlogIndex';
+import BlogPost from './marketing/pages/BlogPost';
 
 function App() {
-  const [view, setView] = useState<View>('landing');
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/disclaimer" element={<Disclaimer />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/blog" element={<BlogIndex />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/app" element={<AppShell />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+type AppView = 'consent' | 'dashboard';
+
+function AppShell() {
+  const navigate = useNavigate();
+  const [view, setView] = useState<AppView>('consent');
   const [aiActive, setAiActive] = useState(false);
 
   return (
     <div className="app-container">
-      {view === 'landing' && <LandingPage onStart={() => setView('consent')} />}
       {view === 'consent' && (
         <ConsentModal
           onAccept={() => setView('dashboard')}
-          onCancel={() => setView('landing')}
+          onCancel={() => navigate('/')}
         />
       )}
       {view === 'dashboard' && (
@@ -24,133 +52,6 @@ function App() {
         </>
       )}
     </div>
-  );
-}
-
-function LandingPage({ onStart }: { onStart: () => void }) {
-  return (
-    <>
-      <nav className="nav-bar container">
-        <div className="logo" style={{ fontWeight: 800, fontSize: '1.5rem', letterSpacing: '-1px' }}>
-          EXIT ARMOR
-        </div>
-        <div className="nav-actions">
-          <button className="btn btn-primary" onClick={onStart}>
-            Get My Action Plan &mdash; $69
-          </button>
-        </div>
-      </nav>
-
-      <header
-        className="hero container animate-fade-in"
-        style={{ textAlign: 'center', paddingTop: '6rem', paddingBottom: '4rem' }}
-      >
-        <p
-          className="eyebrow"
-          style={{
-            color: 'var(--text-muted)',
-            fontSize: '0.85rem',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            marginBottom: '1rem',
-          }}
-        >
-          AI-Powered Guidance &middot; Educational Resource &middot; Not a Human Advisor
-        </p>
-        <h1 style={{ fontSize: '4.5rem', marginBottom: '1.5rem', lineHeight: '1.1' }}>
-          Don't Sign That <span className="text-gradient">Severance Letter</span> Yet.
-        </h1>
-        <p
-          style={{
-            fontSize: '1.25rem',
-            color: 'var(--text-secondary)',
-            maxWidth: '700px',
-            margin: '0 auto 2.5rem',
-          }}
-        >
-          Our Voice AI audits your offer, finds thousands in hidden leverage, and scripts
-          your negotiation in 15 minutes. Don't leave money on the table in the most
-          stressful week of your career.
-        </p>
-        <button
-          className="btn btn-primary"
-          onClick={onStart}
-          style={{ padding: '1rem 2.5rem', fontSize: '1.1rem' }}
-        >
-          Start My 20-Min Audit &mdash; $69
-        </button>
-        <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          &#10003; One-time payment. &#10003; Instant access. &#10003; 7-day money-back guarantee.
-        </p>
-      </header>
-
-      <section className="container" style={{ padding: '4rem 0' }}>
-        <div className="glass-panel" style={{ padding: '3rem', display: 'flex', gap: '2rem', alignItems: 'center' }}>
-          <div style={{ flex: 1 }}>
-            <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Shock is a Strategy.</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-              HR is looking out for the company. They rely on you being too overwhelmed
-              to negotiate. The $5,000 Gap: most professionals leave at least 2&ndash;4
-              weeks of pay or COBRA coverage on the table simply because they didn't ask.
-            </p>
-            <p style={{ color: 'var(--text-secondary)' }}>
-              Confidence on Demand: our AI doesn't just tell you what to say&mdash;it
-              roleplays the call with you until you're ready.
-            </p>
-          </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="glass-panel" style={{ padding: '1.5rem' }}>
-              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>1. The Offer Audit</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                Automated deep-dive into your specific severance package.
-              </p>
-            </div>
-            <div className="glass-panel" style={{ padding: '1.5rem' }}>
-              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>2. The Leverage Report</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                PDF identifying 3&ndash;5 specific asks based on tenure and state law.
-              </p>
-            </div>
-            <div className="glass-panel" style={{ padding: '1.5rem' }}>
-              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>3. Live Prep</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                20 minutes of private, voice-to-voice HR roleplay coaching.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer
-        style={{
-          borderTop: '1px solid var(--glass-border)',
-          padding: '2rem 0',
-          marginTop: '4rem',
-          textAlign: 'center',
-        }}
-      >
-        <div className="container">
-          <p
-            style={{
-              color: 'var(--text-muted)',
-              fontSize: '0.75rem',
-              maxWidth: '800px',
-              margin: '0 auto',
-              lineHeight: '1.6',
-            }}
-          >
-            FirstDayFired / Exit Armor is an AI-powered educational resource. Nothing on
-            this website or in our product constitutes legal advice, financial advice,
-            tax advice, or professional services of any kind. No attorney-client or
-            professional relationship is created by use of this product. Information
-            provided is general in nature and may not apply to your specific situation.
-            Always consult a licensed professional before making legal or financial
-            decisions. FirstDayFired is not a law firm and does not provide legal
-            representation.
-          </p>
-        </div>
-      </footer>
-    </>
   );
 }
 
