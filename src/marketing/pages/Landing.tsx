@@ -35,7 +35,7 @@ const HERO_ROTATOR = [
   'your 90-day runway',
   'the job-search restart',
   '8 HR roleplay scenarios',
-  '20+ email templates',
+  '20+ full-length email templates',
   '6 attorney services',
   '4 pure-math calculators',
 ];

@@ -554,6 +554,9 @@
   .mk-features { grid-template-columns: 1fr; }
 }
 .mk-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 2rem 1.8rem;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -565,16 +568,18 @@
   transform: translateY(-3px);
 }
 .mk-feature__icon {
-  /* Editorial, vettedvitals-style icon chip. Big enough to read at a glance,
-     calm enough that the card copy reads first. Shadow is monochrome so it
-     never bleeds a red halo into the h3 below. */
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  display: inline-flex;
+  /* Editorial, vettedvitals-style icon chip. `display: flex` (NOT inline-flex)
+     is critical — inline-flex was causing the icon to sit on the same line box
+     as the h3 below it, which made the icon visually collapse on top of the
+     title. flex makes it a block-level box that reserves its own row. */
+  display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.4rem;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 auto;
+  border-radius: 16px;
+  margin: 0 0 1.4rem 0;
   color: #fff;
   position: relative;
   box-shadow:

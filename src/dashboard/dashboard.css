@@ -46,7 +46,13 @@
   font-family: var(--font-body);
 }
 
-/* ---- Sidebar ---- */
+/* ---- Sidebar ----
+   `height: 100vh` pins the column, but we also need `overflow-y: auto` so
+   the sidebar can scroll internally when the content (brand + progress +
+   8 nav items + trust + footer) is taller than the viewport. Without
+   this, short-laptop viewports (≤720px tall) clipped the last two or three
+   nav options with no way to reach them. The `min-height: 0` + internal
+   scroll container pattern keeps `margin-top: auto` on the footer working. */
 .dash-sidebar {
   width: 264px;
   flex-shrink: 0;
@@ -58,6 +64,21 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Slim, near-invisible scrollbar — only appears when content overflows. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+.dash-sidebar::-webkit-scrollbar { width: 6px; }
+.dash-sidebar::-webkit-scrollbar-track { background: transparent; }
+.dash-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+.dash-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .dash-sidebar__brand {
