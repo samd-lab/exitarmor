@@ -74,14 +74,17 @@ interface Feature {
   icon: IconName;
   title: string;
   body: string;
-  accent: 'coral' | 'amber' | 'rose' | 'crimson' | 'sunset' | 'ember';
+  accent: 'sage' | 'slate' | 'terracotta' | 'forest' | 'gold' | 'deep';
   pill?: string;
 }
 
+// Nine modules, painted with the calm editorial palette. The accents cycle
+// so no two neighbors in the 3x3 grid repeat — it feels like one product,
+// not nine free-icon tiles.
 const FEATURES: Feature[] = [
   {
     icon: 'briefcase',
-    accent: 'crimson',
+    accent: 'terracotta',
     pill: 'Calculator',
     title: 'Severance Calculator',
     body:
@@ -89,7 +92,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'dollar',
-    accent: 'sunset',
+    accent: 'gold',
     pill: 'Calculator',
     title: '90-Day Runway',
     body:
@@ -97,7 +100,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'mail',
-    accent: 'coral',
+    accent: 'sage',
     pill: '20+ templates',
     title: 'Ready-to-send emails',
     body:
@@ -105,7 +108,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'mic',
-    accent: 'ember',
+    accent: 'slate',
     pill: 'Practice',
     title: 'HR Call Roleplay',
     body:
@@ -113,7 +116,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'chart',
-    accent: 'amber',
+    accent: 'forest',
     pill: 'Side-by-side',
     title: 'Offer Compare',
     body:
@@ -121,7 +124,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'heart',
-    accent: 'rose',
+    accent: 'terracotta',
     pill: 'Benefits',
     title: 'COBRA vs ACA',
     body:
@@ -129,7 +132,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'scale',
-    accent: 'crimson',
+    accent: 'deep',
     pill: 'Legal',
     title: 'Find an Attorney',
     body:
@@ -137,7 +140,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'book',
-    accent: 'coral',
+    accent: 'gold',
     pill: 'Interview',
     title: 'Story Builder',
     body:
@@ -145,7 +148,7 @@ const FEATURES: Feature[] = [
   },
   {
     icon: 'map',
-    accent: 'amber',
+    accent: 'sage',
     pill: '50 states',
     title: 'State Law Guide',
     body:
@@ -673,17 +676,21 @@ export default function Landing() {
       </section>
 
       {/* ========================================================
-          PAIN CALLOUT — what's actually at stake
+          FOUR NUMBERS — the cited stakes, quietly stated.
+          Reworked from a red, adversarial "HR vs you" block into
+          a calm editorial data strip, closer in tone to VettedVitals
+          and the rest of this page.
       ======================================================== */}
       <section className="mk-pain reveal">
-        <div className="mk-pain__eyebrow">Here's what's actually at stake</div>
+        <div className="mk-pain__eyebrow">Four numbers worth knowing first</div>
         <h2 className="mk-pain__title">
-          HR is counting on you to be <span className="text-gradient">too overwhelmed</span> to fight back.
+          The cited ranges <span className="text-gradient">quietly shape</span> every severance conversation.
         </h2>
         <p className="mk-pain__lede">
-          Not because they're cruel — because that's how companies minimize severance costs.
-          The people who wrote your packet are trained to settle. You aren't. Every day you
-          spend panicking, Googling, and second-guessing is a day HR banks on.
+          None of these are secrets &mdash; they sit in SHRM surveys, KFF reports, and state
+          Department of Labor pages. But they rarely make it into the room when a packet
+          lands on your desk. Exit Armor pulls them forward so you can read your offer
+          against the published numbers instead of your gut.
         </p>
         <div className="mk-pain__grid">
           <div className="mk-pain__card">
@@ -704,12 +711,12 @@ export default function Landing() {
           <div className="mk-pain__card">
             <div className="mk-pain__amount">21 / 45 days</div>
             <div className="mk-pain__head">OWBPA review window</div>
-            <p>Federal law gives workers 40+ 21 days (45 in group layoffs) to review a waiver, plus 7 days to revoke. The kit explains what that means for your situation.</p>
+            <p>Federal law gives workers 21 days (45 in group layoffs) to review a waiver, plus 7 days to revoke. The kit explains what that means for your situation.</p>
           </div>
         </div>
         <p className="mk-pain__reassure">
-          <Icon name="shield" size={14} /> Exit Armor exists so none of these happen to you.
-          We walk beside you through every clause, every number, every conversation.
+          <Icon name="info" size={14} /> Educational, not legal advice. Every number above is
+          drawn from a public source the kit cites inline.
         </p>
       </section>
 

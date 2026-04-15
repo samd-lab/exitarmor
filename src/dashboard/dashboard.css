@@ -341,7 +341,7 @@
 .profile-field input:focus {
   outline: none;
   border-color: var(--d-brand);
-  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.12);
+  box-shadow: 0 0 0 3px rgba(192, 74, 60, 0.12);
 }
 .profile-field__hint {
   color: var(--d-text-muted);
@@ -1189,7 +1189,7 @@
 .calc-toggle input {
   width: 18px;
   height: 18px;
-  accent-color: #e63946;
+  accent-color: #c04a3c;
   cursor: pointer;
 }
 
@@ -1224,7 +1224,7 @@
 }
 .calc-band--floor { border-top-color: #94a3b8; }
 .calc-band--target {
-  border-top-color: #e63946;
+  border-top-color: #c04a3c;
   background: linear-gradient(180deg, #fff1f2 0%, #fff 100%);
   transform: scale(1.02);
 }
@@ -1243,7 +1243,7 @@
   color: var(--d-text);
   margin: 0.3rem 0 0.15rem;
 }
-.calc-band--target .calc-band__amount { color: #e63946; }
+.calc-band--target .calc-band__amount { color: #c04a3c; }
 .calc-band__weeks {
   font-size: 0.82rem;
   font-weight: 600;
@@ -1305,7 +1305,7 @@
   gap: 0.8rem;
   background: #fff;
   border: 1px solid var(--d-border);
-  border-left: 3px solid #e63946;
+  border-left: 3px solid #c04a3c;
   border-radius: 8px;
   padding: 0.8rem 1rem;
 }
@@ -1313,7 +1313,7 @@
   font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 800;
-  color: #e63946;
+  color: #c04a3c;
   line-height: 1;
 }
 .calc-ask__head {
@@ -1535,7 +1535,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(600px circle at 100% 0%, rgba(230, 57, 70, 0.25), transparent 50%);
+  background: radial-gradient(600px circle at 100% 0%, rgba(192, 74, 60, 0.25), transparent 50%);
   pointer-events: none;
 }
 @media (max-width: 780px) {
@@ -1551,7 +1551,7 @@
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: #fca5a5;
-  background: rgba(230, 57, 70, 0.15);
+  background: rgba(192, 74, 60, 0.15);
   border: 1px solid rgba(252, 165, 165, 0.3);
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
@@ -1613,7 +1613,7 @@
 }
 .calc-band--target:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 28px rgba(230, 57, 70, 0.18);
+  box-shadow: 0 12px 28px rgba(192, 74, 60, 0.18);
 }
 
 /* Target-progress bar: visualizes gap to close */
@@ -1652,7 +1652,7 @@
 }
 .calc-progress__fill {
   height: 100%;
-  background: linear-gradient(90deg, #f97316 0%, #e63946 100%);
+  background: linear-gradient(90deg, #f97316 0%, #c04a3c 100%);
   border-radius: 999px;
   transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -3177,7 +3177,7 @@
 .dash-main {
   position: relative;
   background:
-    radial-gradient(1100px 520px at 10% -10%, rgba(230, 57, 70, 0.08), transparent 60%),
+    radial-gradient(1100px 520px at 10% -10%, rgba(192, 74, 60, 0.08), transparent 60%),
     radial-gradient(900px 500px at 110% 10%, rgba(245, 158, 11, 0.08), transparent 60%),
     radial-gradient(700px 420px at 50% 120%, rgba(99, 102, 241, 0.05), transparent 60%),
     var(--d-bg);
@@ -3189,14 +3189,14 @@
   border: 1px solid var(--d-border);
   box-shadow:
     var(--d-shadow-md),
-    0 0 0 1px rgba(230, 57, 70, 0.02),
+    0 0 0 1px rgba(192, 74, 60, 0.02),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: box-shadow 0.2s ease;
 }
 .dash-topbar:hover {
   box-shadow:
     var(--d-shadow-lg),
-    0 0 0 1px rgba(230, 57, 70, 0.05),
+    0 0 0 1px rgba(192, 74, 60, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .dash-topbar__greet strong {
@@ -3236,13 +3236,13 @@
   box-shadow:
     var(--d-shadow-md),
     0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 0 24px rgba(230, 57, 70, 0.12);
+    0 0 24px rgba(192, 74, 60, 0.12);
 }
 .dash-ai-btn::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at var(--x, 50%) 50%, rgba(230, 57, 70, 0.25), transparent 60%);
+  background: radial-gradient(circle at var(--x, 50%) 50%, rgba(192, 74, 60, 0.25), transparent 60%);
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
@@ -3312,7 +3312,7 @@
   right: -60px;
   width: 220px;
   height: 220px;
-  background: radial-gradient(circle, rgba(230, 57, 70, 0.08), transparent 65%);
+  background: radial-gradient(circle, rgba(192, 74, 60, 0.08), transparent 65%);
   pointer-events: none;
 }
 
@@ -3326,7 +3326,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(230, 57, 70, 0.0) 100%);
+  background: linear-gradient(135deg, transparent 0%, rgba(192, 74, 60, 0.0) 100%);
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
@@ -3336,12 +3336,12 @@
   transform: translateY(-3px);
   box-shadow:
     0 18px 40px rgba(15, 23, 42, 0.08),
-    0 4px 12px rgba(230, 57, 70, 0.06);
-  border-color: rgba(230, 57, 70, 0.22);
+    0 4px 12px rgba(192, 74, 60, 0.06);
+  border-color: rgba(192, 74, 60, 0.22);
 }
 .module-card:hover::before {
   opacity: 1;
-  background: linear-gradient(135deg, rgba(230, 57, 70, 0.04) 0%, rgba(245, 158, 11, 0.03) 100%);
+  background: linear-gradient(135deg, rgba(192, 74, 60, 0.04) 0%, rgba(245, 158, 11, 0.03) 100%);
 }
 
 /* Module icon tile — add glow on hover */
@@ -3350,7 +3350,7 @@
 }
 .module-card:hover .module-card__icon {
   transform: scale(1.06) rotate(-3deg);
-  box-shadow: 0 8px 22px rgba(230, 57, 70, 0.22);
+  box-shadow: 0 8px 22px rgba(192, 74, 60, 0.22);
 }
 
 /* Sidebar: subtle animated accent on active item */
@@ -3365,7 +3365,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, #e63946, #f59e0b);
+  background: linear-gradient(180deg, #c04a3c, #f59e0b);
   border-radius: 0 4px 4px 0;
   pointer-events: none;
 }
@@ -3388,7 +3388,7 @@
 .dash-sidebar__progress {
   margin: 1rem 1rem 0.2rem;
   padding: 0.85rem 0.95rem 0.9rem;
-  background: linear-gradient(135deg, rgba(230, 57, 70, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(192, 74, 60, 0.12) 0%, rgba(245, 158, 11, 0.08) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
   position: relative;
@@ -3401,7 +3401,7 @@
   right: -28px;
   width: 110px;
   height: 110px;
-  background: radial-gradient(circle, rgba(230, 57, 70, 0.22), transparent 65%);
+  background: radial-gradient(circle, rgba(192, 74, 60, 0.22), transparent 65%);
   pointer-events: none;
 }
 .dash-sidebar__progress-head {
@@ -3426,7 +3426,7 @@
   color: #fff;
   letter-spacing: -0.02em;
   line-height: 1;
-  text-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
+  text-shadow: 0 2px 8px rgba(192, 74, 60, 0.4);
 }
 .dash-sidebar__progress-bar {
   position: relative;
@@ -3439,7 +3439,7 @@
 .dash-sidebar__progress-bar > span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #e63946 0%, #f59e0b 100%);
+  background: linear-gradient(90deg, #c04a3c 0%, #f59e0b 100%);
   border-radius: 999px;
   transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
@@ -3496,7 +3496,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #e63946 0%, #f59e0b 50%, #e63946 100%);
+  background: linear-gradient(90deg, #c04a3c 0%, #f59e0b 50%, #c04a3c 100%);
   background-size: 200% 100%;
   animation: related-sheen 6s ease-in-out infinite;
 }
@@ -3555,17 +3555,17 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, #e63946, #f59e0b);
+  background: linear-gradient(180deg, #c04a3c, #f59e0b);
   transform: scaleY(0);
   transform-origin: top;
   transition: transform 0.22s ease;
 }
 .related-tile:hover {
   transform: translateX(2px);
-  border-color: rgba(230, 57, 70, 0.25);
+  border-color: rgba(192, 74, 60, 0.25);
   box-shadow:
     0 6px 18px rgba(15, 23, 42, 0.06),
-    0 0 0 1px rgba(230, 57, 70, 0.08);
+    0 0 0 1px rgba(192, 74, 60, 0.08);
 }
 .related-tile:hover::before {
   transform: scaleY(1);
@@ -3619,7 +3619,7 @@
   transition: transform 0.2s ease, color 0.2s ease;
 }
 .related-tile:hover .related-tile__arrow {
-  color: #e63946;
+  color: #c04a3c;
   transform: translateX(3px);
 }
 
@@ -3793,12 +3793,12 @@
   margin-bottom: 1.6rem;
   border-radius: 20px;
   background:
-    radial-gradient(ellipse at 0% 0%, rgba(230, 57, 70, 0.12), transparent 55%),
+    radial-gradient(ellipse at 0% 0%, rgba(192, 74, 60, 0.12), transparent 55%),
     radial-gradient(ellipse at 100% 100%, rgba(245, 158, 11, 0.12), transparent 60%),
     linear-gradient(145deg, #fff6f5 0%, #fffaf1 100%);
-  border: 1px solid rgba(230, 57, 70, 0.14);
+  border: 1px solid rgba(192, 74, 60, 0.14);
   box-shadow:
-    0 18px 42px rgba(230, 57, 70, 0.08),
+    0 18px 42px rgba(192, 74, 60, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
   overflow: hidden;
 }
@@ -3809,7 +3809,7 @@
   right: -10%;
   width: 520px;
   height: 520px;
-  background: conic-gradient(from 120deg, rgba(230, 57, 70, 0.08), rgba(245, 158, 11, 0.1), rgba(230, 57, 70, 0.08));
+  background: conic-gradient(from 120deg, rgba(192, 74, 60, 0.08), rgba(245, 158, 11, 0.1), rgba(192, 74, 60, 0.08));
   filter: blur(60px);
   pointer-events: none;
   animation: dashHeroDrift 30s linear infinite;
@@ -3827,8 +3827,8 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.35rem 0.7rem;
-  background: rgba(230, 57, 70, 0.12);
-  border: 1px solid rgba(230, 57, 70, 0.22);
+  background: rgba(192, 74, 60, 0.12);
+  border: 1px solid rgba(192, 74, 60, 0.22);
   border-radius: 999px;
   font-size: 0.68rem;
   font-weight: 700;
@@ -3872,7 +3872,7 @@
   align-items: center;
   gap: 0.55rem;
   padding: 0.85rem 1.25rem;
-  background: linear-gradient(135deg, #e63946 0%, #c92a38 100%);
+  background: linear-gradient(135deg, #c04a3c 0%, #c92a38 100%);
   color: #fff;
   border: 1px solid #b91c1c;
   border-radius: 12px;
@@ -3882,14 +3882,14 @@
   letter-spacing: -0.005em;
   cursor: pointer;
   box-shadow:
-    0 10px 24px rgba(230, 57, 70, 0.32),
+    0 10px 24px rgba(192, 74, 60, 0.32),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: transform 0.18s ease, box-shadow 0.22s ease;
 }
 .dash-hero__cta:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 14px 32px rgba(230, 57, 70, 0.4),
+    0 14px 32px rgba(192, 74, 60, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 .dash-hero__cite {
@@ -3925,7 +3925,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #e63946, #f59e0b, #10b981);
+  background: linear-gradient(90deg, #c04a3c, #f59e0b, #10b981);
 }
 .dash-hero__money-row {
   display: flex;

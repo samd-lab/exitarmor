@@ -202,7 +202,7 @@ export function Overview({ checked, onToggle, onOpenModule, firstName }: Props) 
             <b>{overall}%</b>
           </div>
           <div style={{ height: 6, background: '#e5e7eb', borderRadius: 999, overflow: 'hidden', marginBottom: '0.9rem' }}>
-            <div style={{ width: `${overall}%`, height: '100%', background: 'linear-gradient(90deg,#e63946,#f59e0b)', transition: 'width 0.4s ease' }} />
+            <div style={{ width: `${overall}%`, height: '100%', background: 'linear-gradient(90deg,#c04a3c,#d4a24c)', transition: 'width 0.4s ease' }} />
           </div>
           {MODULES.filter((m) => m.id !== 'job-search').map((m) => {
             const items = ITEMS_BY_MODULE[m.id];

@@ -35,7 +35,7 @@ export function BrandMark({ size = 34, id = 'ea', className }: Props) {
       <path
         d="M32 4 L56 12 V32 C56 44 45 54 32 60 C19 54 8 44 8 32 V12 Z"
         fill={`url(#${shieldId})`}
-        stroke="#e63946"
+        stroke="#c04a3c"
         strokeWidth="2.2"
       />
       <path
@@ -46,7 +46,7 @@ export function BrandMark({ size = 34, id = 'ea', className }: Props) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="32" cy="15" r="2.8" fill="#e63946" />
+      <circle cx="32" cy="15" r="2.8" fill="#c04a3c" />
     </svg>
   );
 }
