@@ -1,9 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MarketingLayout } from '../MarketingLayout';
 import { Icon } from '../../components/Icon';
 import { usePageMeta } from '../../lib/seo';
 import { SUPPORT_EMAIL } from '../../lib/config';
+
+// Tell TS about the global gtag loaded in index.html
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 // ------------------------------------------------------------
 // /thanks — Stripe payment success landing page
@@ -31,6 +38,27 @@ function useAccessCode(): string {
 export default function Thanks() {
   const code = useAccessCode();
   const [copied, setCopied] = useState(false);
+
+  // Google Ads "Purchase" conversion — fires once when a buyer lands
+  // on /thanks after successful Stripe checkout. We guard against
+  // accidental double-firing (reloads, back button) with a sessionStorage
+  // flag so the same tab can only report one Purchase.
+  useEffect(() => {
+    if (typeof window.gtag !== 'function') return;
+    const FIRED_KEY = 'exitarmor.v1.purchaseConversionFired';
+    try {
+      if (sessionStorage.getItem(FIRED_KEY) === '1') return;
+      sessionStorage.setItem(FIRED_KEY, '1');
+    } catch {
+      // sessionStorage blocked (private browsing, etc.) — fire anyway.
+    }
+    window.gtag('event', 'conversion', {
+      send_to: 'AW-11033587773/D-8KCLOD4pwcEL3gnI0p',
+      value: 69.0,
+      currency: 'USD',
+      transaction_id: '',
+    });
+  }, []);
 
   usePageMeta({
     title: 'You got the kit — Exit Armor',

@@ -12,11 +12,18 @@
 // competing CTAs. One button does one thing.
 // ============================================================
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BrandMark } from '../../components/BrandMark';
 import { CHECKOUT_URL, SUPPORT_EMAIL } from '../../lib/config';
 import { usePageMeta } from '../../lib/seo';
+
+// Tell TS about the global gtag loaded in index.html
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 // ------------------------------------------------------------
 // Content — all copy in one block so you can edit without
@@ -209,6 +216,18 @@ export default function Checkout() {
     path: '/checkout',
     noindex: true,
   });
+
+  // Google Ads / GA4 event — fires once when the checkout page mounts.
+  // "cart_page_view" = add-to-cart analog for a single-product site.
+  // If you later get a full Google Ads conversion snippet with a
+  // send_to like 'AW-11033587773/XXX', add it to the params object.
+  useEffect(() => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'cart_page_view', {
+        // send_to: 'AW-11033587773/YOUR_LABEL',
+      });
+    }
+  }, []);
 
   return (
     <>

@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from '../components/Icon';
 import { BrandMark } from '../components/BrandMark';
 import { EMAIL_TEMPLATES } from '../data/emailTemplates';
+import type { EmailTemplate } from '../data/emailTemplates';
 import {
   DEFAULT_SEVERANCE_INPUT,
   calculateRunway,
@@ -34,7 +35,7 @@ import {
 } from '../lib/calculators';
 import type { RunwayInput, SeveranceInput } from '../lib/calculators';
 import { STATES, UI_DATA_AS_OF } from '../data/states';
-import { ITEMS_BY_MODULE, MODULES } from '../data/modules';
+import { FIRST_48_ITEMS, ITEMS_BY_MODULE, MODULES, RECOVERY_ITEMS } from '../data/modules';
 import type { ModuleId } from '../data/modules';
 import { countChecked, loadJSON, personalize } from '../lib/storage';
 import type { ChecklistMap, UserProfile } from '../lib/storage';
@@ -268,10 +269,49 @@ export default function ActionPlan() {
     runwayInput.other;
   const budgetTotal = essentialsTotal + runwayInput.discretionary;
 
-  // Counter email
-  const counterTemplate = EMAIL_TEMPLATES.find((t) => t.id === 'leverage');
-  const counterSubject = counterTemplate ? personalize(counterTemplate.subject, profile) : '';
-  const counterBody = counterTemplate ? personalize(counterTemplate.body, profile) : '';
+  // Core severance negotiation emails — the 3-step sequence most users
+  // actually need. All personalized against the profile so the PDF is
+  // copy-paste ready.
+  const coreSeveranceIds = ['soft-stall', 'leverage', 'final-signoff'] as const;
+  const coreSeveranceEmails = coreSeveranceIds
+    .map((id) => EMAIL_TEMPLATES.find((t) => t.id === id))
+    .filter((t): t is EmailTemplate => !!t)
+    .map((t) => ({
+      ...t,
+      subject: personalize(t.subject, profile),
+      body: personalize(t.body, profile),
+    }));
+
+  // Email library index — compact quick-reference listing of all 21
+  // templates, split into severance and job-search lanes.
+  const severanceLibrary = EMAIL_TEMPLATES.filter((t) => t.category === 'severance');
+  const jobSearchLibrary = EMAIL_TEMPLATES.filter((t) => t.category === 'job-search');
+
+  // First 48 Hours — group by Day 1 / Day 2 with checklist status
+  const first48ByDay = useMemo(() => {
+    const day1 = FIRST_48_ITEMS.filter((i) => i.day === 'Day 1');
+    const day2 = FIRST_48_ITEMS.filter((i) => i.day === 'Day 2');
+    const done1 = countChecked(progress, day1.map((i) => i.id));
+    const done2 = countChecked(progress, day2.map((i) => i.id));
+    return { day1, day2, done1, done2 };
+  }, [progress]);
+
+  // 7-Day Recovery — group by Day 1..Day 7 with checklist status. Days
+  // are encoded in the `detail` field as "Day N · ..." so we parse them.
+  const recoveryByDay = useMemo(() => {
+    const buckets: Record<number, typeof RECOVERY_ITEMS> = {};
+    for (const item of RECOVERY_ITEMS) {
+      const match = item.detail?.match(/Day\s+(\d)/i);
+      const day = match ? parseInt(match[1], 10) : 0;
+      if (!buckets[day]) buckets[day] = [];
+      buckets[day].push(item);
+    }
+    return [1, 2, 3, 4, 5, 6, 7].map((d) => {
+      const items = buckets[d] ?? [];
+      const done = countChecked(progress, items.map((i) => i.id));
+      return { day: d, items, done };
+    });
+  }, [progress]);
 
   const today = new Date().toLocaleDateString(undefined, {
     year: 'numeric',
@@ -403,6 +443,97 @@ export default function ActionPlan() {
               </li>
             ))}
           </ol>
+        </section>
+
+        {/* FIRST 48 HOURS — tactical lane */}
+        <section className="ap-section ap-section--page-break">
+          <h2 className="ap-section__title">First 48 hours · tactical checklist</h2>
+          <p className="ap-section__sub">
+            The things that leak money or rights if you do not handle them in 48 hours.
+            {first48ByDay.done1 + first48ByDay.done2} of{' '}
+            {first48ByDay.day1.length + first48ByDay.day2.length} complete.
+          </p>
+          <div className="ap-days">
+            <div className="ap-days__col">
+              <div className="ap-days__head">
+                <strong>Day 1</strong>
+                <span>
+                  {first48ByDay.done1}/{first48ByDay.day1.length} done
+                </span>
+              </div>
+              <ul className="ap-days__list">
+                {first48ByDay.day1.map((i) => (
+                  <li key={i.id} className={progress[i.id] ? 'ap-days__item--done' : ''}>
+                    <span className="ap-days__mark" aria-hidden>
+                      {progress[i.id] ? '✓' : '○'}
+                    </span>
+                    <div>
+                      <strong>{i.label}</strong>
+                      {i.detail && <div className="ap-days__detail">{i.detail}</div>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="ap-days__col">
+              <div className="ap-days__head">
+                <strong>Day 2</strong>
+                <span>
+                  {first48ByDay.done2}/{first48ByDay.day2.length} done
+                </span>
+              </div>
+              <ul className="ap-days__list">
+                {first48ByDay.day2.map((i) => (
+                  <li key={i.id} className={progress[i.id] ? 'ap-days__item--done' : ''}>
+                    <span className="ap-days__mark" aria-hidden>
+                      {progress[i.id] ? '✓' : '○'}
+                    </span>
+                    <div>
+                      <strong>{i.label}</strong>
+                      {i.detail && <div className="ap-days__detail">{i.detail}</div>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* 7-DAY RECOVERY — emotional & cadence lane */}
+        <section className="ap-section ap-section--page-break">
+          <h2 className="ap-section__title">7-day recovery cadence</h2>
+          <p className="ap-section__sub">
+            The emotional &amp; cadence lane — runs alongside the tactical checklist for
+            Days 1–2, then continues through Day 7. Pace, not panic.
+          </p>
+          <div className="ap-recovery">
+            {recoveryByDay.map((d) => (
+              <div key={d.day} className="ap-recovery__day">
+                <div className="ap-recovery__head">
+                  <strong>Day {d.day}</strong>
+                  {d.items.length > 0 && (
+                    <span>
+                      {d.done}/{d.items.length} done
+                    </span>
+                  )}
+                </div>
+                {d.items.length === 0 ? (
+                  <div className="ap-recovery__empty">—</div>
+                ) : (
+                  <ul className="ap-recovery__list">
+                    {d.items.map((i) => (
+                      <li key={i.id} className={progress[i.id] ? 'ap-recovery__item--done' : ''}>
+                        <span className="ap-recovery__mark" aria-hidden>
+                          {progress[i.id] ? '✓' : '○'}
+                        </span>
+                        <span>{i.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* RED FLAGS */}
@@ -699,22 +830,90 @@ export default function ActionPlan() {
           </section>
         )}
 
-        {/* COUNTER EMAIL */}
-        {counterTemplate && (
+        {/* CORE SEVERANCE EMAILS — 3-step sequence, fully personalized */}
+        {coreSeveranceEmails.length > 0 && (
           <section className="ap-section ap-section--page-break">
-            <h2 className="ap-section__title">Your counter-offer email</h2>
+            <h2 className="ap-section__title">Core severance negotiation emails</h2>
             <p className="ap-section__sub">
-              Personalized and ready to send. Swap in your specific asks from the list above.
+              Three emails, sent in this order, do most of the work. All personalized and
+              ready to copy. Swap in your specific asks from the list above before sending.
             </p>
-            <div className="ap-email">
-              <div className="ap-email__row">
-                <span>Subject</span>
-                <strong>{counterSubject}</strong>
-              </div>
-              <pre className="ap-email__body">{counterBody}</pre>
+            <div className="ap-emails">
+              {coreSeveranceEmails.map((t, idx) => (
+                <div key={t.id} className="ap-emailcard">
+                  <div className="ap-emailcard__head">
+                    <span className="ap-emailcard__step">Step {idx + 1}</span>
+                    <strong>{t.title}</strong>
+                  </div>
+                  <div className="ap-emailcard__when">
+                    <Icon name="calendar" size={12} /> {t.when}
+                  </div>
+                  <div className="ap-email">
+                    <div className="ap-email__row">
+                      <span>Subject</span>
+                      <strong>{t.subject}</strong>
+                    </div>
+                    <pre className="ap-email__body">{t.body}</pre>
+                  </div>
+                  {t.notes && t.notes.length > 0 && (
+                    <ul className="ap-emailcard__notes">
+                      {t.notes.map((n, i) => (
+                        <li key={i}>{n}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
             </div>
           </section>
         )}
+
+        {/* EMAIL LIBRARY INDEX — all 21 templates as quick reference */}
+        <section className="ap-section ap-section--page-break">
+          <h2 className="ap-section__title">Email library index ({EMAIL_TEMPLATES.length} templates)</h2>
+          <p className="ap-section__sub">
+            Every template in the playbook — for every conversation you might need to have.
+            Open the Email Library in the dashboard to copy the full personalized body.
+          </p>
+
+          <div className="ap-lib">
+            <div className="ap-lib__lane">
+              <div className="ap-lib__lanehead ap-lib__lanehead--sev">
+                Severance &amp; negotiation · {severanceLibrary.length}
+              </div>
+              <ol className="ap-lib__list">
+                {severanceLibrary.map((t) => (
+                  <li key={t.id}>
+                    <div className="ap-lib__title">
+                      <span className="ap-lib__tag ap-lib__tag--sev">{t.tag}</span>
+                      <strong>{t.title}</strong>
+                    </div>
+                    <div className="ap-lib__subject">Subject: {personalize(t.subject, profile)}</div>
+                    <div className="ap-lib__when">{t.when}</div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="ap-lib__lane">
+              <div className="ap-lib__lanehead ap-lib__lanehead--job">
+                Job search &amp; interview · {jobSearchLibrary.length}
+              </div>
+              <ol className="ap-lib__list">
+                {jobSearchLibrary.map((t) => (
+                  <li key={t.id}>
+                    <div className="ap-lib__title">
+                      <span className="ap-lib__tag ap-lib__tag--job">{t.tag}</span>
+                      <strong>{t.title}</strong>
+                    </div>
+                    <div className="ap-lib__subject">Subject: {personalize(t.subject, profile)}</div>
+                    <div className="ap-lib__when">{t.when}</div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
 
         {/* STAR STORIES APPENDIX */}
         {filledStories.length > 0 && (
