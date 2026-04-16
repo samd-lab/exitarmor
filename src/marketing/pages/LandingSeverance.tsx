@@ -73,11 +73,14 @@ const FEATURES: Feature[] = [
 
 // Scenario cards — representative situations, not invented people.
 // The main Landing follows the same pattern (no gimmick testimonials).
+// The `used` chip row is factual product usage — NOT outcome numbers,
+// so no fabricated dollar-amount promises end up on named faces.
 interface Scenario {
   tag: string;
   who: string;
   role: string;
-  avatar: 'A' | 'B';
+  avatar: 'A' | 'B' | 'C';
+  used: string[];
   body: string;
 }
 
@@ -87,16 +90,27 @@ const SCENARIOS: Scenario[] = [
     who: 'Engineer, 8 years',
     role: 'Severance window: 21 days',
     avatar: 'A',
+    used: ['Benchmark', '3 emails', 'Extended health', '11 Asks'],
     body:
-      'Opens the kit Friday night. Runs the 50-state benchmark, drafts the "soft stall" email, then the leverage ask with extended health and unvested equity framed as the top two items. Books a 20-minute attorney review from the free-legal-help list before signing.',
+      'Opens the kit Friday night. Runs the 50-state benchmark, drafts the soft-stall email, then the leverage ask with extended health and unvested equity framed as the top two items. Books a 20-minute attorney review from the free-legal-help list before signing.',
   },
   {
-    tag: 'Manager · Mid-market · East Coast',
+    tag: 'People manager · Mid-market · East Coast',
     who: 'Director, 12 years',
     role: 'Severance window: 45 days',
     avatar: 'B',
+    used: ['COBRA vs ACA', '90-day budget', 'Outplacement', 'Reference letter'],
     body:
-      'Uses the COBRA vs ACA calculator first — her family of four is better off on an ACA Silver plan for six months. Sends the benefits-focused counter-offer, adds outplacement and reference language, then runs the 90-day budget planner while the response comes back.',
+      'Uses the COBRA vs ACA calculator first — her family of four lands on an ACA Silver plan for six months. Sends the benefits-focused counter-offer, adds outplacement and reference language, then runs the 90-day budget planner while the response comes back.',
+  },
+  {
+    tag: 'Already signed · Mid-career · Midwest',
+    who: 'Product lead, 6 years',
+    role: 'Signed last Friday',
+    avatar: 'C',
+    used: ['Unemployment', 'Network activation', 'LinkedIn rewrite', 'Job-search emails'],
+    body:
+      'The severance window closed — but the rest of the kit did not. Backfiles unemployment correctly on day one, rewrites the LinkedIn headline to read past the ATS, sends the 8 warm-intro emails in a single block, and opens the first-48-hours tactical list to keep momentum.',
   },
 ];
 
@@ -288,6 +302,13 @@ export default function LandingSeverance() {
               </div>
               <div className="sev-scenario__who">{s.who}</div>
               <div className="sev-scenario__role">{s.role}</div>
+              <div className="sev-scenario__used">
+                {s.used.map((u) => (
+                  <span key={u} className="sev-scenario__chip">
+                    <Icon name="check" size={10} /> {u}
+                  </span>
+                ))}
+              </div>
               <p className="sev-scenario__body">{s.body}</p>
             </div>
           ))}
@@ -458,31 +479,21 @@ function StepCard({
 // without fabricating real customer photos. Pure inline SVG,
 // no copyrighted imagery.
 // ================================================================
-function AvatarSvg({ variant }: { variant: 'A' | 'B' }) {
-  if (variant === 'A') {
-    return (
-      <svg className="sev-avatar" viewBox="0 0 80 80" aria-hidden>
-        <defs>
-          <linearGradient id="sevAvA" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#f4a261" />
-            <stop offset="100%" stopColor="#c04a3c" />
-          </linearGradient>
-        </defs>
-        <circle cx="40" cy="40" r="40" fill="url(#sevAvA)" />
-        <circle cx="40" cy="32" r="12" fill="#fff" opacity="0.95" />
-        <path d="M18 72 C22 56, 58 56, 62 72 Z" fill="#fff" opacity="0.95" />
-      </svg>
-    );
-  }
+function AvatarSvg({ variant }: { variant: 'A' | 'B' | 'C' }) {
+  const palette = {
+    A: { from: '#f4a261', to: '#c04a3c', id: 'sevAvA' },
+    B: { from: '#7fb069', to: '#2a9d8f', id: 'sevAvB' },
+    C: { from: '#d4a24c', to: '#9c5f8d', id: 'sevAvC' },
+  }[variant];
   return (
     <svg className="sev-avatar" viewBox="0 0 80 80" aria-hidden>
       <defs>
-        <linearGradient id="sevAvB" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#7fb069" />
-          <stop offset="100%" stopColor="#2a9d8f" />
+        <linearGradient id={palette.id} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={palette.from} />
+          <stop offset="100%" stopColor={palette.to} />
         </linearGradient>
       </defs>
-      <circle cx="40" cy="40" r="40" fill="url(#sevAvB)" />
+      <circle cx="40" cy="40" r="40" fill={`url(#${palette.id})`} />
       <circle cx="40" cy="32" r="12" fill="#fff" opacity="0.95" />
       <path d="M18 72 C22 56, 58 56, 62 72 Z" fill="#fff" opacity="0.95" />
     </svg>
