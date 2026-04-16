@@ -3,7 +3,7 @@ import type { IconName } from '../../components/Icon';
 import { BrandMark } from '../../components/BrandMark';
 import type { ModuleId } from '../../data/modules';
 
-export type Route = 'overview' | ModuleId;
+export type Route = 'overview' | ModuleId | 'email-library';
 
 const NAV: Array<{ id: Route; label: string; icon: IconName }> = [
   { id: 'overview', label: 'Dashboard', icon: 'home' },
@@ -14,6 +14,7 @@ const NAV: Array<{ id: Route; label: string; icon: IconName }> = [
   { id: 'cobra-aca', label: 'COBRA vs ACA', icon: 'heart' },
   { id: 'budget', label: '90-Day Budget', icon: 'dollar' },
   { id: 'job-search', label: 'Job Search Tools', icon: 'search' },
+  { id: 'email-library', label: 'Email Library', icon: 'mail' },
 ];
 
 interface Props {

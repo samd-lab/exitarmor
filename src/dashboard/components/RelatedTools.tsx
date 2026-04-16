@@ -166,6 +166,7 @@ const CONTEXT_TOOLS: Record<Route, ToolKey[]> = {
   'cobra-aca': ['severance', 'budget', 'state', 'first-48'],
   budget: ['severance', 'cobra-aca', 'job-search', 'state'],
   'job-search': ['severance', 'recovery-7day', 'budget', 'state'],
+  'email-library': ['severance', 'job-search', 'first-48', 'recovery-7day'],
 };
 
 interface Props {

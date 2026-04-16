@@ -26,11 +26,16 @@ export interface ChecklistItem {
   id: string;
   label: string;
   detail?: string;
-  day?: 'Day 1' | 'Day 2' | 'Day 3';
+  day?: 'Day 1' | 'Day 2';
   why?: string;        // Why this matters
   how?: string;        // Step-by-step how to do it
   resources?: ChecklistResource[];
   warning?: string;    // Optional red-flag callout
+  /** Optional jump link — renders a pill button on the checklist item
+   *  that opens another module inside the dashboard (e.g. "Run the
+   *  Calculator"). */
+  jumpTo?: ModuleId;
+  jumpLabel?: string;
 }
 
 export interface ModuleSpec {
@@ -221,6 +226,8 @@ export const FIRST_48_ITEMS: ChecklistItem[] = [
     day: 'Day 1',
     label: 'Review severance — DO NOT sign yet',
     detail: 'Under ADEA you typically have 21 days (45 if part of a group layoff, plus 7 to revoke) if you are 40+.',
+    jumpTo: 'severance',
+    jumpLabel: 'Open the Severance Prep module',
     why: 'Signing the severance agreement on the spot is the single biggest financial mistake laid-off workers make. You waive potential claims — age discrimination, ERISA violations, unpaid wages — in exchange for the stated severance. Once signed, it is very difficult to undo. The Older Workers Benefit Protection Act (OWBPA) gives workers 40+ a mandatory review window. Use every day of it.',
     how: 'Step 1: Read the entire document twice — pay special attention to the release of claims, non-compete, non-disparagement, and confidentiality sections. Step 2: Note the exact deadline to sign and the revocation window. Step 3: Do not sign and do not verbally agree. Say: "Thank you, I will review with my advisors and respond by [deadline]." Step 4: If the package is over $20K or involves complex equity, get a 15-minute consult with an employment attorney — most offer free initial reviews.',
     resources: [
@@ -234,6 +241,8 @@ export const FIRST_48_ITEMS: ChecklistItem[] = [
     day: 'Day 1',
     label: 'Confirm exact health insurance end date',
     detail: 'Know whether coverage ends immediately or at month-end so you can time COBRA/ACA correctly.',
+    jumpTo: 'cobra-aca',
+    jumpLabel: 'Compare COBRA vs ACA',
     why: 'Health coverage gaps are the fastest way to drain savings — a single ER visit during a gap can cost $5,000+. Some employers end coverage the day of termination; others run it to the end of the month. You have 60 days to elect COBRA retroactively, but that is a strategic decision, not a safety net — electing late means paying for gap coverage and leaves you exposed.',
     how: 'Step 1: Ask HR in writing (email is fine): "What is my last day of active health coverage?" Step 2: Download your insurance ID cards and benefits summary today. Step 3: Note the 60-day COBRA election window — it starts from either your coverage end date or when you receive the COBRA notice, whichever is later. Step 4: Also note the 60-day ACA Special Enrollment Period — loss of employer coverage is a qualifying life event.',
     resources: [
@@ -246,6 +255,8 @@ export const FIRST_48_ITEMS: ChecklistItem[] = [
     day: 'Day 1',
     label: 'Calculate your 30-day cash runway',
     detail: 'Know your burn rate and how long current cash will last before you start cutting.',
+    jumpTo: 'budget',
+    jumpLabel: 'Run the Runway Calculator',
     why: 'You cannot plan if you do not know the numbers. Most people dramatically overestimate how long their savings will last because they forget recurring subscriptions, insurance, and taxes. Knowing the real number turns panic into a plan — and tells you how aggressively to negotiate severance and cut expenses.',
     how: 'Open the 90-Day Defense Budget module. Enter: rent/mortgage, utilities, food, transportation, debt minimums, insurance, childcare. Sum up liquid savings (checking, HYSA, accessible cash). Divide savings by monthly essentials. Under 3 months = aggressive action required. Over 6 months = you have room to negotiate without panic.',
   },
@@ -254,6 +265,8 @@ export const FIRST_48_ITEMS: ChecklistItem[] = [
     day: 'Day 2',
     label: 'File for unemployment benefits',
     detail: 'Most states do NOT backdate. File the same week you are notified.',
+    jumpTo: 'state',
+    jumpLabel: 'Open your State Resources',
     why: 'Unemployment insurance is money you are legally owed — it comes from taxes your employer paid, not from public assistance. Every week you delay is a week of benefits lost forever. Average US benefit is $385/week for up to 26 weeks — that is over $10,000 left on the table if you wait a month. Severance does NOT disqualify you in most states, though it may delay the start.',
     how: 'Go to the State Resources module and open your state DOL portal. Have ready: SSN, driver\'s license, employer name/address/dates, reason for separation ("laid off" or "lack of work"), last 18 months of wages. Answer honestly — lying is fraud. File even if you got severance; the agency will handle timing.',
     resources: [
@@ -273,7 +286,7 @@ export const FIRST_48_ITEMS: ChecklistItem[] = [
   },
   {
     id: '48-references',
-    day: 'Day 3',
+    day: 'Day 2',
     label: 'Lock in 3–5 written references',
     detail: 'Ask managers, peers, and skip-level contacts for a short LinkedIn recommendation now.',
     why: 'Memories fade in 90 days. The people who loved your work will move on, change jobs, or forget specifics of your contributions. Getting written references now — while you are top of mind and while the context is fresh — dramatically increases quality and response rate. Written recommendations on LinkedIn are also permanent social proof for future recruiters.',
@@ -281,7 +294,7 @@ export const FIRST_48_ITEMS: ChecklistItem[] = [
   },
   {
     id: '48-notify-bank',
-    day: 'Day 3',
+    day: 'Day 2',
     label: 'Call bank/lender — ask about hardship programs',
     detail: 'Many lenders offer no-cost forbearance for income-loss customers if you call early.',
     why: 'Forbearance programs are designed to be used — banks would rather pause your payments for 3 months than have you default. But they are only helpful if you call BEFORE you miss a payment. Once you are delinquent, it damages your credit and limits options. A single call can save your credit score and buy you 90 days of breathing room on your biggest monthly expense.',
@@ -514,17 +527,17 @@ export const RECOVERY_ITEMS: ChecklistItem[] = [
   { id: 'rec-d1-breathe', label: 'Take 30 minutes to breathe — you do not have to decide anything today', detail: 'Day 1 · Before any paperwork.' },
   { id: 'rec-d1-document', label: 'Save pay stubs, W-2, and performance reviews to personal cloud', detail: 'Day 1 · Before access is cut.' },
   { id: 'rec-d1-tell-one-person', label: 'Tell one trusted person — out loud — what happened', detail: 'Day 1 · Saying it makes it real and smaller.' },
-  { id: 'rec-d2-file-ui', label: 'File for unemployment in your state', detail: 'Day 2 · Most states do not backdate.' },
+  { id: 'rec-d2-file-ui', label: 'File for unemployment in your state', detail: 'Day 2 · Most states do not backdate.', jumpTo: 'state', jumpLabel: 'Open State Resources' },
   { id: 'rec-d2-freeze-credit', label: 'Pause any non-essential autopay or freeze credit applications', detail: 'Day 2 · Cut one thing that felt reflexive.' },
-  { id: 'rec-d3-health-decision', label: 'Pick a lane on health coverage (COBRA vs ACA)', detail: 'Day 3 · Use the calculator — do not elect yet unless urgent.' },
-  { id: 'rec-d3-cash-check', label: 'Run the runway calculator and look at the number', detail: 'Day 3 · The number is less scary than the uncertainty.' },
-  { id: 'rec-d4-counter-email', label: 'Draft your severance counter email — do not send yet', detail: 'Day 4 · Sleep on it.' },
-  { id: 'rec-d4-owbpa', label: 'If 40+, write your review deadline on a sticky note', detail: 'Day 4 · 21 days (or 45 for group) is a lot of leverage.' },
-  { id: 'rec-d5-network-list', label: 'Write down 20 people who know your work', detail: 'Day 5 · Former bosses, peers, direct reports, classmates.' },
-  { id: 'rec-d5-linkedin', label: 'Turn on LinkedIn "Open to Work" (recruiters only)', detail: 'Day 5 · Triples your inbound. Update headline to target role.' },
-  { id: 'rec-d6-story', label: 'Practice your 2-sentence layoff story until it is boring', detail: 'Day 6 · "My role was eliminated as part of... I am now focused on..."' },
-  { id: 'rec-d6-references', label: 'Ask 3 people for a LinkedIn recommendation', detail: 'Day 6 · Memory fades fast. Ask while the context is fresh.' },
-  { id: 'rec-d7-outreach', label: 'Send 5 warm-network "grabbing coffee?" messages', detail: 'Day 7 · Ask for advice, not a job. Advice leads to jobs.' },
+  { id: 'rec-d3-health-decision', label: 'Pick a lane on health coverage (COBRA vs ACA)', detail: 'Day 3 · Use the calculator — do not elect yet unless urgent.', jumpTo: 'cobra-aca', jumpLabel: 'Compare COBRA vs ACA' },
+  { id: 'rec-d3-cash-check', label: 'Run the runway calculator and look at the number', detail: 'Day 3 · The number is less scary than the uncertainty.', jumpTo: 'budget', jumpLabel: 'Run the Runway Calculator' },
+  { id: 'rec-d4-counter-email', label: 'Draft your severance counter email — do not send yet', detail: 'Day 4 · Sleep on it.', jumpTo: 'severance', jumpLabel: 'Open Email Templates' },
+  { id: 'rec-d4-owbpa', label: 'If 40+, write your review deadline on a sticky note', detail: 'Day 4 · 21 days (or 45 for group) is a lot of leverage.', jumpTo: 'severance', jumpLabel: 'Open Severance Prep' },
+  { id: 'rec-d5-network-list', label: 'Write down 20 people who know your work', detail: 'Day 5 · Former bosses, peers, direct reports, classmates.', jumpTo: 'job-search', jumpLabel: 'Open Job Search Tools' },
+  { id: 'rec-d5-linkedin', label: 'Turn on LinkedIn "Open to Work" (recruiters only)', detail: 'Day 5 · Triples your inbound. Update headline to target role.', jumpTo: 'job-search', jumpLabel: 'Open Job Search Tools' },
+  { id: 'rec-d6-story', label: 'Practice your 2-sentence layoff story until it is boring', detail: 'Day 6 · "My role was eliminated as part of... I am now focused on..."', jumpTo: 'job-search', jumpLabel: 'Use the Story Builder' },
+  { id: 'rec-d6-references', label: 'Ask 3 people for a LinkedIn recommendation', detail: 'Day 6 · Memory fades fast. Ask while the context is fresh.', jumpTo: 'severance', jumpLabel: 'Send the reference email' },
+  { id: 'rec-d7-outreach', label: 'Send 5 warm-network "grabbing coffee?" messages', detail: 'Day 7 · Ask for advice, not a job. Advice leads to jobs.', jumpTo: 'job-search', jumpLabel: 'Open the warm-network template' },
   { id: 'rec-d7-reset', label: 'Plan one small good thing for tomorrow', detail: 'Day 7 · You finished the hardest week. Close it deliberately.' },
 ];
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MODULES } from '../data/modules';
 import type { ModuleId } from '../data/modules';
 import { countChecked, useChecklist, useProfile } from '../lib/storage';
+import { usePageMeta } from '../lib/seo';
 import { Icon } from '../components/Icon';
 import { Overview } from './Overview';
 import { Sidebar } from './components/Sidebar';
@@ -15,6 +16,7 @@ import { CobraVsAca } from './modules/CobraVsAca';
 import { Budget } from './modules/Budget';
 import { JobSearch } from './modules/JobSearch';
 import { RecoveryCompanion } from './modules/RecoveryCompanion';
+import { EmailLibrary } from './modules/EmailLibrary';
 import './dashboard.css';
 
 interface Props {
@@ -22,6 +24,15 @@ interface Props {
 }
 
 export function Dashboard({ onStartAi }: Props) {
+  // Hard noindex — this is a private, purchased, stateful app shell. Not for
+  // search engines. Pairs with the Disallow in public/robots.txt.
+  usePageMeta({
+    title: 'Exit Armor — Your Playbook',
+    description: 'Private playbook dashboard. Not a public page.',
+    path: '/app',
+    noindex: true,
+  });
+
   const navigate = useNavigate();
   const [route, setRoute] = useState<Route>('overview');
   const { checked, toggle } = useChecklist('progress');
@@ -116,6 +127,9 @@ export function Dashboard({ onStartAi }: Props) {
         )}
         {route === 'recovery-7day' && (
           <RecoveryCompanion checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
+        )}
+        {route === 'email-library' && (
+          <EmailLibrary onBack={goOverview} onOpenModule={openModule} />
         )}
       </main>
 

@@ -39,6 +39,7 @@ import type { ModuleId } from '../data/modules';
 import { countChecked, loadJSON, personalize } from '../lib/storage';
 import type { ChecklistMap, UserProfile } from '../lib/storage';
 import { EMPTY_PROFILE } from '../lib/storage';
+import { usePageMeta } from '../lib/seo';
 import {
   COBRA_ACA_DEFAULTS,
   estimateAca,
@@ -170,6 +171,14 @@ function buildStoryAnswer(s: Story): string {
 // ---------------------------------------------------------------------------
 
 export default function ActionPlan() {
+  // Private, personalized printable. Never index.
+  usePageMeta({
+    title: 'Exit Armor — Action Plan',
+    description: 'Private printable playbook. Not a public page.',
+    path: '/action-plan',
+    noindex: true,
+  });
+
   const profile = loadJSON<UserProfile>('profile', EMPTY_PROFILE);
   const severanceInput = loadJSON<SeveranceInput>('severance.calc', DEFAULT_SEVERANCE_INPUT);
   const runwayInput = loadJSON<RunwayInput>('budget.runway', DEFAULT_RUNWAY);

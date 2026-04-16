@@ -257,41 +257,45 @@ const TIERS: Tier[] = [
       '7-day money-back guarantee',
     ],
     cta: 'Get the Self-Serve Kit — $69',
-    ctaTo: '/app',
+    ctaTo: '/checkout',
     highlighted: true,
   },
   {
     id: 'ally',
+    badge: 'Coming soon',
     name: 'Power Hour',
-    price: '$149',
-    period: 'one-time',
-    blurb: 'The kit + a real human on your most important call. For when you want a second set of eyes.',
+    price: 'TBD',
+    period: 'free for kit owners at launch',
+    blurb:
+      'An AI companion trained on the whole playbook — severance math, COBRA-vs-ACA, state law, the 21 email templates. Someone to talk through the next step with. Not a lawyer, not HR, not a career coach — a guide that already knows the kit.',
     features: [
-      'Everything in Self-Serve Kit',
-      '60-min 1:1 call with a severance coach',
-      'Live review of your specific offer',
-      'We draft your counter-offer with you',
-      '3 days of async follow-up questions',
-      'Schedule within 24 hours',
+      'Conversational AI trained on this playbook',
+      'Ask about your offer, state, and timeline',
+      'Walks you through any module step-by-step',
+      'Never asked to give legal or financial advice',
+      'Private — runs against your browser session',
+      'Free for Self-Serve Kit owners when it ships',
     ],
-    cta: 'Book my Power Hour',
+    cta: 'Join the waitlist',
     ctaTo: '/contact',
   },
   {
     id: 'war-room',
+    badge: 'Coming soon',
     name: 'War Room',
-    price: '$349',
-    period: 'one-time',
-    blurb: 'Full concierge through the entire negotiation — first call, counter, final sign-off.',
+    price: 'TBD',
+    period: 'add-on · 90-day engagement',
+    blurb:
+      'A deeper AI companion for the full 90-day run. Longer memory of your situation, nudges when deadlines slip, and a weekly check-in while you negotiate and job-hunt.',
     features: [
       'Everything in Power Hour',
-      '3 sessions (intake, counter, sign-off)',
-      'Unlimited async messaging for 14 days',
-      'Line-by-line review of your agreement',
-      'Attorney referral if your case needs it',
-      'Priority scheduling',
+      'Remembers your numbers, state, and deadlines',
+      'Weekly check-in through the 90-day window',
+      'Nudges you before review windows expire',
+      'Interview-day pep talk + story rehearsal',
+      'Never a substitute for an employment attorney',
     ],
-    cta: 'Start a War Room',
+    cta: 'Join the waitlist',
     ctaTo: '/contact',
   },
 ];
@@ -315,7 +319,7 @@ const FAQ = [
   },
   {
     q: 'Is there a subscription?',
-    a: 'No subscription on the Self-Serve Kit — $69 one-time, you use it until you don\'t need it. Power Hour and War Room are also one-time purchases. We don\'t do freemium traps or auto-renewing monthly plans.',
+    a: 'No subscription. The Self-Serve Kit is $69 one-time — you use it until you don\'t need it. The Power Hour and War Room AI companions are on the waitlist and will be free for Self-Serve Kit owners when they ship. We don\'t do freemium traps or auto-renewing monthly plans.',
   },
   {
     q: 'What if I was laid off last month — is it too late?',
@@ -787,7 +791,7 @@ export default function Landing() {
           'Counter-offer email auto-drafted with your numbers',
         ]}
         ctaLabel="See the module"
-        ctaTo="/app"
+        ctaTo="/checkout"
         card={{
           title: 'Counter-offer target',
           category: 'Severance Calculator · example',
@@ -820,7 +824,7 @@ export default function Landing() {
           'Real subsidy curve math for ACA side',
         ]}
         ctaLabel="See the module"
-        ctaTo="/app"
+        ctaTo="/checkout"
         card={{
           title: 'Monthly savings · example',
           category: 'COBRA vs ACA',
@@ -851,7 +855,7 @@ export default function Landing() {
           'Printable summary you can bring to either recruiter',
         ]}
         ctaLabel="See the module"
-        ctaTo="/app"
+        ctaTo="/checkout"
         card={{
           title: 'Annual delta · example',
           category: 'Offer Compare',
@@ -1271,7 +1275,15 @@ export default function Landing() {
               key={t.id}
               className={`mk-price-card ${t.highlighted ? 'mk-price-card--highlight' : ''} reveal`}
             >
-              {t.badge && <div className="mk-price-card__badge">{t.badge}</div>}
+              {t.badge && (
+                <div
+                  className={`mk-price-card__badge ${
+                    t.badge.toLowerCase().includes('soon') ? 'mk-price-card__badge--soon' : ''
+                  }`}
+                >
+                  {t.badge}
+                </div>
+              )}
               <h3>{t.name}</h3>
               <div className="mk-price-card__price">
                 <span className="mk-price-card__amount">{t.price}</span>

@@ -42,8 +42,8 @@ export default function NotFound() {
           <Link to="/blog" className="btn btn-glass" style={{ padding: '0.9rem 1.6rem' }}>
             Read the blog
           </Link>
-          <Link to="/app" className="btn btn-glass" style={{ padding: '0.9rem 1.6rem' }}>
-            Open the playbook
+          <Link to="/checkout" className="btn btn-glass" style={{ padding: '0.9rem 1.6rem' }}>
+            See what's in the kit
           </Link>
         </div>
 

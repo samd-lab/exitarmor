@@ -87,7 +87,18 @@
   gap: 0.65rem;
   padding: 1.4rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
 }
+/* Every direct child of the sidebar must refuse to shrink — otherwise the
+   flex column will silently compress the progress card / nav items on short
+   laptops (13" MBAs) and it LOOKS like content is "cut off" by the menu
+   below. flex-shrink: 0 forces the overflow-y: auto scrollbar to kick in
+   instead, which is what we want. */
+.dash-sidebar__progress,
+.dash-sidebar__section,
+.dash-sidebar__nav,
+.dash-sidebar__trust,
+.dash-sidebar__footer { flex-shrink: 0; }
 .dash-sidebar__logo {
   width: 40px;
   height: 40px;
@@ -860,12 +871,93 @@
 
 .day-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .day-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.5rem 0.95rem; border-radius: 999px;
   font-size: 0.82rem; font-weight: 600;
   border: 1px solid var(--d-border); background: #fff;
   color: var(--d-text-muted); cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
+.day-tab:hover { background: #f6f8f5; color: var(--d-text); }
 .day-tab--active { background: var(--d-text); color: #fff; border-color: var(--d-text); }
+/* Gold-accent tab variant — used for under-the-radar tools (401k Options,
+   attorney referrals, etc.) that people skip because they don't know what's
+   inside. The warm gold border + "Often missed" badge is the visual nudge. */
+.day-tab--gold {
+  border-color: #d9a962;
+  color: #8c6a1f;
+  background: linear-gradient(180deg, #fff 0%, #fffaf0 100%);
+  box-shadow: 0 0 0 0 rgba(217, 169, 98, 0.35);
+  animation: dayTabPulse 2.4s ease-in-out infinite;
+}
+@keyframes dayTabPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 169, 98, 0.35); }
+  50%      { box-shadow: 0 0 0 6px rgba(217, 169, 98, 0); }
+}
+.day-tab--gold:hover {
+  background: linear-gradient(180deg, #fffaf0 0%, #fff2d9 100%);
+  color: #6a4e0f;
+}
+.day-tab--gold.day-tab--active {
+  background: linear-gradient(135deg, #d9a962, #b37f2f);
+  color: #fff;
+  border-color: #b37f2f;
+  animation: none;
+}
+.day-tab__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, #d9a962, #b37f2f);
+  color: #fff;
+  border-radius: 999px;
+  margin-left: 0.25rem;
+}
+.day-tab--active .day-tab__badge {
+  background: rgba(255, 255, 255, 0.22);
+}
+@media (prefers-reduced-motion: reduce) {
+  .day-tab--gold { animation: none; }
+}
+
+/* =========================================================
+   Checklist "jump to tool" pill — opens the target module
+   directly from an item on the First 48-Hour or 7-Day plan.
+   ========================================================= */
+.cklist__actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.45rem;
+  align-items: center;
+}
+.cklist__jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.38rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(91, 122, 110, 0.35);
+  background: linear-gradient(135deg, rgba(91, 122, 110, 0.14), rgba(63, 90, 80, 0.08));
+  color: #2d4a3f;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+.cklist__jump:hover {
+  background: linear-gradient(135deg, rgba(91, 122, 110, 0.22), rgba(63, 90, 80, 0.14));
+  border-color: rgba(91, 122, 110, 0.55);
+  transform: translateX(2px);
+}
+.cklist__jump svg { color: #2d4a3f; }
 
 .privacy-note {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -1967,6 +2059,9 @@
   font-size: 0.85rem;
   color: var(--d-text);
   line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .recovery-task__body strong {
   display: block;
@@ -4065,3 +4160,303 @@
   font-weight: 500;
   line-height: 1.35;
 }
+
+/* =========================================================
+   SEVERANCE WORKFLOW — 3-stage tab nav (Understand · Decide · Act)
+   Splits the old 8-tab strip into three labelled groups with
+   icons so the workflow is scannable at a glance.
+   ========================================================= */
+.sev-workflow {
+  display: flex;
+  gap: 1.6rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.1rem 1.1rem;
+  background: linear-gradient(180deg, #fafbf9 0%, #f4f6f2 100%);
+  border: 1px solid var(--d-border);
+  border-radius: 14px;
+  position: relative;
+}
+.sev-workflow__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+.sev-workflow__group + .sev-workflow__group::before {
+  content: '';
+  position: absolute;
+  left: -0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 60%;
+  background: linear-gradient(180deg, transparent, rgba(45, 59, 68, 0.15), transparent);
+}
+.sev-workflow__eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--d-text-muted);
+  padding-left: 0.15rem;
+}
+.sev-workflow__tabs {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.sev-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--d-border);
+  background: #fff;
+  color: var(--d-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.sev-tab:hover {
+  background: #f6f8f5;
+  color: var(--d-text);
+  border-color: rgba(91, 122, 110, 0.4);
+}
+.sev-tab--active {
+  background: var(--d-text);
+  color: #fff;
+  border-color: var(--d-text);
+  box-shadow: 0 6px 14px rgba(45, 59, 68, 0.18);
+}
+.sev-tab--active svg { color: #d9a962; }
+.sev-tab__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 0.35rem;
+  margin-left: 0.15rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #d9a962, #b37f2f);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.sev-tab--active .sev-tab__count { background: #fff; color: #2d3b44; }
+@media (max-width: 700px) {
+  .sev-workflow { gap: 1rem; flex-direction: column; align-items: flex-start; }
+  .sev-workflow__group + .sev-workflow__group::before { display: none; }
+}
+
+/* ============================================================
+ * Email Library module
+ * ============================================================ */
+.emaillib { display: flex; flex-direction: column; gap: 1.1rem; }
+.emaillib__filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.emaillib__search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 260px;
+  padding: 0.55rem 0.85rem;
+  background: #fff;
+  border: 1px solid var(--d-border, #e2e8f0);
+  border-radius: 999px;
+  color: var(--d-text-muted, #64748b);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.emaillib__search:focus-within {
+  border-color: #5b7a6e;
+  box-shadow: 0 0 0 3px rgba(91, 122, 110, 0.12);
+}
+.emaillib__search input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 0.9rem;
+  color: #2d3b44;
+  font-family: inherit;
+}
+.emaillib__search input::placeholder { color: #94a3b8; }
+.day-tab__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 0.4rem;
+  margin-left: 0.25rem;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+.day-tab--active .day-tab__count { background: #fff; color: #2d3b44; }
+.emaillib__results {
+  font-size: 0.82rem;
+  color: var(--d-text-muted, #64748b);
+  padding: 0 0.25rem;
+}
+.emaillib__results strong { color: #2d3b44; font-weight: 700; }
+.emaillib__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  color: #64748b;
+  text-align: center;
+}
+.emaillib__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.emailcard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.1rem 1.2rem 1.2rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.emailcard:hover {
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+.emailcard__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.emailcard__tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.emailcard__tag--severance {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+}
+.emailcard__tag--job-search {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  color: #1e40af;
+}
+.emailcard__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.02rem;
+  color: #1e293b;
+  line-height: 1.35;
+}
+.emailcard__when {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+.emailcard__when svg { margin-top: 2px; flex-shrink: 0; }
+.emailcard__subject {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.55rem 0.7rem;
+  background: #f8fafc;
+  border-left: 3px solid #5b7a6e;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+.emailcard__subject-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+.emailcard__subject-text {
+  color: #334155;
+  font-style: italic;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.emailcard__jump {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.85rem;
+  background: linear-gradient(135deg, #2d6a4f, #1f4d3a);
+  color: #fff;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.emailcard__jump:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+}
+@media (max-width: 600px) {
+  .emaillib__filters { flex-direction: column; align-items: stretch; }
+  .emaillib__search { width: 100%; }
+  .emaillib__grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+ * Recovery Companion — lane note (complementary to First 48)
+ * ============================================================ */
+.recovery__lane-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+  padding: 0.75rem 0.95rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+  color: #075985;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.recovery__lane-note svg { flex-shrink: 0; margin-top: 3px; }
+.recovery__lane-note em { font-style: italic; font-weight: 600; }
+.recovery__lane-cta { margin-top: 0.6rem; }

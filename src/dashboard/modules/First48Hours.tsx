@@ -9,7 +9,7 @@ import { ModuleHeader } from '../components/ModuleHeader';
 import { RelatedTools } from '../components/RelatedTools';
 import type { ModuleId } from '../../data/modules';
 
-const DAYS = ['Day 1', 'Day 2', 'Day 3'] as const;
+const DAYS = ['Day 1', 'Day 2'] as const;
 
 interface Props {
   checked: ChecklistMap;
@@ -61,7 +61,7 @@ export function First48Hours({ checked, onToggle, onBack, onOpenModule }: Props)
               No actions for {day} — pick another day tab above.
             </p>
           ) : (
-            <Checklist items={filtered} checked={checked} onToggle={onToggle} />
+            <Checklist items={filtered} checked={checked} onToggle={onToggle} onJumpTo={onOpenModule} />
           )}
           <p style={{
             marginTop: '1.25rem',
@@ -74,9 +74,22 @@ export function First48Hours({ checked, onToggle, onBack, onOpenModule }: Props)
             lineHeight: 1.55,
           }}>
             <Icon name="info" size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />
-            Day 4 onward is covered in the separate <strong>7-Day Recovery Companion</strong> module —
-            open it from the sidebar for the week-one wellbeing and job-search cadence.
+            This is the <strong>tactical lane</strong> — the things that leak money or rights
+            if you do not handle them in 48 hours. Run the <strong>7-Day Recovery Companion</strong>
+            in parallel (sidebar): it is the <strong>emotional &amp; cadence lane</strong> for
+            the same first few days, and then Days 3–7 that sit after this checklist is done.
           </p>
+          {onOpenModule && (
+            <div style={{ marginTop: '0.9rem' }}>
+              <button
+                type="button"
+                className="btn-pill btn-pill--primary"
+                onClick={() => onOpenModule('recovery-7day')}
+              >
+                <Icon name="calendar" size={14} /> Open the 7-Day Recovery Companion
+              </button>
+            </div>
+          )}
 
           <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button type="button" className="btn-pill" onClick={() => downloadChecklist(module.title, FIRST_48_ITEMS, checked)}>
@@ -103,9 +116,10 @@ export function First48Hours({ checked, onToggle, onBack, onOpenModule }: Props)
           <div className="module-side-card">
             <h4>What this module covers</h4>
             <p>
-              The first 48 hours after a layoff are when most money is left on the
-              table — missed unemployment filings, signed agreements, lost references.
-              Work through Day 1 first, then continue into Day 2 and 3.
+              The first 48 hours are when most money is left on the table — missed
+              unemployment filings, signed agreements, lost references. This is the
+              tactical two-day sprint. Work Day 1 first, then Day 2. The emotional
+              side of the same days runs in parallel in the 7-Day Recovery Companion.
             </p>
           </div>
 

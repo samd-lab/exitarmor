@@ -563,6 +563,10 @@
   border-radius: 18px;
   transition: all 0.2s ease;
 }
+/* Title + body inside a card need to be explicit blocks so they never get
+   swallowed by the inline box the icon used to live in. */
+.mk-feature > h3,
+.mk-feature > p { display: block; width: 100%; }
 .mk-feature:hover {
   border-color: var(--glass-highlight);
   transform: translateY(-3px);
@@ -972,6 +976,12 @@
   border-radius: 999px;
   box-shadow: 0 6px 18px rgba(192, 74, 60, 0.35);
   white-space: nowrap;
+}
+/* "Coming soon" badge — muted, not the same hot gradient as "Start here".
+   Reads as a marker instead of a nudge to buy. */
+.mk-price-card__badge--soon {
+  background: linear-gradient(135deg, #3f5a50, #2d4a3f);
+  box-shadow: 0 6px 18px rgba(45, 74, 63, 0.35);
 }
 .mk-price-card h3 {
   font-family: var(--font-heading);
@@ -1909,12 +1919,21 @@
   border-color: rgba(180, 195, 188, 0.28);
   box-shadow: 0 28px 60px rgba(8, 12, 18, 0.35);
 }
+/* These children need to sit above the ::before gloss overlay. Everything
+   except the pill gets position: relative. The pill is already position:
+   absolute — overriding it to relative was bumping it into flow and
+   pushing the icon DOWN into the h3 below. That was the "icons covering
+   text below" bug. */
 .mk-features--v2 .mk-feature h3,
 .mk-features--v2 .mk-feature p,
-.mk-features--v2 .mk-feature__icon,
-.mk-features--v2 .mk-feature__pill {
+.mk-features--v2 .mk-feature__icon {
   position: relative;
   z-index: 1;
+}
+.mk-features--v2 .mk-feature__pill {
+  /* Keep the absolute placement from the base rule; just lift it above the
+     gloss overlay with z-index. */
+  z-index: 2;
 }
 
 /* ---- Reduced-motion safety ---- */

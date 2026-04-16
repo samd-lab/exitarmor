@@ -74,15 +74,50 @@ export function Severance({ checked, onToggle, onBack, onOpenModule }: Props) {
 
       <div className="module-page__layout">
         <div className="module-page__primary">
-          <div className="day-tabs">
-            <button type="button" className={`day-tab ${tab === 'calculator' ? 'day-tab--active' : ''}`} onClick={() => setTab('calculator')}>Calculator</button>
-            <button type="button" className={`day-tab ${tab === 'overview' ? 'day-tab--active' : ''}`} onClick={() => setTab('overview')}>Checklist</button>
-            <button type="button" className={`day-tab ${tab === 'asks' ? 'day-tab--active' : ''}`} onClick={() => setTab('asks')}>11 Negotiable Asks</button>
-            <button type="button" className={`day-tab ${tab === 'templates' ? 'day-tab--active' : ''}`} onClick={() => setTab('templates')}>Email Templates</button>
-            <button type="button" className={`day-tab ${tab === 'roleplay' ? 'day-tab--active' : ''}`} onClick={() => setTab('roleplay')}>HR Roleplay</button>
-            <button type="button" className={`day-tab ${tab === 'compare' ? 'day-tab--active' : ''}`} onClick={() => setTab('compare')}>Offer Compare</button>
-            <button type="button" className={`day-tab ${tab === 'attorney' ? 'day-tab--active' : ''}`} onClick={() => setTab('attorney')}>Find an Attorney</button>
-            <button type="button" className={`day-tab ${tab === 'benchmarks' ? 'day-tab--active' : ''}`} onClick={() => setTab('benchmarks')}>Benchmarks</button>
+          {/* 3-stage severance workflow. Tabs are split into "Understand",
+              "Decide", "Act" so the user sees the order instead of a wall
+              of 8 equal chips. Icons make each tab scannable without
+              reading the label. */}
+          <div className="sev-workflow">
+            <div className="sev-workflow__group">
+              <span className="sev-workflow__eyebrow">1 · Understand</span>
+              <div className="sev-workflow__tabs">
+                <button type="button" className={`sev-tab ${tab === 'calculator' ? 'sev-tab--active' : ''}`} onClick={() => setTab('calculator')}>
+                  <Icon name="dollar" size={14} /> Calculator
+                </button>
+                <button type="button" className={`sev-tab ${tab === 'benchmarks' ? 'sev-tab--active' : ''}`} onClick={() => setTab('benchmarks')}>
+                  <Icon name="chart" size={14} /> Benchmarks
+                </button>
+                <button type="button" className={`sev-tab ${tab === 'compare' ? 'sev-tab--active' : ''}`} onClick={() => setTab('compare')}>
+                  <Icon name="scale" size={14} /> Offer Compare
+                </button>
+              </div>
+            </div>
+            <div className="sev-workflow__group">
+              <span className="sev-workflow__eyebrow">2 · Decide</span>
+              <div className="sev-workflow__tabs">
+                <button type="button" className={`sev-tab ${tab === 'overview' ? 'sev-tab--active' : ''}`} onClick={() => setTab('overview')}>
+                  <Icon name="check" size={14} /> Checklist
+                </button>
+                <button type="button" className={`sev-tab ${tab === 'asks' ? 'sev-tab--active' : ''}`} onClick={() => setTab('asks')}>
+                  <Icon name="list" size={14} /> 11 Asks
+                </button>
+              </div>
+            </div>
+            <div className="sev-workflow__group">
+              <span className="sev-workflow__eyebrow">3 · Act</span>
+              <div className="sev-workflow__tabs">
+                <button type="button" className={`sev-tab ${tab === 'templates' ? 'sev-tab--active' : ''}`} onClick={() => setTab('templates')}>
+                  <Icon name="mail" size={14} /> Emails <span className="sev-tab__count">21</span>
+                </button>
+                <button type="button" className={`sev-tab ${tab === 'roleplay' ? 'sev-tab--active' : ''}`} onClick={() => setTab('roleplay')}>
+                  <Icon name="mic" size={14} /> HR Roleplay
+                </button>
+                <button type="button" className={`sev-tab ${tab === 'attorney' ? 'sev-tab--active' : ''}`} onClick={() => setTab('attorney')}>
+                  <Icon name="scale" size={14} /> Attorney
+                </button>
+              </div>
+            </div>
           </div>
 
           {tab === 'calculator' && <SeveranceCalculator />}

@@ -60,8 +60,17 @@ export function Budget({ checked, onToggle, onBack, onOpenModule }: Props) {
       <div className="module-page__layout">
         <div className="module-page__primary">
           <div className="day-tabs">
-            <button type="button" className={`day-tab ${tab === 'runway' ? 'day-tab--active' : ''}`} onClick={() => setTab('runway')}>Runway Calculator</button>
-            <button type="button" className={`day-tab ${tab === 'rollover' ? 'day-tab--active' : ''}`} onClick={() => setTab('rollover')}>401(k) Options</button>
+            <button type="button" className={`day-tab ${tab === 'runway' ? 'day-tab--active' : ''}`} onClick={() => setTab('runway')}>
+              <Icon name="dollar" size={13} /> Runway Calculator
+            </button>
+            <button
+              type="button"
+              className={`day-tab day-tab--gold ${tab === 'rollover' ? 'day-tab--active' : ''}`}
+              onClick={() => setTab('rollover')}
+            >
+              <Icon name="spark" size={13} /> 401(k) Options
+              <span className="day-tab__badge">Often missed</span>
+            </button>
           </div>
 
           {tab === 'rollover' && <Rollover401k />}

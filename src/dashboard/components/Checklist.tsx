@@ -8,9 +8,12 @@ interface Props {
   items: ChecklistItem[];
   checked: ChecklistMap;
   onToggle: (id: string) => void;
+  /** Optional callback — when provided, items with a `jumpTo` field render
+   *  a pill button that opens the target module. */
+  onJumpTo?: (id: ModuleId) => void;
 }
 
-export function Checklist({ items, checked, onToggle }: Props) {
+export function Checklist({ items, checked, onToggle, onJumpTo }: Props) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
   const toggleOpen = (id: string) => setOpen((o) => ({ ...o, [id]: !o[id] }));
@@ -40,17 +43,29 @@ export function Checklist({ items, checked, onToggle }: Props) {
                   {it.label}
                   {it.detail && <small>{it.detail}</small>}
                 </div>
-                {hasExpand && (
-                  <button
-                    type="button"
-                    className="cklist__expand"
-                    onClick={() => toggleOpen(it.id)}
-                    aria-expanded={isOpen}
-                  >
-                    {isOpen ? 'Hide coaching' : 'Coach me through this'}
-                    <span className={`cklist__chevron ${isOpen ? 'cklist__chevron--open' : ''}`}>&rsaquo;</span>
-                  </button>
-                )}
+                <div className="cklist__actions">
+                  {it.jumpTo && onJumpTo && (
+                    <button
+                      type="button"
+                      className="cklist__jump"
+                      onClick={() => onJumpTo(it.jumpTo!)}
+                    >
+                      <Icon name="arrow" size={12} />
+                      {it.jumpLabel || 'Open tool'}
+                    </button>
+                  )}
+                  {hasExpand && (
+                    <button
+                      type="button"
+                      className="cklist__expand"
+                      onClick={() => toggleOpen(it.id)}
+                      aria-expanded={isOpen}
+                    >
+                      {isOpen ? 'Hide coaching' : 'Coach me through this'}
+                      <span className={`cklist__chevron ${isOpen ? 'cklist__chevron--open' : ''}`}>&rsaquo;</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
             {hasExpand && isOpen && (

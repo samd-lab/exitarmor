@@ -30,26 +30,27 @@ export default function About() {
 
         <h2>Why Exit Armor exists</h2>
         <p>
-          In 2023, our founder was laid off from a senior role at a tech company. The
-          meeting lasted 14 minutes. By the end of the day, he was staring at a 28-page
-          separation agreement with a 21-day review window, a non-compete clause he
-          didn't understand, and a COBRA notice that mentioned a 60-day deadline but
-          didn't explain what would happen if he missed it.
+          Every year, roughly two million Americans are handed a severance packet with a
+          deadline. The meeting lasts 15 minutes. By the end of that day, they are
+          staring at a 20-to-40-page separation agreement, a review window, a
+          non-compete clause nobody explained, and a COBRA notice with a 60-day ticking
+          deadline. Almost nobody has seen any of it before.
         </p>
         <p>
-          He did what most people do: he called three friends who had been laid off
-          before him. Each one told him a story he wished he'd heard earlier &mdash; about
-          the severance weeks they didn't know they could ask for, the COBRA months they
-          paid out of pocket when ACA would have been cheaper, the references they never
-          got in writing and later regretted.
+          The people who come through it best are almost always the ones who happen to
+          know someone who went through it six months earlier &mdash; a friend who quietly
+          tells them about the severance weeks they did not know they could ask for, the
+          COBRA months they paid out of pocket when ACA would have been cheaper, the
+          references they forgot to lock in and later regretted. That friend is the
+          difference between an offer accepted in shock and an offer negotiated with
+          information.
         </p>
         <p>
-          He ended up negotiating an extra 6 weeks of severance and 3 months of COBRA
-          reimbursement. Not because he was a brilliant negotiator &mdash; but because he
-          finally knew what to ask for. The whole conversation took 20 minutes.
-        </p>
-        <p>
-          Exit Armor is the tool he wished existed in those 14 minutes.
+          We built Exit Armor to be that friend &mdash; at a one-time price instead of a
+          favor owed. The kit is a calm, research-backed walkthrough of the entire 90-day
+          window after a layoff, built on publicly-sourced data from SHRM, BLS, KFF,
+          state Departments of Labor, and well-established employment-law practice. No
+          invented case studies, no fake founders, no war stories.
         </p>
 
         <h2>Our principles</h2>
@@ -91,17 +92,20 @@ export default function About() {
 
         <h2>Who we are</h2>
         <p>
-          Exit Armor is built by a small, distributed team of product designers,
-          engineers, and former HR operators. We've been on both sides of the separation
-          conversation. We've read the playbooks that HR teams use, and we've rewritten
-          them into the playbook you should have.
+          Exit Armor is built by a small, distributed team that includes product and
+          design people, a former recruiter, and friends of ours who have been through
+          recent layoffs in tech, retail, and healthcare. We are not a law firm and we
+          are not trying to become one. We read the playbooks that HR and legal teams
+          use every day and we rewrote them into a plain-English walkthrough anyone can
+          follow in the worst week of their career.
         </p>
         <p>
-          We work in public. Every piece of content on this site is sourced from state
-          Department of Labor websites, federal agency publications (EEOC, DOL, IRS,
-          HHS), and well-established employment law commentary. If you ever spot
-          something inaccurate, please <Link to="/contact">tell us</Link>. We fix errors
-          within 48 hours.
+          We work in public. Every factual claim inside the product is sourced from a
+          state Department of Labor page, a federal agency (EEOC, DOL, IRS, HHS), a
+          major HR-industry survey (SHRM, KFF), or well-established employment-law
+          commentary. Every citation is linked inline. If you ever spot something
+          inaccurate, please <Link to="/contact">tell us</Link>. We fix errors within
+          48 hours.
         </p>
 
         <h2>Who we are not</h2>

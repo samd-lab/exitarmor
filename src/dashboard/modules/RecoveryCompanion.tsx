@@ -82,6 +82,24 @@ export function RecoveryCompanion({ checked, onToggle, onBack, onOpenModule }: P
             do them all perfectly — that is fine. Finishing half is still a
             week-one win.
           </p>
+          <div className="recovery__lane-note">
+            <Icon name="info" size={13} />
+            <span>
+              <strong>Runs alongside the First 48 Hours module.</strong> That one is
+              the <em>tactical lane</em> — secure data, review severance, file UI,
+              lock references. This one is the <em>emotional &amp; cadence lane</em> —
+              breathe, tell one person, know your numbers, build a 7-day rhythm.
+              Same first two days, different job. Days 3–7 below continue past where
+              the tactical checklist ends.
+            </span>
+          </div>
+          {onOpenModule && (
+            <div className="recovery__lane-cta">
+              <button type="button" className="btn-pill" onClick={() => onOpenModule('first-48')}>
+                <Icon name="shield" size={14} /> Open the First 48 Hours checklist
+              </button>
+            </div>
+          )}
           <div className="recovery__progress">
             <div className="recovery__progress-head">
               <span>Week progress</span>
@@ -126,6 +144,17 @@ export function RecoveryCompanion({ checked, onToggle, onBack, onOpenModule }: P
                         <div className="recovery-task__body">
                           <strong>{item.label}</strong>
                           {item.detail && <span>{item.detail}</span>}
+                          {item.jumpTo && onOpenModule && (
+                            <button
+                              type="button"
+                              className="cklist__jump"
+                              style={{ marginTop: '0.4rem', alignSelf: 'flex-start' }}
+                              onClick={() => onOpenModule(item.jumpTo!)}
+                            >
+                              <Icon name="arrow" size={12} />
+                              {item.jumpLabel || 'Open tool'}
+                            </button>
+                          )}
                         </div>
                       </li>
                     );

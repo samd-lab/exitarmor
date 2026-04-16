@@ -57,6 +57,16 @@
   padding: 0;
 }
 
+/* Global horizontal overflow guard. `overflow-x: clip` prevents accidental
+ * horizontal scrollbars from decorative overflow, transforms, or slight
+ * rounding errors — without breaking sticky positioning the way `hidden`
+ * would. If a descendant legitimately needs a horizontal scroller, it can
+ * still create one in its own containing block. */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   font-family: var(--font-body);
