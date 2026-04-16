@@ -3711,11 +3711,14 @@
 .sev-scenarios-section { padding: 5rem 0 4rem; }
 .sev-scenarios {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.75rem;
-  max-width: 1040px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+@media (max-width: 900px) {
+  .sev-scenarios { grid-template-columns: 1fr; max-width: 520px; }
 }
 .sev-scenario {
   position: relative;
