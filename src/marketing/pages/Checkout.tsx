@@ -12,11 +12,12 @@
 // competing CTAs. One button does one thing.
 // ============================================================
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BrandMark } from '../../components/BrandMark';
 import { CHECKOUT_URL, SUPPORT_EMAIL } from '../../lib/config';
 import { usePageMeta } from '../../lib/seo';
+import { captureReferral, getCheckoutUrlWithRef } from '../../lib/referral';
 
 // Tell TS about the global gtag loaded in index.html
 declare global {
@@ -217,6 +218,14 @@ export default function Checkout() {
     noindex: true,
   });
 
+  // Capture ref in case user arrived directly on /checkout?ref=CODE
+  // (some affiliates might share the checkout link directly).
+  useEffect(() => { captureReferral(); }, []);
+
+  // Build the Stripe Payment Link with the affiliate's ref code
+  // appended as client_reference_id. If no ref, returns base URL.
+  const checkoutHref = useMemo(() => getCheckoutUrlWithRef(CHECKOUT_URL), []);
+
   // Google Ads / GA4 event — fires once when the checkout page mounts.
   // "cart_page_view" = add-to-cart analog for a single-product site.
   // If you later get a full Google Ads conversion snippet with a
@@ -292,7 +301,7 @@ export default function Checkout() {
             <div className="co-card__rule" />
 
             <a
-              href={CHECKOUT_URL}
+              href={checkoutHref}
               className="co-cta"
               // No onClick analytics yet — GA4 will capture the
               // outbound link automatically via gtag enhanced measurement.

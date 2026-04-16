@@ -11,6 +11,7 @@ import {
   usePageMeta,
   websiteJsonLd,
 } from '../../lib/seo';
+import { captureReferral } from '../../lib/referral';
 
 // --------------------------------------------------------------
 // Person-in-context imagery — used inside the "Built for your
@@ -583,6 +584,8 @@ function DeepDive(p: DeepDiveProps) {
 
 export default function Landing() {
   useReveal();
+  // Capture ?ref=CODE from the URL if an affiliate sent them here.
+  useEffect(() => { captureReferral(); }, []);
 
   usePageMeta({
     title: 'Exit Armor — Severance Maximizer & 90-Day Layoff Playbook',
