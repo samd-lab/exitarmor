@@ -14,12 +14,14 @@ import BlogPost from './marketing/pages/BlogPost';
 import Checkout from './marketing/pages/Checkout';
 import Thanks from './marketing/pages/Thanks';
 import NotFound from './marketing/pages/NotFound';
+import LandingSeverance from './marketing/pages/LandingSeverance';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/severance" element={<LandingSeverance />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
