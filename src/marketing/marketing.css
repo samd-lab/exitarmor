@@ -3564,11 +3564,16 @@
 .sev-features-section { padding: 5rem 0; }
 .sev-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* Explicit 2x2 on desktop — 4 pillars breathe better than a cramped
+     4-across, and it prevents the ugly 3+1 wrap at mid widths. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
-  max-width: 1200px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+@media (max-width: 720px) {
+  .sev-grid { grid-template-columns: 1fr; max-width: 560px; }
 }
 .sev-card {
   position: relative;
@@ -3752,8 +3757,29 @@
   font-size: 0.82rem;
   color: #f4a261;
   font-weight: 600;
+  margin-bottom: 0.9rem;
+}
+.sev-scenario__used {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
   margin-bottom: 1rem;
 }
+.sev-scenario__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #cfe4d7;
+  background: rgba(45, 106, 79, 0.14);
+  border: 1px solid rgba(82, 183, 136, 0.28);
+  border-radius: 999px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.sev-scenario__chip svg { color: #8dd9a8; }
 .sev-scenario__body {
   color: var(--text-secondary);
   font-size: 0.93rem;
