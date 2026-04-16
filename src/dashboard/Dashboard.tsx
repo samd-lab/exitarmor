@@ -38,9 +38,19 @@ export function Dashboard({ onStartAi }: Props) {
   const { checked, toggle } = useChecklist('progress');
   const [profile, setProfile] = useProfile();
   const [profileOpen, setProfileOpen] = useState(false);
+  // Entry hint for modules that have sub-tabs. Lets callers like the
+  // Email Library land the user on the "Emails" tab of Severance
+  // instead of the default Calculator tab.
+  type SevTab = 'overview' | 'calculator' | 'asks' | 'templates' | 'roleplay' | 'compare' | 'attorney' | 'benchmarks';
+  const [severanceEntryTab, setSeveranceEntryTab] = useState<SevTab | undefined>(undefined);
 
   const goOverview = () => setRoute('overview');
-  const openModule = (id: ModuleId) => setRoute(id);
+  const openModule = (id: ModuleId, opts?: { tab?: string }) => {
+    if (id === 'severance') {
+      setSeveranceEntryTab((opts?.tab as SevTab | undefined) ?? undefined);
+    }
+    setRoute(id);
+  };
   const firstName = profile.name ? profile.name.split(' ')[0] : '';
 
   // Personalized progress stats for the sidebar
@@ -111,7 +121,13 @@ export function Dashboard({ onStartAi }: Props) {
           <First48Hours checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
         )}
         {route === 'severance' && (
-          <Severance checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />
+          <Severance
+            checked={checked}
+            onToggle={toggle}
+            onBack={goOverview}
+            onOpenModule={openModule}
+            initialTab={severanceEntryTab}
+          />
         )}
         {route === 'state' && (
           <StateResources checked={checked} onToggle={toggle} onBack={goOverview} onOpenModule={openModule} />

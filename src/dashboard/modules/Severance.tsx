@@ -31,16 +31,22 @@ const NEGOTIABLES = [
   'Re-employment eligibility',
 ];
 
+type SevTab = 'overview' | 'calculator' | 'asks' | 'templates' | 'roleplay' | 'compare' | 'attorney' | 'benchmarks';
+
 interface Props {
   checked: ChecklistMap;
   onToggle: (id: string) => void;
   onBack: () => void;
   onOpenModule?: (id: ModuleId) => void;
+  /** Optional — when the user arrives here from another module
+   *  (e.g. "Open in Severance" from Email Library), we want to
+   *  land them on a specific tab instead of the default. */
+  initialTab?: SevTab;
 }
 
-export function Severance({ checked, onToggle, onBack, onOpenModule }: Props) {
+export function Severance({ checked, onToggle, onBack, onOpenModule, initialTab }: Props) {
   const module = MODULES.find((m) => m.id === 'severance')!;
-  const [tab, setTab] = useState<'overview' | 'calculator' | 'asks' | 'templates' | 'roleplay' | 'compare' | 'attorney' | 'benchmarks'>('calculator');
+  const [tab, setTab] = useState<SevTab>(initialTab ?? 'calculator');
   const [activeTpl, setActiveTpl] = useState<string>(SEV_TEMPLATES[0]?.id ?? '');
   const [copied, setCopied] = useState<string | null>(null);
   const [profile] = useProfile();
@@ -108,7 +114,7 @@ export function Severance({ checked, onToggle, onBack, onOpenModule }: Props) {
               <span className="sev-workflow__eyebrow">3 · Act</span>
               <div className="sev-workflow__tabs">
                 <button type="button" className={`sev-tab ${tab === 'templates' ? 'sev-tab--active' : ''}`} onClick={() => setTab('templates')}>
-                  <Icon name="mail" size={14} /> Emails <span className="sev-tab__count">21</span>
+                  <Icon name="mail" size={14} /> Emails <span className="sev-tab__count">{SEV_TEMPLATES.length}</span>
                 </button>
                 <button type="button" className={`sev-tab ${tab === 'roleplay' ? 'sev-tab--active' : ''}`} onClick={() => setTab('roleplay')}>
                   <Icon name="mic" size={14} /> HR Roleplay

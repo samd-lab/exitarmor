@@ -15,7 +15,9 @@ import type { ModuleId } from '../../data/modules';
 
 interface Props {
   onBack: () => void;
-  onOpenModule: (id: ModuleId) => void;
+  /** Wider signature — we pass an optional tab hint so clicking
+   *  "Open in Severance" lands on the Emails tab, not Calculator. */
+  onOpenModule: (id: ModuleId, opts?: { tab?: string }) => void;
 }
 
 type Filter = 'all' | 'severance' | 'job-search';
@@ -153,12 +155,17 @@ function EmailCard({
   onOpenModule,
 }: {
   template: EmailTemplate;
-  onOpenModule: (id: ModuleId) => void;
+  onOpenModule: (id: ModuleId, opts?: { tab?: string }) => void;
 }) {
   const targetModule: ModuleId =
     template.category === 'job-search' ? 'job-search' : 'severance';
   const targetLabel =
     template.category === 'job-search' ? 'Open in Job Search' : 'Open in Severance';
+  // Severance module has 8 tabs — always land on "Emails" when jumping
+  // from the Email Library, otherwise user hits Calculator and wonders
+  // where their template went. Job Search module shows templates by
+  // default, so no tab hint needed there.
+  const targetTab = template.category === 'job-search' ? undefined : 'templates';
 
   return (
     <div className="emailcard">
@@ -178,7 +185,7 @@ function EmailCard({
       <button
         type="button"
         className="emailcard__jump"
-        onClick={() => onOpenModule(targetModule)}
+        onClick={() => onOpenModule(targetModule, targetTab ? { tab: targetTab } : undefined)}
       >
         <Icon name="arrow" size={12} />
         {targetLabel}
