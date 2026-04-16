@@ -218,9 +218,11 @@ export default function Checkout() {
     noindex: true,
   });
 
-  // Capture ref in case user arrived directly on /checkout?ref=CODE
-  // (some affiliates might share the checkout link directly).
-  useEffect(() => { captureReferral(); }, []);
+  // Capture ref SYNCHRONOUSLY before building the Stripe URL — if an
+  // affiliate shares /checkout?ref=CODE directly, the ref must be in
+  // localStorage before the useMemo below reads it. This is safe to
+  // call during render (pure localStorage read/write, no side effects).
+  captureReferral();
 
   // Build the Stripe Payment Link with the affiliate's ref code
   // appended as client_reference_id. If no ref, returns base URL.
