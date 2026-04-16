@@ -166,6 +166,7 @@ function AiComingSoonModal({ onClose }: { onClose: () => void }) {
               fontWeight: 600,
               fontSize: '0.9rem',
               cursor: 'pointer',
+              transition: 'background 0.15s ease',
             }}
           >
             Got it
