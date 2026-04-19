@@ -3914,6 +3914,42 @@
   overflow: hidden;
   padding: 2rem;
 }
+/* Slow-drifting ambient glow — two soft radial blobs that move
+   on different orbits so the background feels alive without
+   being distracting. Colors stay within the dark palette. */
+.calm-hero::before,
+.calm-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.35;
+}
+.calm-hero::before {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(45, 106, 79, 0.4) 0%, transparent 70%);
+  top: -10%;
+  right: -8%;
+  animation: calmDrift1 20s ease-in-out infinite alternate;
+}
+.calm-hero::after {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(192, 74, 60, 0.25) 0%, transparent 70%);
+  bottom: -5%;
+  left: -5%;
+  animation: calmDrift2 24s ease-in-out infinite alternate;
+}
+@keyframes calmDrift1 {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-60px, 40px); }
+}
+@keyframes calmDrift2 {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(50px, -30px); }
+}
 
 /* Breathing circle — slow, meditative pulse */
 .calm-breath {
@@ -4598,5 +4634,7 @@
   .calm-breath__ring--outer,
   .calm-breath__ring--inner { animation: none; }
   .calm-hero__scroll svg { animation: none; }
+  .calm-hero::before,
+  .calm-hero::after { animation: none; }
   .calm-mockup { transform: none; }
 }
