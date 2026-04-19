@@ -15,6 +15,7 @@ import Checkout from './marketing/pages/Checkout';
 import Thanks from './marketing/pages/Thanks';
 import NotFound from './marketing/pages/NotFound';
 import LandingSeverance from './marketing/pages/LandingSeverance';
+import LandingCalm from './marketing/pages/LandingCalm';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/severance" element={<LandingSeverance />} />
+        <Route path="/breathe" element={<LandingCalm />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/disclaimer" element={<Disclaimer />} />

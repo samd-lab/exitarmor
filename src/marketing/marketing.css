@@ -3879,3 +3879,365 @@
   .sev-receipt__bar-fill--mid  { width: 62%; }
   .sev-receipt__bar-fill--high { width: 88%; }
 }
+
+/* =========================================================
+   /breathe — Calm Landing Page
+   "Breathe first, buy later."
+
+   Design rules:
+     1. No color except the CTA button. Everything is text + space.
+     2. Animations are slow (1s+) and gentle. Nothing bounces.
+     3. Typography does the heavy lifting — large sizes, generous
+        line-height, lots of vertical breathing room.
+     4. The breathing circle is the only visual element above the fold.
+   ========================================================= */
+
+/* ---- Scroll reveal (shared pattern) ---- */
+.calm-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.calm-reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Section 1: The Breathing Room ---- */
+.calm-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #080a0e 0%, #0d1117 50%, #111820 100%);
+  overflow: hidden;
+  padding: 2rem;
+}
+
+/* Breathing circle — slow, meditative pulse */
+.calm-breath {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.calm-breath__ring {
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.calm-breath__ring--outer {
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  animation: calmPulse 6s ease-in-out infinite;
+}
+.calm-breath__ring--inner {
+  width: 260px;
+  height: 260px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  animation: calmPulse 6s ease-in-out infinite 1.5s;
+}
+@keyframes calmPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.8; }
+}
+
+.calm-hero__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 680px;
+}
+.calm-hero__headline {
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+  letter-spacing: -0.5px;
+  margin-bottom: 1.2rem;
+  animation: calmFadeUp 1.2s ease both;
+}
+.calm-hero__soft {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+.calm-hero__anchor {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5.5vw, 3.6rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+  margin-bottom: 1.6rem;
+  animation: calmFadeUp 1.2s ease 0.4s both;
+}
+.calm-hero__sub {
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  color: var(--text-muted);
+  line-height: 1.8;
+  max-width: 540px;
+  margin: 0 auto 3rem;
+  animation: calmFadeUp 1.2s ease 0.7s both;
+}
+.calm-hero__scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  animation: calmFadeUp 1.2s ease 1.1s both;
+}
+.calm-hero__scroll svg {
+  animation: calmBob 3s ease-in-out infinite;
+}
+@keyframes calmFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes calmBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+
+/* ---- Section 2: The Reframe ---- */
+.calm-reframe {
+  background: linear-gradient(180deg, #111820 0%, #141c24 100%);
+  padding: 6rem 2rem 5rem;
+}
+.calm-reframe__inner {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+.calm-reframe__item {
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  padding-left: 1.5rem;
+}
+.calm-reframe__statement {
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.55;
+  margin-bottom: 0.6rem;
+}
+.calm-reframe__cite {
+  font-style: normal;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+/* ---- Section 3: The Path ---- */
+.calm-path {
+  background: linear-gradient(180deg, #141c24 0%, #161e28 100%);
+  padding: 5rem 2rem 5rem;
+}
+.calm-path__inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.calm-path__heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.calm-path__step {
+  display: flex;
+  gap: 1.3rem;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+.calm-path__step:last-child { margin-bottom: 0; }
+.calm-path__num {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+.calm-path__step-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.45rem;
+}
+.calm-path__step-body {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ---- Section 4: The Product Reveal ---- */
+.calm-product {
+  background: linear-gradient(180deg, #161e28 0%, #1a2330 40%, #1e2a36 100%);
+  padding: 5rem 2rem 4rem;
+}
+.calm-product__inner {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+.calm-product__eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+.calm-product__price {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+  margin-bottom: 0.4rem;
+}
+.calm-product__once {
+  font-size: 0.4em;
+  font-weight: 500;
+  color: var(--text-muted);
+  vertical-align: middle;
+  letter-spacing: 0;
+}
+.calm-product__detail {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+.calm-product__proof {
+  list-style: none;
+  text-align: left;
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.calm-product__proof li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.calm-product__proof li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--forest-soft);
+  opacity: 0.7;
+}
+.calm-product__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  padding: 0.9rem 2.2rem;
+}
+.calm-product__fine {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+/* ---- Section 5: FAQ ---- */
+.calm-faq {
+  background: linear-gradient(180deg, #1e2a36 0%, #1a2230 100%);
+  padding: 4rem 2rem 3rem;
+}
+.calm-faq__inner {
+  max-width: 580px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+}
+.calm-faq__q {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+.calm-faq__a {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.calm-faq__a a {
+  color: var(--forest-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.calm-faq__a a:hover { color: #fff; }
+
+/* ---- Closing line ---- */
+.calm-close {
+  background: #1a2230;
+  padding: 3rem 2rem 5rem;
+  text-align: center;
+}
+.calm-close__line {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ---- Mobile adjustments ---- */
+@media (max-width: 600px) {
+  .calm-hero { padding: 1.5rem; }
+  .calm-breath__ring--outer { width: 300px; height: 300px; }
+  .calm-breath__ring--inner { width: 180px; height: 180px; }
+  .calm-reframe { padding: 4rem 1.5rem 3.5rem; }
+  .calm-reframe__inner { gap: 2.5rem; }
+  .calm-path { padding: 3.5rem 1.5rem 3.5rem; }
+  .calm-path__step { gap: 1rem; }
+  .calm-product { padding: 3.5rem 1.5rem 3rem; }
+  .calm-product__proof { margin-bottom: 2rem; }
+  .calm-faq { padding: 3rem 1.5rem 2.5rem; }
+  .calm-close { padding: 2.5rem 1.5rem 4rem; }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .calm-reveal { opacity: 1; transform: none; transition: none; }
+  .calm-hero__headline,
+  .calm-hero__anchor,
+  .calm-hero__sub,
+  .calm-hero__scroll { animation: none; opacity: 1; transform: none; }
+  .calm-breath__ring--outer,
+  .calm-breath__ring--inner { animation: none; }
+  .calm-hero__scroll svg { animation: none; }
+}

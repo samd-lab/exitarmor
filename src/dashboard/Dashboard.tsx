@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MODULES } from '../data/modules';
 import type { ModuleId } from '../data/modules';
@@ -44,6 +44,21 @@ export function Dashboard({ onStartAi }: Props) {
   type SevTab = 'overview' | 'calculator' | 'asks' | 'templates' | 'roleplay' | 'compare' | 'attorney' | 'benchmarks';
   const [severanceEntryTab, setSeveranceEntryTab] = useState<SevTab | undefined>(undefined);
 
+  const mainRef = useRef<HTMLElement | null>(null);
+
+  // Scroll to top of content whenever the route changes — critical on mobile
+  // where the drawer closes but the viewport is still scrolled past the fold.
+  const prevRoute = useRef(route);
+  useEffect(() => {
+    if (route !== prevRoute.current) {
+      prevRoute.current = route;
+      // Scroll the viewport to the top so the new module is visible
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Also scroll .dash-main itself (on desktop it can have its own scroll)
+      mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [route]);
+
   const goOverview = () => setRoute('overview');
   const openModule = (id: ModuleId, opts?: { tab?: string }) => {
     if (id === 'severance') {
@@ -71,7 +86,7 @@ export function Dashboard({ onStartAi }: Props) {
         profileName={profile.name}
         progress={progressStats}
       />
-      <main className="dash-main">
+      <main className="dash-main" ref={mainRef}>
         <div className="dash-topbar">
           <div className="dash-topbar__greet">
             {firstName ? (

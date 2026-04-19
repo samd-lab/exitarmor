@@ -23,6 +23,7 @@ import {
   usePageMeta,
   websiteJsonLd,
 } from '../../lib/seo';
+import { captureReferral } from '../../lib/referral';
 
 // --------------------------------------------------------------
 // Feature pillars — mapped 1:1 to the dashboard modules so nothing
@@ -115,6 +116,9 @@ const SCENARIOS: Scenario[] = [
 ];
 
 export default function LandingSeverance() {
+  // -------- capture affiliate ref code on mount --------
+  useEffect(() => { captureReferral(); }, []);
+
   // -------- reveal-on-scroll -----------------
   useEffect(() => {
     const nodes = document.querySelectorAll<HTMLElement>('.reveal');
@@ -284,7 +288,7 @@ export default function LandingSeverance() {
       ================================================================ */}
       <section className="mk-section sev-scenarios-section">
         <div className="mk-section__head reveal" style={{ maxWidth: 820, margin: '0 auto 3rem', textAlign: 'center' }}>
-          <div className="mk-section__eyebrow">Two typical weekends inside the kit</div>
+          <div className="mk-section__eyebrow">Three typical weekends inside the kit</div>
           <h2>
             What it looks like when <span className="text-gradient">the panic ends.</span>
           </h2>
