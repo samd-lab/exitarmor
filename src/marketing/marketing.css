@@ -3923,23 +3923,23 @@
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(80px);
-  opacity: 0.35;
+  filter: blur(100px);
+  opacity: 0.5;
 }
 .calm-hero::before {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(45, 106, 79, 0.4) 0%, transparent 70%);
-  top: -10%;
-  right: -8%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(45, 106, 79, 0.5) 0%, transparent 70%);
+  top: 5%;
+  right: 2%;
   animation: calmDrift1 20s ease-in-out infinite alternate;
 }
 .calm-hero::after {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(192, 74, 60, 0.25) 0%, transparent 70%);
-  bottom: -5%;
-  left: -5%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(192, 74, 60, 0.3) 0%, transparent 70%);
+  bottom: 5%;
+  left: 2%;
   animation: calmDrift2 24s ease-in-out infinite alternate;
 }
 @keyframes calmDrift1 {
