@@ -21,7 +21,7 @@
  * Until you replace this, clicking any CTA opens a mailto as a safe fallback.
  */
 export const STRIPE_PAYMENT_LINK =
-  'https://buy.stripe.com/00w00jgSm63d6ZmaAG7AI00';
+  'https://buy.stripe.com/6oU4gz9qR8YJaZe5LEg7e00';
 
 /** True while we're still on the placeholder — used to show a mailto fallback. */
 export const IS_PAYMENT_LINK_LIVE = !STRIPE_PAYMENT_LINK.includes('REPLACE_WITH_REAL_LINK');
