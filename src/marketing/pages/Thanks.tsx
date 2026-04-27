@@ -39,8 +39,8 @@ export default function Thanks() {
   const code = useAccessCode();
   const [copied, setCopied] = useState(false);
 
-  // Google Ads "Purchase" conversion — fires once when a buyer lands
-  // on /thanks after successful Stripe checkout. We guard against
+  // Google Ads conversion + GA4 purchase — fires once when a buyer
+  // lands on /thanks after successful Stripe checkout. We guard against
   // accidental double-firing (reloads, back button) with a sessionStorage
   // flag so the same tab can only report one Purchase.
   useEffect(() => {
@@ -52,11 +52,30 @@ export default function Thanks() {
     } catch {
       // sessionStorage blocked (private browsing, etc.) — fire anyway.
     }
+    const sessionId =
+      new URLSearchParams(window.location.search).get('session_id') || '';
+
+    // Google Ads conversion event
     window.gtag('event', 'conversion', {
       send_to: 'AW-11033587773/D-8KCLOD4pwcEL3gnI0p',
       value: 69.0,
       currency: 'USD',
-      transaction_id: '',
+      transaction_id: sessionId,
+    });
+
+    // GA4 purchase event (so Analytics tracks revenue too)
+    window.gtag('event', 'purchase', {
+      transaction_id: sessionId,
+      value: 69.0,
+      currency: 'USD',
+      items: [
+        {
+          item_id: 'exit-armor-90day',
+          item_name: '90-Day Playbook',
+          price: 69.0,
+          quantity: 1,
+        },
+      ],
     });
   }, []);
 
