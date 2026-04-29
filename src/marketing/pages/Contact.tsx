@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { MarketingLayout } from '../MarketingLayout';
 import { breadcrumbJsonLd, usePageMeta } from '../../lib/seo';
+import { usePricing } from '../../lib/usePricing';
 
 export default function Contact() {
+  const pricing = usePricing();
   const [sent, setSent] = useState(false);
   usePageMeta({
     title: 'Contact Exit Armor — Support, corrections & press',
@@ -88,7 +90,7 @@ export default function Contact() {
           support@exitarmor.com from the address you used at checkout and we'll process
           it within one business day. If it's been longer than 7 days and you still feel
           the product didn't serve you, write to us anyway &mdash; we'd rather refund an
-          unhappy customer than keep $69.
+          unhappy customer than keep {pricing.label}.
         </p>
 
         <h2>Found an error?</h2>

@@ -12,6 +12,7 @@ import {
   websiteJsonLd,
 } from '../../lib/seo';
 import { captureReferral } from '../../lib/referral';
+import { usePricing } from '../../lib/usePricing';
 
 // --------------------------------------------------------------
 // Person-in-context imagery — used inside the "Built for your
@@ -583,6 +584,7 @@ function DeepDive(p: DeepDiveProps) {
 }
 
 export default function Landing() {
+  const pricing = usePricing();
   useReveal();
   // Capture ?ref=CODE from the URL if an affiliate sent them here.
   useEffect(() => { captureReferral(); }, []);
@@ -590,7 +592,7 @@ export default function Landing() {
   usePageMeta({
     title: 'Exit Armor — Severance Maximizer & 90-Day Layoff Playbook',
     description:
-      'Laid off? Exit Armor is a $69 severance negotiation and layoff survival kit — 11 negotiable asks, HR call roleplay, COBRA vs ACA math, 50-state unemployment rules, and a printable 90-day action plan.',
+      `Laid off? Exit Armor is a ${pricing.label} severance negotiation and layoff survival kit — 11 negotiable asks, HR call roleplay, COBRA vs ACA math, 50-state unemployment rules, and a printable 90-day action plan.`,
     path: '/',
     jsonLd: [
       organizationJsonLd(),
@@ -628,7 +630,7 @@ export default function Landing() {
               className="btn btn-primary btn-glow"
               style={{ padding: '1rem 2rem', fontSize: '1.05rem' }}
             >
-              Get the 90-Day Playbook &mdash; $69
+              Get the 90-Day Playbook &mdash; {pricing.label}
               <Icon name="arrow" size={16} />
             </Link>
             <a href="#inside" className="btn btn-glass" style={{ padding: '1rem 2rem', fontSize: '1.05rem' }}>
@@ -636,7 +638,7 @@ export default function Landing() {
             </a>
           </div>
           <div className="mk-hero__checks reveal">
-            <span className="mk-hero__check">One-time $69</span>
+            <span className="mk-hero__check">One-time {pricing.label}</span>
             <span className="mk-hero__check">No account needed</span>
             <span className="mk-hero__check">7-day money-back</span>
           </div>
@@ -675,7 +677,7 @@ export default function Landing() {
           </div>
           <div className="mk-trust__stat reveal">
             <strong>
-              $<Counter target={69} />
+              $<Counter target={pricing.price} />
             </strong>
             <span>One-time price. No subscription, no renewal.</span>
           </div>
@@ -967,7 +969,7 @@ export default function Landing() {
             <tbody>
               <tr>
                 <td>Cost</td>
-                <td className="mk-compare__us mk-compare__money">$69 one-time</td>
+                <td className="mk-compare__us mk-compare__money">{pricing.label} one-time</td>
                 <td>$1,500&ndash;$5,000+</td>
                 <td>Free (plus your mistakes)</td>
               </tr>
@@ -1022,7 +1024,7 @@ export default function Landing() {
             className="btn btn-primary btn-glow"
             style={{ padding: '1rem 2rem' }}
           >
-            Get the kit &mdash; $69
+            Get the kit &mdash; {pricing.label}
             <Icon name="arrow" size={16} />
           </Link>
         </div>
@@ -1223,7 +1225,7 @@ export default function Landing() {
             <Icon name="lock" size={12} /> Everything saves on your device. No account, no login.
           </span>
           <Link to="/checkout" className="btn btn-primary btn-glow" style={{ padding: '0.95rem 1.8rem' }}>
-            Get the kit &mdash; $69
+            Get the kit &mdash; {pricing.label}
             <Icon name="arrow" size={16} />
           </Link>
         </div>
@@ -1265,7 +1267,7 @@ export default function Landing() {
       <section className="mk-section" id="pricing">
         <div className="mk-section__head">
           <div className="mk-section__eyebrow">Pricing</div>
-          <h2>$69 one-time. No subscription.</h2>
+          <h2>{pricing.label} one-time. No subscription.</h2>
           <p>
             Less than one hour of an attorney at market rates. Less than two months of
             a streaming bundle. One-time purchase, seven-day refund, and you keep the
@@ -1289,7 +1291,7 @@ export default function Landing() {
               )}
               <h3>{t.name}</h3>
               <div className="mk-price-card__price">
-                <span className="mk-price-card__amount">{t.price}</span>
+                <span className="mk-price-card__amount">{t.id === 'self' ? pricing.label : t.price}</span>
                 <span className="mk-price-card__period">{t.period}</span>
               </div>
               <p className="mk-price-card__blurb">{t.blurb}</p>
@@ -1306,7 +1308,7 @@ export default function Landing() {
                   className={`btn ${t.highlighted ? 'btn-primary btn-glow' : 'btn-glass'}`}
                   style={{ padding: '0.85rem 1.5rem', justifyContent: 'center' }}
                 >
-                  {t.cta}
+                  {t.cta.replace('$69', pricing.label)}
                 </Link>
               ) : (
                 <Link
@@ -1370,7 +1372,7 @@ export default function Landing() {
           {FAQ.map((f, i) => (
             <details key={i} className="mk-faq__item reveal">
               <summary>{f.q}</summary>
-              <p>{f.a}</p>
+              <p>{f.a.replace(/\$69/g, pricing.label)}</p>
             </details>
           ))}
         </div>
@@ -1406,11 +1408,11 @@ export default function Landing() {
               className="btn btn-primary btn-glow"
               style={{ padding: '1rem 2.5rem', fontSize: '1.1rem' }}
             >
-              Get the 90-Day Playbook &mdash; $69
+              Get the 90-Day Playbook &mdash; {pricing.label}
               <Icon name="arrow" size={16} />
             </Link>
             <p className="mk-cta-band__fine">
-              $69 one-time &middot; 7-day money-back guarantee &middot; No account needed
+              {pricing.label} one-time &middot; 7-day money-back guarantee &middot; No account needed
             </p>
           </div>
         </div>

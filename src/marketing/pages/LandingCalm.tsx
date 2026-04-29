@@ -22,6 +22,7 @@ import {
   websiteJsonLd,
 } from '../../lib/seo';
 import { captureReferral } from '../../lib/referral';
+import { usePricing } from '../../lib/usePricing';
 
 // ---- Scroll-reveal observer ----
 function useReveal() {
@@ -236,6 +237,7 @@ function CalcMockup() {
 // MAIN COMPONENT
 // ================================================================
 export default function LandingCalm() {
+  const pricing = usePricing();
   usePageMeta({
     title: 'Exit Armor — Take a Breath',
     description:
@@ -373,7 +375,7 @@ export default function LandingCalm() {
       <section className="calm-features">
         <div className="calm-features__inner">
           <div className="mk-section__head calm-reveal" style={{ maxWidth: 720, margin: '0 auto 2.5rem', textAlign: 'center' }}>
-            <p className="calm-features__eyebrow">What&rsquo;s inside the $69 kit</p>
+            <p className="calm-features__eyebrow">What&rsquo;s inside the {pricing.label} kit</p>
             <h2 className="calm-features__heading">
               Six tools. One playbook. No guesswork.
             </h2>
@@ -438,7 +440,7 @@ export default function LandingCalm() {
         <div className="calm-product__inner">
           <p className="calm-product__eyebrow">Everything above</p>
           <h2 className="calm-product__price">
-            $69 <span className="calm-product__once">one time</span>
+            {pricing.label} <span className="calm-product__once">one time</span>
           </h2>
           <p className="calm-product__detail">
             No subscription. No account. No upsell emails.
@@ -462,7 +464,7 @@ export default function LandingCalm() {
           </div>
 
           <Link to="/checkout" className="btn btn-primary btn-glow calm-product__cta">
-            Get Your Playbook &mdash; $69
+            Get Your Playbook &mdash; {pricing.label}
             <Icon name="arrow" size={16} />
           </Link>
 
@@ -543,10 +545,10 @@ export default function LandingCalm() {
             <span className="text-gradient">Start planning at your own pace.</span>
           </h2>
           <p className="calm-final__sub">
-            $69 once. Instant access. Everything above is inside the moment you check out.
+            {pricing.label} once. Instant access. Everything above is inside the moment you check out.
           </p>
           <Link to="/checkout" className="btn btn-primary btn-glow calm-product__cta">
-            Get The Playbook &mdash; $69
+            Get The Playbook &mdash; {pricing.label}
             <Icon name="arrow" size={16} />
           </Link>
           <p className="calm-product__fine">

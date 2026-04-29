@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { BrandMark } from '../components/BrandMark';
+import { usePricing } from '../lib/usePricing';
 import './marketing.css';
 
 interface Props {
@@ -18,6 +19,7 @@ export function MarketingLayout({ children }: Props) {
 }
 
 export function MarketingNav() {
+  const pricing = usePricing();
   return (
     <nav className="mk-nav">
       <div className="mk-nav__inner">
@@ -31,11 +33,8 @@ export function MarketingNav() {
           <Link to="/blog" className="mk-nav__link">Blog</Link>
           <Link to="/about" className="mk-nav__link">About</Link>
           <Link to="/contact" className="mk-nav__link">Contact</Link>
-          {/* Primary nav CTA — lands on the /checkout interstitial,
-              which hands off to Stripe. Interstitial adds trust signals
-              (what's inside, guarantee, FAQ) before money changes hands. */}
           <Link to="/checkout" className="btn btn-primary mk-nav__cta">
-            Get Started &mdash; $69
+            Get Started &mdash; {pricing.label}
           </Link>
         </div>
       </div>

@@ -24,6 +24,7 @@ import {
   websiteJsonLd,
 } from '../../lib/seo';
 import { captureReferral } from '../../lib/referral';
+import { usePricing } from '../../lib/usePricing';
 
 // --------------------------------------------------------------
 // Feature pillars — mapped 1:1 to the dashboard modules so nothing
@@ -116,6 +117,7 @@ const SCENARIOS: Scenario[] = [
 ];
 
 export default function LandingSeverance() {
+  const pricing = usePricing();
   // -------- capture affiliate ref code on mount --------
   useEffect(() => { captureReferral(); }, []);
 
@@ -144,7 +146,7 @@ export default function LandingSeverance() {
   usePageMeta({
     title: 'Exit Armor — Severance Maximizer Kit',
     description:
-      "Don't sign your severance yet. Audit the offer against 50-state benchmarks, run COBRA vs ACA, and send a research-backed counter-offer email in 48 hours. $69 one-time.",
+      `Don't sign your severance yet. Audit the offer against 50-state benchmarks, run COBRA vs ACA, and send a research-backed counter-offer email in 48 hours. ${pricing.label} one-time.`,
     path: '/severance',
     jsonLd: [organizationJsonLd(), websiteJsonLd(), productJsonLd()],
   });
@@ -158,7 +160,7 @@ export default function LandingSeverance() {
         <div className="mk-hero__copy sev-hero__copy">
           <div className="mk-hero__eyebrow reveal">
             <span className="mk-hero__eyebrow-pulse" />
-            The $69 Severance Maximizer Kit
+            The {pricing.label} Severance Maximizer Kit
           </div>
           <h1 className="reveal sev-hero__title">
             Don't sign your severance yet.
@@ -172,7 +174,7 @@ export default function LandingSeverance() {
           </p>
           <div className="mk-hero__cta-row reveal sev-hero__cta-row">
             <Link to="/checkout" className="btn btn-primary btn-glow sev-hero__cta">
-              Audit My Severance Offer &mdash; $69
+              Audit My Severance Offer &mdash; {pricing.label}
               <Icon name="arrow" size={16} />
             </Link>
           </div>
@@ -232,7 +234,7 @@ export default function LandingSeverance() {
       ================================================================ */}
       <section className="mk-section sev-features-section">
         <div className="mk-section__head reveal" style={{ maxWidth: 820, margin: '0 auto 3rem', textAlign: 'center' }}>
-          <div className="mk-section__eyebrow">What's inside the $69 kit</div>
+          <div className="mk-section__eyebrow">What's inside the {pricing.label} kit</div>
           <h2>
             Four tools that turn shock into <span className="text-gradient">a plan on paper.</span>
           </h2>
@@ -265,7 +267,7 @@ export default function LandingSeverance() {
           <StepCard
             n={1}
             icon="dollar"
-            title="Pay $69 once"
+            title={`Pay ${pricing.label} once`}
             body="Stripe checkout, instant access, no subscription, no upsell emails. 7-day refund if the kit isn't for you."
           />
           <StepCard
@@ -352,7 +354,7 @@ export default function LandingSeverance() {
             <summary>What's the refund policy?</summary>
             <p>
               Seven days, no questions asked. Email support@exitarmor.com and we refund within one
-              business day. We would rather refund an unhappy customer than keep their $69.
+              business day. We would rather refund an unhappy customer than keep their {pricing.label}.
             </p>
           </details>
         </div>
@@ -372,11 +374,11 @@ export default function LandingSeverance() {
             <span className="text-gradient">Start auditing at 10 a.m.</span>
           </h2>
           <p className="sev-final__lede">
-            $69 once. Instant access. Everything above is inside the moment you check out &mdash;
+            {pricing.label} once. Instant access. Everything above is inside the moment you check out &mdash;
             benchmarks, templates, calculator, 90-day budget, job search, legal-help directory.
           </p>
           <Link to="/checkout" className="btn btn-primary btn-glow sev-final__cta">
-            Get The Severance Maximizer Kit &mdash; $69
+            Get The Severance Maximizer Kit &mdash; {pricing.label}
             <Icon name="arrow" size={18} />
           </Link>
           <p className="sev-final__foot">

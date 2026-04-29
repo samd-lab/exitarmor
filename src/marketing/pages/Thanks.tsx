@@ -4,6 +4,7 @@ import { MarketingLayout } from '../MarketingLayout';
 import { Icon } from '../../components/Icon';
 import { usePageMeta } from '../../lib/seo';
 import { SUPPORT_EMAIL } from '../../lib/config';
+import { usePricing } from '../../lib/usePricing';
 
 // Tell TS about the global gtag loaded in index.html
 declare global {
@@ -38,6 +39,7 @@ function useAccessCode(): string {
 export default function Thanks() {
   const code = useAccessCode();
   const [copied, setCopied] = useState(false);
+  const pricing = usePricing();
 
   // Google Ads conversion + GA4 purchase — fires once when a buyer
   // lands on /thanks after successful Stripe checkout. We guard against
@@ -58,7 +60,7 @@ export default function Thanks() {
     // Google Ads conversion event
     window.gtag('event', 'conversion', {
       send_to: 'AW-11033587773/D-8KCLOD4pwcEL3gnI0p',
-      value: 69.0,
+      value: pricing.price,
       currency: 'USD',
       transaction_id: sessionId,
     });
@@ -66,18 +68,19 @@ export default function Thanks() {
     // GA4 purchase event (so Analytics tracks revenue too)
     window.gtag('event', 'purchase', {
       transaction_id: sessionId,
-      value: 69.0,
+      value: pricing.price,
       currency: 'USD',
+      price_cohort: pricing.id,
       items: [
         {
           item_id: 'exit-armor-90day',
           item_name: '90-Day Playbook',
-          price: 69.0,
+          price: pricing.price,
           quantity: 1,
         },
       ],
     });
-  }, []);
+  }, [pricing.price, pricing.id]);
 
   usePageMeta({
     title: 'You got the kit — Exit Armor',

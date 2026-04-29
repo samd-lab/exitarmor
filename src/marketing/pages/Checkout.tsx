@@ -15,9 +15,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BrandMark } from '../../components/BrandMark';
-import { CHECKOUT_URL, SUPPORT_EMAIL } from '../../lib/config';
+import { SUPPORT_EMAIL } from '../../lib/config';
 import { usePageMeta } from '../../lib/seo';
 import { captureReferral, getCheckoutUrlWithRef } from '../../lib/referral';
+import { usePricing } from '../../lib/usePricing';
 
 // Tell TS about the global gtag loaded in index.html
 declare global {
@@ -64,26 +65,26 @@ const INCLUDES = [
   },
 ];
 
-const FAQ = [
-  {
-    q: 'What exactly do I get after I pay?',
-    a: 'Instant access to all six tools above, a $0-to-launch checklist, plain-English explainers, and every template you see on the homepage. No login, no waiting list, no extra cost — the receipt from Stripe contains your access link.',
-  },
-  {
-    q: 'Is this legal or financial advice?',
-    a: 'No. Exit Armor is an educational resource. Everything is cited to public sources (SHRM, KFF, Littler, state DOLs), but decisions that affect your rights should be reviewed by a licensed professional in your state.',
-  },
-  {
-    q: 'What if I change my mind?',
-    a: 'Seven-day money-back guarantee, no questions asked. Email ' +
-      SUPPORT_EMAIL +
-      ' from the inbox on your Stripe receipt and we refund the full $69.',
-  },
-  {
-    q: 'Do I need an account?',
-    a: 'No account, no password. Everything saves to your own browser. Stripe emails you a receipt; that receipt is your access.',
-  },
-];
+function buildFaq(priceLabel: string) {
+  return [
+    {
+      q: 'What exactly do I get after I pay?',
+      a: 'Instant access to all six tools above, a $0-to-launch checklist, plain-English explainers, and every template you see on the homepage. No login, no waiting list, no extra cost — the receipt from Stripe contains your access link.',
+    },
+    {
+      q: 'Is this legal or financial advice?',
+      a: 'No. Exit Armor is an educational resource. Everything is cited to public sources (SHRM, KFF, Littler, state DOLs), but decisions that affect your rights should be reviewed by a licensed professional in your state.',
+    },
+    {
+      q: 'What if I change my mind?',
+      a: `Seven-day money-back guarantee, no questions asked. Email ${SUPPORT_EMAIL} from the inbox on your Stripe receipt and we refund the full ${priceLabel}.`,
+    },
+    {
+      q: 'Do I need an account?',
+      a: 'No account, no password. Everything saves to your own browser. Stripe emails you a receipt; that receipt is your access.',
+    },
+  ];
+}
 
 // ------------------------------------------------------------
 // Tiny inline icon set — kept here so this page has zero
@@ -179,11 +180,11 @@ function Icon({ name }: { name: string }) {
 // ------------------------------------------------------------
 // FAQ accordion — one open at a time, keyboard-accessible.
 // ------------------------------------------------------------
-function Faq() {
+function Faq({ items }: { items: { q: string; a: string }[] }) {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   return (
     <div className="co-faq">
-      {FAQ.map((item, i) => {
+      {items.map((item, i) => {
         const open = openIdx === i;
         return (
           <div key={i} className={`co-faq__item ${open ? 'is-open' : ''}`}>
@@ -210,8 +211,10 @@ function Faq() {
 // Page
 // ============================================================
 export default function Checkout() {
+  const pricing = usePricing();
+
   usePageMeta({
-    title: 'Checkout — Exit Armor · $69 one-time',
+    title: `Checkout — Exit Armor · ${pricing.label} one-time`,
     description:
       "You're 60 seconds from your 90-day layoff playbook. Secure checkout via Stripe, 7-day money-back, instant receipt.",
     path: '/checkout',
@@ -226,7 +229,12 @@ export default function Checkout() {
 
   // Build the Stripe Payment Link with the affiliate's ref code
   // appended as client_reference_id. If no ref, returns base URL.
-  const checkoutHref = useMemo(() => getCheckoutUrlWithRef(CHECKOUT_URL), []);
+  const checkoutHref = useMemo(
+    () => getCheckoutUrlWithRef(pricing.stripeLink),
+    [pricing.stripeLink],
+  );
+
+  const faq = useMemo(() => buildFaq(pricing.label), [pricing.label]);
 
   // Google Ads / GA4 event — fires once when the checkout page mounts.
   // "cart_page_view" = add-to-cart analog for a single-product site.
@@ -235,10 +243,12 @@ export default function Checkout() {
   useEffect(() => {
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'cart_page_view', {
-        // send_to: 'AW-11033587773/YOUR_LABEL',
+        price_cohort: pricing.id,
+        value: pricing.price,
+        currency: 'USD',
       });
     }
-  }, []);
+  }, [pricing.id, pricing.price]);
 
   return (
     <>
@@ -266,7 +276,7 @@ export default function Checkout() {
               instead of a blank browser tab.
             </h1>
             <p className="co-lede">
-              Educational kit. One-time $69. Seven-day money-back. No account,
+              Educational kit. One-time {pricing.label}. Seven-day money-back. No account,
               no subscription, no waiting list.
             </p>
           </div>
@@ -279,7 +289,7 @@ export default function Checkout() {
                 <div className="co-card__title">The 90-Day Playbook</div>
               </div>
               <div className="co-card__price">
-                <div className="co-card__price-amt">$69</div>
+                <div className="co-card__price-amt">{pricing.label}</div>
                 <div className="co-card__price-sub">one-time</div>
               </div>
             </div>
@@ -334,7 +344,7 @@ export default function Checkout() {
           {/* ---- Tiny FAQ — collapsed by default except #1 ---- */}
           <section className="co-faq-wrap" aria-label="Frequently asked">
             <h2 className="co-faq-title">Quick answers</h2>
-            <Faq />
+            <Faq items={faq} />
           </section>
 
           <p className="co-fine">

@@ -6,6 +6,7 @@ import {
   breadcrumbJsonLd,
   usePageMeta,
 } from '../../lib/seo';
+import { usePricing } from '../../lib/usePricing';
 
 // Minimal markdown renderer: ## for h2, blank line for paragraph breaks
 function renderBody(body: string) {
@@ -33,6 +34,7 @@ function renderBody(body: string) {
 }
 
 export default function BlogPost() {
+  const pricing = usePricing();
   const { slug = '' } = useParams();
   const post = BLOG_BY_SLUG[slug];
 
@@ -134,7 +136,7 @@ export default function BlogPost() {
             Exit Armor walks you through every step in this post with personalized
             checklists, state-specific guidance, and copy-paste email templates.
           </p>
-          <Link to="/checkout" className="btn btn-primary">Get the kit &mdash; $69</Link>
+          <Link to="/checkout" className="btn btn-primary">Get the kit &mdash; {pricing.label}</Link>
         </div>
 
         {related.length > 0 && (

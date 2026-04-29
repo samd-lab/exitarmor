@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { MarketingLayout } from '../MarketingLayout';
 import { breadcrumbJsonLd, organizationJsonLd, usePageMeta } from '../../lib/seo';
+import { usePricing } from '../../lib/usePricing';
 
 export default function About() {
+  const pricing = usePricing();
   usePageMeta({
     title: 'About Exit Armor — Built for the hardest week of your career',
     description:
@@ -83,7 +85,7 @@ export default function About() {
 
         <h3>4. One price. No upsell.</h3>
         <p>
-          Exit Armor is a one-time $69 purchase. Not a subscription. Not a freemium
+          Exit Armor is a one-time {pricing.label} purchase. Not a subscription. Not a freemium
           trap. Not an aggressive email sequence. You buy it once, you use it until you
           don't need it anymore, and then you (hopefully) forget about us. We believe
           that's the right relationship between a product and someone who's navigating a
@@ -122,7 +124,7 @@ export default function About() {
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
             Your 72-hour survival plan is 3 clicks away.
           </p>
-          <Link to="/checkout" className="btn btn-primary">Get the kit &mdash; $69</Link>
+          <Link to="/checkout" className="btn btn-primary">Get the kit &mdash; {pricing.label}</Link>
         </div>
       </article>
     </MarketingLayout>

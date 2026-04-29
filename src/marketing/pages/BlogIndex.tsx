@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom';
 import { BLOG_POSTS } from '../../data/blog';
 import { MarketingLayout } from '../MarketingLayout';
 import { breadcrumbJsonLd, SITE_URL, usePageMeta } from '../../lib/seo';
+import { usePricing } from '../../lib/usePricing';
 
 export default function BlogIndex() {
+  const pricing = usePricing();
   const posts = [...BLOG_POSTS].sort((a, b) => b.date.localeCompare(a.date));
 
   usePageMeta({
@@ -66,7 +68,7 @@ export default function BlogIndex() {
           posts &mdash; personalized to your state, your tenure, and your situation.
         </p>
         <Link to="/checkout" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.05rem' }}>
-          Get the kit &mdash; $69
+          Get the kit &mdash; {pricing.label}
         </Link>
       </div>
     </MarketingLayout>
